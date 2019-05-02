@@ -476,7 +476,7 @@ tail +20 notes.log #显示文件 notes.log 的内容，从第 20 行至文件末
 tail -c 10 notes.log  #显示文件 notes.log 的最后 10 个字符
 ``` 
 
-#xargs
+# xargs
 
 xargs 是给命令传递参数的一个过滤器，也是组合多个命令的一个工具。
 
@@ -571,7 +571,7 @@ ccc
 =======================
 
 使用 -I 指定一个替换字符串 {}，这个字符串在 xargs 扩展时会被替换掉，当 -I 与 xargs 结合使用，每一个参数命令都会被执行一次：
-# cat arg.txt | xargs -I {} ./sk.sh -p {} -l
+# cat arg.txt | xargs -I{} ./sk.sh -p {} -l
 -p aaa -l
 -p bbb -l
 -p ccc -l
@@ -594,4 +594,87 @@ find . -type f -name "*.jpg" -print | xargs tar -czvf images.tar.gz
 xargs 其他应用
 假如你有一个文件包含了很多你希望下载的 URL，你能够使用 xargs下载所有链接：
 # cat url-list.txt | xargs wget -c
+```
+
+
+# curl
+
+**格式参数**
+
+命令格式：curl [options...] <url>
+
+参数：
+```
+-d, --data <data>   HTTP POST data
+    --data-ascii <data> HTTP POST ASCII data
+    --data-binary <data> HTTP POST binary data
+    --data-raw <data> HTTP POST data, '@' allowed
+    --data-urlencode <data> HTTP POST data url encoded
+    --delegation <LEVEL> GSS-API delegation permission
+    --digest        Use HTTP Digest Authentication
+-i, --include       Include protocol response headers in the output
+-I, --head          Show document info only
+-P, --ftp-port <address> Use PORT instead of PASV
+    --ftp-pret      Send PRET before PASV
+    --ftp-skip-pasv-ip Skip the IP address for PASV
+    --ftp-ssl-ccc   Send CCC after authenticating
+    --ftp-ssl-ccc-mode <active/passive> Set CCC mode
+    --ftp-ssl-control Require SSL/TLS for FTP login, clear for transfer
+-G, --get           Put the post data in the URL and use GET
+-H, --header <header/@file> Pass custom header(s) to server
+-0, --http1.0       Use HTTP 1.0
+    --http1.1       Use HTTP 1.1
+    --http2         Use HTTP 2
+    --http2-prior-knowledge Use HTTP 2 without HTTP/1.1 Upgrade
+    --ignore-content-length Ignore the size of the remote resource
+-4, --ipv4          Resolve names to IPv4 addresses
+-6, --ipv6          Resolve names to IPv6 addresses
+-x, --proxy [protocol://]host[:port] Use this proxy
+-X, --request <command> Specify request command to use
+    --request-target Specify the target for this request
+    --resolve <host:port:address> Resolve the host+port to this address
+    --retry <num>   Retry request if transient problems occur
+    --retry-connrefused Retry on connection refused (use with --retry)
+    --retry-delay <seconds> Wait time between retries
+    --retry-max-time <seconds> Retry only within this period
+    --sasl-ir       Enable initial response in SASL authentication
+    --service-name <name> SPNEGO service name
+-O, --remote-name   Write output to a file named as the remote file
+-o, --output <file> Write to file instead of stdout
+```
+
+**示例**
+
+```
+POST请求
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
+   "kingdom": "family", \ 
+   "parameters": {} \ 
+ }' 'http://52.90.174.93:8040/closerTV/ott/top?userId=ziju&ver=3&clientId=1001'
+
+GET 请求
+发送数据时，不仅可以使用 POST 方式，也可以使用 GET 方式
+curl -X GET http://www.example.com/api -d “somedata”
+或者使用 -G 选项：
+curl -G http://www.example.com/api -d “somedata” 
+
+DELETE请求
+curl -X DELETE https://api.github.cim
+
+显示HTTP头和文件内容
+curl -i http://www.codebelief.com
+
+只显示 HTTP 头，而不显示文件内容
+curl -I http://www.codebelief.com
+
+将链接保存到文件
+方法1： 我们可以使用 > 符号将输出重定向到本地文件中。
+curl http://www.codebelief.com > index.html
+
+方法2：也可以通过 curl 自带的 -o/-O 选项将内容保存到文件中。
+-o（小写的 o）：结果会被保存到命令行中提供的文件名
+-O（大写的 O）：URL 中的文件名会被用作保存输出的文件名
+curl -o index.html http://www.codebelief.com
+curl -O http://www.codebelief.com/page/2/
+注意：使用 -O 选项时，必须确保链接末尾包含文件名，否则 curl 无法正确保存文件。如果遇到链接中无文件名的情况，应该使用 -o 选项手动指定文件名，或使用重定向符号。
 ```
