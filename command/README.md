@@ -231,11 +231,9 @@ ls | tee test.txt,会在显示器中打出ls的结果，同时也会在test.txt�
 
 # chown
 
-变更文件的拥有者和所属组
+chmod命令用来变更文件或目录的权限。在UNIX系统家族里，文件或目录权限的控制分别以读取、写入、执行3种一般权限来区分，另有3种特殊权限可供运用。用户可以使用chmod指令去变更文件与目录的权限，设置方式采用文字或数字代号皆可。符号连接的权限无法变更，如果用户对符号连接修改权限，其改变会作用在被连接的原始文件。
 
 **格式参数**
-
-chmod命令用来变更文件或目录的权限。在UNIX系统家族里，文件或目录权限的控制分别以读取、写入、执行3种一般权限来区分，另有3种特殊权限可供运用。用户可以使用chmod指令去变更文件与目录的权限，设置方式采用文字或数字代号皆可。符号连接的权限无法变更，如果用户对符号连接修改权限，其改变会作用在被连接的原始文件。
 
 命令格式：
 
@@ -285,4 +283,56 @@ chmod a+x f01　　//对文件f01的u,g,o都设置可执行属性
 
 文件的属主和属组属性设置
 chown user:market f01　　//把文件f01给uesr，添加到market组
+```
+
+
+# lsof
+
+在linux环境下，任何事物都以文件的形式存在，通过文件不仅仅可以访问常规数据，还可以访问网络连接和硬件。所以如传输控制协议 (TCP) 和用户数据报协议 (UDP) 套接字等，系统在后台都为该应用程序分配了一个文件描述符，无论这个文件的本质如何，该文件描述符为应用程序与基础操作系统之间的交互提供了通用接口。因为应用程序打开文件的描述符列表提供了大量关于这个应用程序本身的信息，因此通过lsof工具能够查看这个列表对系统监测以及排错将是很有帮助的。
+
+**格式参数**
+
+命令格式： lsof ［options］ filename
+
+参数：
+
+```
++d <目录>  列出目录下被打开的文件
++D <目录>  递归列出目录下被打开的文件
+-a 列出打开文件存在的进程
+-c <进程名> 列出指定进程所打开的文件
+-g  列出GID号进程详情
+-d <文件号> 列出占用该文件号的进程
+-n <目录>  列出使用NFS的文件
+
+-i <条件>  列出符合条件的进程。（4、6、协议、:端口、 @ip ）
+  lsof -i [46] [protocol][@hostname|hostaddr][:service|port]
+    46 --> IPv4 or IPv6
+    protocol --> TCP or UDP
+    hostname --> Internet host name
+    hostaddr --> IPv4/IPv6地址
+    service --> /etc/service中的 service name e.g., smtp (可以不止一个)
+    port --> 端口号 (可以不止一个)
+
+-p <进程号> 列出指定进程号所打开的文件
+
+-u selects the listing of files for the user whose login names or user  ID  numbers  are  in  the  comma-separated set s - e.g.,``abe'', or ``548,root''.  (There should be no spaces  in  the set.)
+
+-h 显示帮助信息
+-v 显示版本信息
+```
+
+**示例**
+
+```bash
+lsof -u username  #列出某个用户打开的文件信息
+lsof /filepath/file  #查看谁正在使用某个文件
+lsof -c mysql  #列出某个程序所打开的文件信息
+lsof -u test -c mysql  #列出某个用户以及某个程序所打开的文件信息
+lsof -c -p 1234  #列出进程号为1234的进程所打开的文件
+lsof -g gid  #显示归属gid的进程情况
+lsof +d /usr/local/ #显示目录下被进程开启的文件
+lsof +D /usr/local/# 同上，但是会搜索目录下的目录，时间较长
+lsof -d 4 #显示使用fd为4的进程
+
 ```
