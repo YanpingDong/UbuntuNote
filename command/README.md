@@ -850,15 +850,15 @@ route -n|awk 'NR!=1{print}'  #不显示第一行
 awk '/mysql/' /etc/passwd
 awk '/mysql/{print }' /etc/passwd
 awk '/mysql/{print $0}' /etc/passwd               #以上三条指令结果一样
-awk '!/mysql/{print $0}' /etc/passwd   #输出不匹配mysql的行
-awk '/mysql|mail/{print}' /etc/passwd
-awk '!/mysql|mail/{print}' /etc/passwd
-awk -F":" '/mail/,/mysql/{print}' /etc/passwd     
-
-//区间匹配
-awk '/[2][7][7]*/{print $0}' /etc/passwd   #匹配包含27为数字开头的行，如27，277，2777...
-awk -F":" '$1~/mail/{print $1}' /etc/passwd  #$1匹配指定内容才显示
-awk -F: '{if($1~/mail/) print $1}' /etc/passwd  #/与上面相同
+awk '!/mysql/{print $0}' /etc/passwd command/README.md#  #输出不匹配mysql的行command/README.md#
+awk '/mysql|mail/{print}' /etc/passwdcommand/README.md#
+awk '!/mysql|mail/{print}' /etc/passwcommand/README.md#d
+awk -F":" '/mail/,/mysql/{print}' /etcommand/README.md#c/passwd     
+command/README.md#
+//区间匹配command/README.md#
+awk '/[2][7][7]*/{print $0}' /etc/pascommand/README.md#swd   #匹配包含27为数字开头的行，如27，277，2777..command/README.md#.
+awk -F":" '$1~/mail/{print $1}' /etc/command/README.md#passwd  #$1匹配指定内容才显示command/README.md#
+awk -F: '{if($1~/mail/) print $1}' /ecommand/README.md#tc/passwd  #/与上面相同
 awk -F: '$1!~/mail/{print $1}' /etc/passwd  #不匹配
 awk -F: '$1!~/mail|mysql/{print $1}' /etc/passwd        
  
@@ -996,7 +996,7 @@ Jack    2321 66 78 45
 Tom     2122 48 77 71
 Mike    2537 87 97 95
 Bob     2415 40 57 62
-
+```
  
 awk手册
 http://www.chinaunix.net/old_jh/7/16985.html
