@@ -599,6 +599,8 @@ xargs 其他应用
 
 # curl
 
+curl  is  a tool to transfer data from or to a server, using one of the supported protocols (DICT,FILE, FTP, FTPS, GOPHER, HTTP, HTTPS,  IMAP,IMAPS,LDAP,  LDAPS,  POP3,  POP3S,  RTMP, RTSP, SCP,SFTP,SMB, SMBS, SMTP, SMTPS, TELNET and TFTP)
+
 **格式参数**
 
 命令格式：curl [options...] <url>
@@ -650,7 +652,7 @@ POST请求
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
    "kingdom": "family", \ 
    "parameters": {} \ 
- }' 'http://52.90.174.93:8040/closerTV/ott/top?userId=ziju&ver=3&clientId=1001'
+ }' 'http://host:port/closerTV/ott/top?userId=ziju&ver=3&clientId=1001'
 
 GET 请求
 发送数据时，不仅可以使用 POST 方式，也可以使用 GET 方式
@@ -677,4 +679,29 @@ curl http://www.codebelief.com > index.html
 curl -o index.html http://www.codebelief.com
 curl -O http://www.codebelief.com/page/2/
 注意：使用 -O 选项时，必须确保链接末尾包含文件名，否则 curl 无法正确保存文件。如果遇到链接中无文件名的情况，应该使用 -o 选项手动指定文件名，或使用重定向符号。
+```
+
+# wc
+
+该命令统计给定文件中的字节数、字数、行数。如果没有给出文件名，则从标准输入读取。wc同时也给出所有指定文件的总统计数。字是由空格字符区分开的最大字符串。 
+
+**格式参数**
+
+命令格式：
+    wc [选项] 文件… 
+
+参数：
+```
+- c 统计字节数。 
+- l 统计行数。 
+- w 统计字数。  
+```
+
+**示例**
+
+```bash
+~$ wc -lcw get-pip.py examples.desktop 
+  22374   23043 1780465 get-pip.py
+    240     569    8980 examples.desktop
+  22614   23612 1789445 total
 ```
