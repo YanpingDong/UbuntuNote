@@ -87,9 +87,11 @@ update-alternatives是Debian系统中专门维护系统命令链接符的工具�
 ## [lsof](command/README.md#lsof)
 lsof(list open files)是一个列出当前系统打开文件的工具
  
+## [grep](command/README.md#grep)
+它能使用正则表达式搜索文本，并把匹配的行打印出来。 
+
 # 概念解释
 
-# 换主题与更改图标
 # 输入法
 # IDE
 
