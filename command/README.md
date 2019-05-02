@@ -923,13 +923,13 @@ large
 small
 small
 
-awk -F":" 'BEGIN{A=0;B=0} {if($3>100) {A++; print "large"} else {B++; print "small"}} END{print A,"\t",B}' /etc/passwd 
-#ID大于100,A加1，否则B加1
-
-awk -F":" '{if($3<100) next; else print}' /etc/passwd   #小于100跳过，否则显示
-awk -F":" 'BEGIN{i=1} {if(i<NF) print NR,NF,i++ }' /etc/passwd   
-awk -F":" 'BEGIN{i=1} {if(i<NF) {print NR,NF} i++ }' /etc/passwd
-另一种形式
+awk -F":" 'BEGIN{A=0;B=0} {if行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。($3>100) {A++; print "large"} else {B++; print "sm行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。all"}} END{print A,"\t",B}' /etc/passwd 行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。
+#ID大于100,A加1，否则B加1行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。
+行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。
+awk -F":" '{if($3<100) next; 行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。else print}' /etc/passwd   #小于100跳过，否则显行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。示
+awk -F":" 'BEGIN{i=1} {if(i<N行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。F) print NR,NF,i++ }' /etc/passwd   行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。
+awk -F":" 'BEGIN{i=1} {if(i<N行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。F) {print NR,NF} i++ }' /etc/passwd行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。
+另一种形式行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。
 awk -F":" '{print ($3>100 ? "yes":"no")}'  /etc/passwd #第三列>100输出yes否则no
 awk -F: '{print ($3>100 ? $3":\t yes":$3":\t no")}'  /etc/passwd #第三列>100输出第三列+制表符+yes否则输出第三列+制表符+no
  
@@ -1000,4 +1000,71 @@ Bob     2415 40 57 62
  
 awk手册
 http://www.chinaunix.net/old_jh/7/16985.html
-    
+
+
+# sudo
+
+以其它用户身份执行一个命令，其相关配置文件在/etc/sudoers文件中或在/etc/sudoers.d目录下的文件中，两者功能是一样的，只是在/etc/sudoers.d目录下的文件需要使用visudo -f /etc/sudoers.d/somefilename来做配置，而sudoers本身直接用visudo即可。
+
+**为什么要使用/etc/sudoers.d/目录**
+
+一般来讲/etc/sudoers是由版本发布管理者来控制的。假设你直接修改了/etc/sudoers文件，而这时管理者发布了新的版本，这时候你需要手动的检查更改并且使你的修改在新的版本中生效。但如果你把你的更改放到/etc/sudoers.d目录下的文件中的话，你就不必这样做，升级并不影响你之前的配置。但要注意，该目录下的文件名不能以’～’结尾，文件名不能包含’.’;且所有的文件应该是 0440（即-r--r----- ）
+如何让/etc/sudoers.d中的配置文件生效
+将/etc/sudoers文件中注掉的下行打开即可
+
+```#includedir /etc/sudoers.d```
+
+如何知道该用户可以执行哪些命令：sudo -l
+
+## 如何配置sudoers文件
+
+1.配置别名：这个在配置项很多且需要重复为多用户配置的时候很有用,别名规则定义格式如下：
+Alias_Type NAME = item1, item2, ...
+或Alias_Type NAME = item1, item2, item3 : NAME = item4, item5 
+
+别名类型（Alias_Type）：别名类型包括如下四种 
+
+- Host_Alias 定义主机别名； 
+- User_Alias 用户别名，别名成员可以是用户，用户组（前面要加%号） 
+- Runas_Alias 用来定义runas别名，这个别名指定的是“目的用户”，即sudo允许切换至的用户； 
+- Cmnd_Alias 定义命令别名； 
+
+NAME 就是别名了，NMAE的命名是包含大写字母、下划线以及数字，但**必须以一个大写字母开头**，比如SYNADM、SYN_ADM或SYNAD0是合法的，sYNAMDA或1SYNAD是不合法的；
+
+**授权格式：**
+
+授权用户 主机=[(切换到哪些用户：用户组)] [是否需要密码验证：] 命令1,[(切换到哪些用户：用户组)] [是否需要密码验证：] [命令2],[(切换到哪些用户：用户组)] [是否需要密码验证：] [命令3]...... 
+凡是[ ]中的内容，是可以省略；命令与命令之间用,号分隔；通过本文的例子，可以对照着看哪些是省略了，哪些地方需要有空格； 
+在[(切换到哪些用户：用户组)] ，如果省略，则默认为root用户；如果是ALL，则代表能切换到所有用户；注意要切换到的目的用户必须用()号括起来，比如(ALL)、(beinan) 
+
+**一个完整的示例：**
+
+假如我们就一台主机localhost，能通过hostname来查看，我们在这里就不定义主机别名了，用ALL来匹配所有可能出现的主机名；并且有 beinan、linuxsir、lanhaitun 用户；主要是通过小例子能更好理解；sudo虽然简单好用，但能把说的明白的确是件难事；最好的办法是多看例子和man soduers ； 
+
+```
+User_Alias SYSADER=beinan,linuxsir,%beinan 
+User_Alias DISKADER=lanhaitun 
+Runas_Alias OP=root 
+Cmnd_Alias SYDCMD=/bin/chown,/bin/chmod,/usr/sbin/adduser,/usr/bin/passwd [A-Za-z]*,!/usr/bin/passwd root 
+Cmnd_Alias DSKCMD=/sbin/parted,/sbin/fdisk 注：定义命令别名DSKCMD，下有成员parted和fdisk ； 
+SYSADER ALL= SYDCMD,DSKCMD 
+DISKADER ALL=(OP) DSKCMD 
+
+注解： 
+第一行：定义用户别名SYSADER 下有成员 beinan、linuxsir和beinan用户组下的成员，用户组前面必须加%号； 
+第二行：定义用户别名 DISKADER ，成员有lanhaitun 
+第三行：定义Runas用户，也就是目标用户的别名为OP，下有成员root 
+第四行：定义SYSCMD命令别名，成员之间用,号分隔，最后的!/usr/bin/passwd root 表示不能通过passwd 来更改root密码； 
+第五行：定义命令别名DSKCMD，下有成员parted和fdisk ； 
+第六行： 表示授权SYSADER下的所有成员，在所有可能存在的主机名的主机下运行或禁止 SYDCMD和DSKCMD下定义的命令。更为明确的说， beinan、linuxsir和beinan用户组下的成员能以root身份运行 chown 、chmod 、adduser、passwd，但不能 更改root的密码；也可以以root身份运行 parted和fdisk ，本条规则的等价规则是； 
+
+beinan,linuxsir,%beinan ALL= /bin/chown,/bin/chmod,/usr/sbin/adduser,/usr/bin/passwd [A-Za-z]*,!/usr/bin/passwd root,/sbin/parted,/sbin/fdisk
+
+第七行：表示授权DISKADER 下的所有成员，能以OP的身份，来运行 DSKCMD ，不需要密码；更为明确的说 lanhaitun 能以root身份运行 parted和fdisk 命令；其等价规则是： 
+
+lanhaitun ALL=(root) /sbin/parted,/sbin/fdisk 
+
+可能有的弟兄会说我想不输入用户的密码就能切换到root并运行SYDCMD和DSKCMD 下的命令，那应该把把NOPASSWD:加在哪里为好？理解下面的例子吧，能明白的； 
+
+SYSADER ALL= NOPASSWD: SYDCMD, NOPASSWD: DSKCMD 
+```
