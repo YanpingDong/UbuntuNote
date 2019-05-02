@@ -93,6 +93,9 @@ lsof(list open files)是一个列出当前系统打开文件的工具
 ## [tail](command/README.md#tail)
 用于从文件尾部查看文件的内容
 
+## [xargs](command/README.md#xargs)
+给命令传递参数的一个过滤器，也是组合多个命令的一个工具。
+
 # 概念解释
 
 # 输入法
