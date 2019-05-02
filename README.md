@@ -90,6 +90,9 @@ lsof(list open files)是一个列出当前系统打开文件的工具
 ## [grep](command/README.md#grep)
 它能使用正则表达式搜索文本，并把匹配的行打印出来。 
 
+## [tail](command/README.md#tail)
+用于从文件尾部查看文件的内容
+
 # 概念解释
 
 # 输入法
