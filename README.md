@@ -78,6 +78,9 @@ update-alternatives是Debian系统中专门维护系统命令链接符的工具�
 ## [screenfetch](command/README.md#screenfetch)
 自动检测你的发行版并显示 ASCII 版的发行版标志，并且在右边显示OS,Kernel,CPU,GPU,RAM等信息
 
+## [tee](command/README.md#tee)
+是在不影响原本 I/O 输出的情况下，将 stdout 复制一份到档案里
+
 # 概念解释
 
 # 换主题与更改图标
