@@ -197,3 +197,33 @@ screenfetch
                    ````` +oo+++o\:    
                           `oo++.   
 ```
+
+# tee 
+
+是在不影响原本 I/O 的情况下，将 stdout 复制一份到档案里
+
+**格式参数**
+
+命令格式：
+
+tee [OPTION]... [FILE]...
+
+参数说明：
+
+```bash
+-a, --append : append to the given FILEs, do not overwrite
+
+-i, --ignore-interrupts : ignore interrupt signals
+  
+-p : diagnose errors writing to non pipes
+      
+--output-error[=MODE] : set behavior on write error.  See MODE below
+
+--help : display this help and exit
+
+--version : output version information and exit
+```
+
+**示例**
+
+ls | tee test.txt,会在显示器中打出ls的结果，同时也会在test.txt里保存一份
