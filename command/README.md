@@ -705,3 +705,48 @@ curl -O http://www.codebelief.com/page/2/
     240     569    8980 examples.desktop
   22614   23612 1789445 total
 ```
+
+# command
+
+command命令在shell脚本里面，如果发现有个函数和我们需要执行的命令同名，我们可以用command用来强制执行后面的命令，而不是同名函数，然后我们也可以在shell脚本里面判断莫个命令是否存在，我们平时一般用which命令也行。
+
+**测试代码**
+
+```bash
+#!/bin/bash
+function pwd()
+{
+    echo "I am pwd function"
+}
+  
+echo "shell run pwd"
+pwd
+  
+echo "shell command pwd"
+command pwd
+  
+if  command -v pwd > /dev/null; then
+    echo "pwd command has found"
+else
+    echo "pwd command has not found"
+fi
+  
+if  command -v pwd1 > /dev/null; then
+    echo "pwd1 command has found"
+else
+    echo "pwd1 command has not found"
+fi
+```
+*NOTE: command -v pwd > /dev/null目的是把输出重定向到/dev/null中, -v是为了屏蔽掉command -v pwd1找不到会输出 pwd1: command not found类似错误*
+
+输出：
+
+```
+shell run pwd
+I am pwd function
+shell command pwd
+/home/chenyu/Desktop/linux/dabian/python
+pwd command has found
+pwd1 command has not found
+```
+    
