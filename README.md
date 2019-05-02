@@ -102,6 +102,9 @@ cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年
 ## [awk](command/README.md#awk)
 行处理器,相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。逐行处理。
 
+## [sudo](command/README.md#sudo)
+以其它用户身份执行一个命令，其相关配置文件在/etc/sudoers文件中或在/etc/sudoers.d目录下的文件中，两者功能是一样的，只是在/etc/sudoers.d目录下的文件需要使用visudo -f /etc/sudoers.d/somefilename来做配置，而sudoers本身直接用visudo即可。
+
 # 概念解释
 
 # 输入法
