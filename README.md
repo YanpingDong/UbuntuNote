@@ -99,6 +99,8 @@ lsof(list open files)是一个列出当前系统打开文件的工具
 ## [curl](command/README.md#curl)
 cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年首次发行。它支持文件上传和下载，所以是综合传输工具。
 
+## [awk](command/README.md#awk)
+
 # 概念解释
 
 # 输入法
