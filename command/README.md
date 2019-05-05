@@ -1135,6 +1135,10 @@ apt 还有一些自己的命令(apt 命令也还在不断发展中)：
 
 使用```apt-get update```命令会从/etc/apt/sources.list中下载软件列表，并保存到该目录
 
+**/var/cache/apt/archives**
+
+目录是在用 ```apt-get install``` 安装软件时，软件包的临时存放路径
+
 **/etc/apt/sources.list**
 
 存放的是软件源站点入口信息
@@ -1167,12 +1171,6 @@ Ubuntu下：
 ![软件包示例](pic/sources_sample.png)
 
 
-
-**/var/cache/apt/archives**
-
-目录是在用 ```apt-get install``` 安装软件时，软件包的临时存放路径
-
-
 ## 工作原理：
 
 Ubuntu采用集中式的软件仓库机制，将各式各样的软件包分门别类地存放在软件仓库中，进行有效地组织和管理。然后，将软件仓库置于许许多多的镜像服务器中，并保持基本一致。这样，所有的Ubuntu用户随时都能获得最新版本的安装软件包。因此，对于用户，这些镜像服务器就是他们的软件源（Reposity）。
@@ -1198,7 +1196,7 @@ mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_i18n_Translation-en
 
 从上会发现其把url指定地址下所有的类型的数据包描述全部下载下来，每一个“_”符代表一级目录。以mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_binary-amd64_Packages为例 ，其对应到URL地址为hhttp://mirrors.aliyun.com/ubuntu/dists/xenial-security/universe/binary-amd64/  在该地址下有两个Packages文件，一个是.gz，另一个是.xz
 
-## apt-get install
+### apt-get install
 
 apt-get install每次都会从/var/lib/apt/lists读取相应的文件，从而获取的Packages.gz包的信息。
 
@@ -1256,11 +1254,11 @@ Supported: 3y
 - 第三步： 从软件源所指 的镜像站点中，下载相关软件包；
 - 第四步： 解压软件包，并自动完成应用程序的安装和配置。
 
-## apt-get upgrade
+### apt-get upgrade
 
 使用“apt-get install”命令能够安装或更新指定的软件包。而在Ubuntu Linux中，只需一条命令就可以轻松地将系统中的所有软件包一次性升级到最新版本，这个命令就是“apt-get upgrade”，它可以很方便的完成在相同版本号的发行版中更新软件包。在依赖关系检查后，命令列出了目前所有需要升级的软件包，在得到用户确认后，便开始更新软件包的下载和安装。当然，apt- get upgrade命令会在最后以合理的次序，安装本次更新的软件包。系统更新需要用户等待一段时间。
 
-## apt-cache pkgnames
+### apt-cache pkgnames
 
 查询以指定名字开头的安装包，比如:
 
@@ -1270,7 +1268,7 @@ shadowsocks-libev
 Shadowsocks
 ```
 
-## apt-cache search
+### apt-cache search
 查询名字或描述中包含指定关键字的安装包，比如：
 
 ```
