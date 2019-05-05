@@ -1068,3 +1068,38 @@ lanhaitun ALL=(root) /sbin/parted,/sbin/fdisk
 
 SYSADER ALL= NOPASSWD: SYDCMD, NOPASSWD: DSKCMD 
 ```
+
+# apt/apt-get
+
+**apt与apt-get之间的区别**
+
+ 通过 apt 命令，用户可以在同一地方集中得到所有必要的工具，apt 的主要目的是提供一种以「让终端用户满意」的方式来处理 Linux 软件包的有效方式。
+
+apt 具有更精减但足够的命令选项，而且参数选项的组织方式更为有效。除此之外，它默认启用的几个特性对最终用户也非常有帮助。特性如下:
+
+- 可以在使用 apt 命令安装或删除程序时看到进度条。
+- apt 还会在更新存储库数据库时提示用户可升级的软件包个数。
+- 彩色字符支持等
+
+|apt 命令| 	取代的命令 |	命令的功能|
+| -------- | -----: | :---: | 
+|apt install| 	apt-get install| 	安装软件包 |
+|apt remove |	apt-get remove |	移除软件包 |
+|apt purge |	apt-get purge  |	移除软件包及配置文件 |
+|apt update |	apt-get update |	刷新存储库索引 |
+|apt upgrade |	apt-get upgrade | 升级所有可升级的软件包 |
+|apt autoremove |	apt-get autoremove |	自动删除不需要的包 |
+|apt full-upgrade |	apt-get dist-upgrade |	在升级软件包时自动处理依赖关系 |
+|apt search |	apt-cache search |	搜索应用程序 |
+|apt show |	apt-cache show |显示装细节 |
+
+
+apt 还有一些自己的命令(apt 命令也还在不断发展中)：
+| apt 命令 | 命令的功能 |
+| -------- | :---: | 
+| apt list |	列出包含条件的包（已安装，可升级等）|
+| apt edit-sources | 编辑源列表 (vim /etc/apt/sources.list)|
+
+**apt-get已弃用?**
+
+目前还没有任何 Linux 发行版官方放出 apt-get 将被停用的消息，至少它还有比 apt 更多、更细化的操作功能。对于低级操作，仍然需要 apt-get。

@@ -68,7 +68,7 @@
 
 个人在工作和生活中使用到的命令，没有使用到的并不会在这里面出现，从中可以看出一般我个人需要掌握多少个命令，当然每个命令的使用频率并不会在本文档记录。如果要找命令的使用可以使用该[链接](http://www.runoob.com/linux/linux-command-manual.html.)。
 
-本文中用到的重要的命令都会记录在下面，这样主不用再上网去查找。
+本文中用到的重要的命令都会记录在下面，这样就不用再上网去查找。
 
 ## [update-alternative](command/README.md#update-alternative)
 update-alternatives是Debian系统中专门维护系统命令链接符的工具，通过它可以很方便的设置系统默认使用哪个命令、哪个软件版本
@@ -106,7 +106,17 @@ cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年
 ## [sudo](command/README.md#sudo)
 以其它用户身份执行一个命令，其相关配置文件在/etc/sudoers文件中或在/etc/sudoers.d目录下的文件中，两者功能是一样的，只是在/etc/sudoers.d目录下的文件需要使用visudo -f /etc/sudoers.d/somefilename来做配置，而sudoers本身直接用visudo即可。
 
-## apt/apt-get
+## [apt/apt-get](command/README.md#apt/apt-get])
+Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母板，其具有强健的「包管理」系统，它的每个组件和应用程序都内置在系统中安装的软件包中。Debian 使用一套名为 Advanced Packaging Tool（APT）的工具来管理这种包系统，**不过请不要把它与 apt 命令混淆，它们之间是其实不是同一个东西**。
+
+在基于 Debian 的 Linux 发行版中，有各种工具可以与 APT 进行交互，以方便用户安装、删除和管理的软件包。apt-get 便是其中一款广受欢迎的命令行工具，另外一款较为流行的是 Aptitude 这一命令行与 GUI 兼顾的小工具。
+
+可能已经遇到过许多类似的命令，如apt-cache、apt-config 等。如你所见，这些命令都比较低级又包含众多功能，普通的 Linux 用户也许永远都不会使用到。换种说法来说，就是最常用的 Linux 包管理命令都被分散在了 ```apt-get、apt-cache 和 apt-config``` 这三条命令当中。
+
+```apt``` 命令的引入就是为了解决命令过于分散的问题，它包括了 ```apt-get``` 命令出现以来使用最广泛的功能选项，以及 ```apt-cache 和 apt-config``` 命令中很少用到的功能。
+
+***简单理解来说就是：apt = apt-get、apt-cache 和 apt-config 中最常用命令选项的集合。所以它并不能完全向下兼容 apt-get 命令***
+
 
 # 概念解释
 
