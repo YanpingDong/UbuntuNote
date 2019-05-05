@@ -68,6 +68,7 @@
 
 个人在工作和生活中使用到的命令，没有使用到的并不会在这里面出现，从中可以看出一般我个人需要掌握多少个命令，当然每个命令的使用频率并不会在本文档记录。如果要找命令的使用可以使用该[链接](http://www.runoob.com/linux/linux-command-manual.html.)。
 
+本文中用到的重要的命令都会记录在下面，这样主不用再上网去查找。
 
 ## [update-alternative](command/README.md#update-alternative)
 update-alternatives是Debian系统中专门维护系统命令链接符的工具，通过它可以很方便的设置系统默认使用哪个命令、哪个软件版本
@@ -105,20 +106,12 @@ cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年
 ## [sudo](command/README.md#sudo)
 以其它用户身份执行一个命令，其相关配置文件在/etc/sudoers文件中或在/etc/sudoers.d目录下的文件中，两者功能是一样的，只是在/etc/sudoers.d目录下的文件需要使用visudo -f /etc/sudoers.d/somefilename来做配置，而sudoers本身直接用visudo即可。
 
+## apt/apt-get
+
 # 概念解释
 
 # 输入法
 # IDE
-
-# 虚拟机
-## 安装
-## 设置共享文件夹
-
-# VPS代理客户端安装
-## shadowsocks界面版本
-## shadowsocks命令行版本安装
-## Http Https代理
-## 浏览器设置代理（FireFox）
 
 # PPA是什么
 
@@ -129,18 +122,7 @@ cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年
 ## apt-cache pkgnames
 ## apt-cache search
 ## Apt-get apt区别
-## netstat
-## lsof
-## screenfetch
-## tee
-## chown
-## grep
-## wc
-## tail
-## xargs
-## curl
 
-# 系统升级到新版本
 # exec source 区别
 # nautilus图形与终端的结合
 # Git命令行分支显示
@@ -185,6 +167,14 @@ cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年
 ## Evernote客户端nixnote2
 ## Eclipse
 ## JDK安装
+## 虚拟机
+### 安装
+### 设置共享文件夹
+## VPS代理客户端安装
+### shadowsocks界面版本
+### shadowsocks命令行版本安装
+### Http Https代理
+### 浏览器设置代理（FireFox）
 
 # 遇见问题
 ## Could not get lock /var/lib/dpkg/lock
