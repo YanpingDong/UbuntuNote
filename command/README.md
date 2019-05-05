@@ -1078,7 +1078,24 @@ SYSADER ALL= NOPASSWD: SYDCMD, NOPASSWD: DSKCMD
 apt 具有更精减但足够的命令选项，而且参数选项的组织方式更为有效。除此之外，它默认启用的几个特性对最终用户也非常有帮助。特性如下:
 
 - 可以在使用 apt 命令安装或删除程序时看到进度条。
-- apt 还会在更新存储库数据库时提示用户可升级的软件包个数。
+
+```
+Progress: [  8%] [#####.....................................................] 
+```
+- apt 还会在更新存储库数据库时提示用户可升级的软件包个数。(52 packages can be upgraded)
+
+```bash
+learlee@learleePC:~$ sudo apt update
+[sudo] password for learlee: 
+Hit:1 http://mirrors.aliyun.com/ubuntu xenial InRelease
+... ...
+InRelease
+Reading package lists... Done 
+Building dependency tree       
+Reading state information... Done
+52 packages can be upgraded. Run 'apt list --upgradable' to see them.
+```
+
 - 彩色字符支持等
 
 |apt 命令| 	取代的命令 |	命令的功能|
@@ -1103,3 +1120,138 @@ apt 还有一些自己的命令(apt 命令也还在不断发展中)：
 **apt-get已弃用?**
 
 目前还没有任何 Linux 发行版官方放出 apt-get 将被停用的消息，至少它还有比 apt 更多、更细化的操作功能。对于低级操作，仍然需要 apt-get。
+
+## 与命令相关的目录
+
+**/var/lib/dpkg/available**
+
+文件的内容是软件包的描述信息, 该软件包括当前系统所使用的 ubuntu 安装源中的所有软件包,其中包括当前系统中已安装的和未安装的软件包.
+
+**/var/lib/dpkg/status**
+
+安装过程中软件安装状态，个人认为```apt-get intsall -f```的修复即是通过该文件完成
+
+**/var/lib/apt/lists**
+
+使用```apt-get update```命令会从/etc/apt/sources.list中下载软件列表，并保存到该目录
+
+**/etc/apt/sources.list**
+
+存放的是软件源站点入口信息
+sources.list文件格式：
+deb http://cn.archive.ubuntu.com/ubuntu/ precise main restricted
+
+
+**/var/cache/apt/archives**
+
+目录是在用 ```apt-get install``` 安装软件时，软件包的临时存放路径
+
+
+## 工作原理：
+
+Ubuntu采用集中式的软件仓库机制，将各式各样的软件包分门别类地存放在软件仓库中，进行有效地组织和管理。然后，将软件仓库置于许许多多的镜像服务器中，并保持基本一致。这样，所有的Ubuntu用户随时都能获得最新版本的安装软件包。因此，对于用户，这些镜像服务器就是他们的软件源（Reposity）。
+然而，由于每位用户所处的网络环境不同，不可能随意地访问各镜像站点。为了能够有选择地访问，在Ubuntu系统中，使用软件源配置文件/etc/apt/sources.list列出最合适访问的镜像站点地址。
+
+
+### apt-get update
+
+程序分析/etc/apt/sources.list自动连网寻找list中对应的Packages/Sources/Release列表文件，如果有更新则下载之，存入/var/lib/apt/lists/目录
+例：在sources.list有一个入口条目为：
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe那么在update后会在/var/lib/apt/lists中存入cn.archive.ubuntu.com_ubuntu_dists_bionic-updates_xxx相关文件，其中dists固定添加字段。示例如下：
+
+```bash
+learlee@learleePC:/var/lib/apt/lists$ ls | grep -i mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_
+
+mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_binary-amd64_Packages
+mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_binary-i386_Packages
+mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_dep11_Components-amd64.yml.gz
+mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_dep11_icons-64x64.tar.gz
+mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_i18n_Translation-en
+
+```
+
+从上会发现其把url指定地址下所有的类型的数据包描述全部下载下来，每一个“_”符代表一级目录。以mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_binary-amd64_Packages为例 ，其对应到URL地址为hhttp://mirrors.aliyun.com/ubuntu/dists/xenial-security/universe/binary-amd64/  在该地址下有两个Packages文件，一个是.gz，另一个是.xz
+
+## apt-get install
+
+apt-get install每次都会从/var/lib/apt/lists读取相应的文件，从而获取的Packages.gz包的信息。
+
+Packages.gz中包含的信息有: 包名、优先级、类型、维护者、架构、源文件（source）、版本号、依赖包、冲突性信息、包大小、文件的下载路径、MD5sum、SHA1、包描述、Xul-Appid—应用程序id、Bugs信息、Origin、Supported等
+
+/var/lib/apt/lists目录存储Packages文件中的一个包信息实例：
+
+```
+Package: accountwizard
+Architecture: amd64
+Version: 4:15.12.3-0ubuntu1.1
+Priority: optional
+Section: universe/utils
+Source: kdepim
+Origin: Ubuntu
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Original-Maintainer: Debian/Kubuntu Qt/KDE Maintainers <debian-qt-kde@lists.debi
+an.org>
+Bugs: https://bugs.launchpad.net/ubuntu/+filebug
+Installed-Size: 2126
+Depends: kdepim-runtime, libc6 (>= 2.14), libgcc1 (>= 1:3.0), libkf5akonadicore5
+ (>= 15.07.90), libkf5akonadiwidgets5 (>= 15.07.90), libkf5codecs5 (>= 5.4.0+git
+20141202.0008+15.04), libkf5configcore5 (>= 4.98.0), libkf5coreaddons5 (>= 4.100
+.0), libkf5dbusaddons5 (>= 4.97.0), libkf5i18n5 (>= 5.0.0), libkf5identitymanage
+ment5 (>= 15.07.90), libkf5itemviews5 (>= 4.96.0), libkf5kcmutils5 (>= 4.96.0), 
+libkf5kiocore5 (>= 4.96.0), libkf5krosscore5 (>= 4.96.0), libkf5ldap5 (>= 15.07.
+90), libkf5libkdepim5 (= 4:15.12.3-0ubuntu1.1), libkf5mailtransport5 (>= 15.08.1
+), libkf5mime5 (>= 15.07.90), libkf5newstuff5 (>= 4.95.0), libkf5wallet-bin, lib
+kf5wallet5 (>= 4.96.0), libkf5widgetsaddons5 (>= 4.98.0), libkf5xmlgui5 (>= 4.96
+.0), libqt5core5a (>= 5.5.0), libqt5dbus5 (>= 5.0.2), libqt5gui5 (>= 5.0.2) | li
+bqt5gui5-gles (>= 5.0.2), libqt5widgets5 (>= 5.3.0), libqt5xml5 (>= 5.0.2), libs
+tdc++6 (>= 4.1.1)
+Breaks: kdepim-runtime (<< 4:15.07.90~)
+Replaces: kdepim-runtime (<< 4:15.07.90~)
+Filename: pool/universe/k/kdepim/accountwizard_15.12.3-0ubuntu1.1_amd64.deb
+Size: 357630
+MD5sum: 55f5895b2b37b583eed6d417edb47961
+SHA1: c0ee80464848c3b8798090f845983a3dc90645d3
+SHA256: a4bba5c03df2e2b459436f69fcd38dc0a93c5209f297d48249d9fdf2788be05d
+Homepage: http://pim.kde.org/
+Description: wizard for KDE PIM applications account setup
+Task: kubuntu-desktop, kubuntu-full
+Description-md5: cb40f9c1dd4e29fdc2afadecae895725
+Supported: 3y
+```
+
+- 从/etc/apt/sources.list中的配置```deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe``` 第二项再加上上述中Filename的值可以直接得到下载链接 ```http://mirrors.aliyun.com/ubuntu/pool/universe/k/kdepim/accountwizard_15.12.3-0ubuntu1.1_amd64.deb```
+
+- 从Depends项可以看到该包依赖关系
+
+使用“apt-get install”下载软件包大体分为4步：
+
+- 第一步： 扫描本地存放的软件包更新列表（由“apt-get update”命令刷新更新列表，也就是/var/lib/apt/lists/），找到软件包；
+- 第二步： 进行软件包依赖关系检查，找到支持该软件正常运行的所有软件包；
+- 第三步： 从软件源所指 的镜像站点中，下载相关软件包；
+- 第四步： 解压软件包，并自动完成应用程序的安装和配置。
+
+## apt-get upgrade
+
+使用“apt-get install”命令能够安装或更新指定的软件包。而在Ubuntu Linux中，只需一条命令就可以轻松地将系统中的所有软件包一次性升级到最新版本，这个命令就是“apt-get upgrade”，它可以很方便的完成在相同版本号的发行版中更新软件包。在依赖关系检查后，命令列出了目前所有需要升级的软件包，在得到用户确认后，便开始更新软件包的下载和安装。当然，apt- get upgrade命令会在最后以合理的次序，安装本次更新的软件包。系统更新需要用户等待一段时间。
+
+## apt-cache pkgnames
+
+查询以指定名字开头的安装包，比如:
+
+```
+tra@tra:~$ apt-cache pkgnames shadows
+shadowsocks-libev
+Shadowsocks
+```
+
+## apt-cache search
+查询名字或描述中包含指定关键字的安装包，比如：
+
+```
+tra@tra:~$ apt-cache search shadowsocks
+libshadowsocks-libev-dev - lightweight and secure socks5 proxy (development files)
+libshadowsocks-libev2 - lightweight and secure socks5 proxy (shared library)
+shadowsocks - Fast tunnel proxy that helps you bypass firewalls
+shadowsocks-libev - lightweight and secure socks5 proxy
+simple-obfs - simple obfusacting plugin for shadowsocks-libev
+```
