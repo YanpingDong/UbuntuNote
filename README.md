@@ -125,18 +125,11 @@ Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母
 
 # PPA是什么
 
-# 常用命令说明
-## apt-get update
-## apt-get install
-## apt-get upgrade
-## apt-cache pkgnames
-## apt-cache search
-## Apt-get apt区别
 
 # exec source 区别
 # nautilus图形与终端的结合
 # Git命令行分支显示
-# 将 .rpm 文件转为 .deb 文件
+
 # 显示隐藏文件
 # 安装 tarballs
 
@@ -190,3 +183,4 @@ Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母
 ## Could not get lock /var/lib/dpkg/lock
 ## CLI中文乱码
 ## Ubuntu下耳机电流声消除方法
+## 将 .rpm 文件转为 .deb 文件
