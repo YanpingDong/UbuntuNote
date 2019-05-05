@@ -153,23 +153,91 @@ Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母
 # Linux标准文件描述符
 # 管道和重定向之间的区别
 
-# 常用软件替代方案
+# 常用软件或替代方案
+
+## [通过软件中心安装到哪个目录](SoftwareAlternatives/README.md#通过软件中心安装到哪个目录)
+Ubuntu Software安装的程序位置
 ## Snap和Deb packages
 ## Snap常用命令
 ### cannot find signatures with metadata for snap
-## 通过软件中心安装到哪个目录
+
 ## 截屏软件 Shutter
+apt install shutter  （或Ubuntu应用商店)
+
 ## 对比软件 meld
+apt install meld  (或Ubuntu应用商店)
+
 ## 文本编辑软件atom
+apt install atom  (或应用商店)
+
 ## 邮件客户端 thunderbird
 ### 中文内容乱码问题
 ## WeChat（RamBox替换）
+Snap install electronic-wechat(或应用商店);不支持文本拷贝即你没有办法从聊天窗口拷贝内容，实际也是一个页面版本;目前转用RamBox做微信代理。
+
 ## RamBox 网页版整合程序
+免费的开源消息和电子邮件应用程序，可以将常见的Web应该程序组合在一起，即只要是有网页端的都可以使用RamBox做代理客户端来访问。比如，可以将WeChat的页面端交给RamBox来代理。这样我们不用在浏览器多个页面中来回切换找WeChat了。
+
+安装
+- Step1.到https://github.com/ramboxapp/community-edition/releases/下载
+- Step2.如果是deb的用sudo dpkg -i xxx.deb
+- Step3.在命令行输入rambox启动看一下是否正常
+
+使用中可能出现的问题：输入法不能切换或者你点Rambox桌面图标没有办法启动。可以在命令行输入rambox看是否有错，我用的时候发现Rambox是以Root权限安装，导致我用用户权限时~	/.config/rambox这个目录没有权限，我用chmod 777强制更改了，以上两个问题就都解决了。或者用chown [-R]  用户名：用户组名 文件或目录 
+
 ## Office替代软件
+Ubuntu下自代的LibreOffice并不是很好用，所以我用WPS做为替代产品。先在官方下载http://www.wps.cn/product/wpslinux。Ubuntu可以选择deb格式和Snap格式。然后进行安装；也可以在Ubutnu Software里搜WPS进行安装;
+Snap命令行安装：```snap install wps-office```
+
 ## FireFox模拟IE
+在Add-ons里安装User-Agnet Switcher
+
+## 绘图版替代KolourPaint
+在应用商店里搜寻KolourPaint,然后点安装即可
+
+## TeamViewer
+在https://www.teamviewer.com/en/download/linux/网站选择Ubuntu,Debian版本下载，然后用sudo dpkg -i进行安装即可
+
+## 思维导图
+Ubuntu下xmind做为思维导图的一个免费应用还是不错的，但如果想用他的模板，会经常性的链接不上服务器，安装过程如下：
+
+- step1:https://www.xmind.net/download/中下在.deb应用
+- step2:sudo dpkg –install Xmind-xxx.deb
+  
+## Notepadqq
+
+在windows下常用的notepad++可以使用https://notepadqq.com/wp/download/ 获取到。也可以使用如下命令在Ubuntu下安装
+- step1:sudo add-apt-repository ppa:notepadqq-team/notepadqq
+- step2:sudo apt-get update
+- step3:sudo apt-get install notepadqq
+
+## JDK安装
+
+每一种方式
+- Step 1：
+在https://www.oracle.com/technetwork/java/javase/downloads/index.html下选择下载版本，我本地是jdk-8u181-linux-x64.tar.gz。
+- Step2: 用tar解压，或者直接在图形界面解压出来即可
+- Step3: 编辑/etc/profile文件加入JAVA_HOME;PATH;CLASSPATH(可加可不加);其中JAVA_HOME是你的解压目录
+```
+# the following configuration is for jdk
+export JAVA_HOME=/install_path/jkdx.x.x
+epxort PATH=$PATH:$JAVA_HOME/bin
+epxpor CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+```
+
+- Step4：执行 chmod +x profile ，把profile变成可执行文件
+- Step5：执行 source profile, 把profile里的内容执行生效
+- Step6： 执行 java、 javac、java -version 查看是否安装成功.
+
+第二种方式：
+- Step1:sudo add-apt-repository ppa:webupd8team/java
+- Step2: sudo apt-get update
+- Step3: sudo apt-get install oracle-java8-installer
+
 ## Evernote客户端nixnote2
 ## Eclipse
-## JDK安装
+在https://www.eclipse.org/downloads/页面下载linux版本（比如eclipse-inst-linux64.tar.gz），然后解压出来点击解压目录里的ecliopse-inst，会弹出对话框，可以选择你要安装的eclipse类型。
+
 ## 虚拟机
 ### 安装
 ### 设置共享文件夹
@@ -183,4 +251,55 @@ Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母
 ## Could not get lock /var/lib/dpkg/lock
 ## CLI中文乱码
 ## Ubuntu下耳机电流声消除方法
+首先确定你的耳机是没有问题的。
+- 1.中端输入sudo alsamixer回车-输入密码后进入alsa高级控制面板
+- 2.按F5,显示所有音轨,左右键移动音轨,上下键调节音量,把每个出现红色的音量条调节到绿色.
+- 3.这个实时生效的,关闭窗口,再听听有没有杂音?
+
+我的红色调到绿色生效，加大音量后又会回到红色，但不再有电流声。
+
 ## 将 .rpm 文件转为 .deb 文件
+## 清理磁盘占用空间
+- Step1：查看磁盘占用率 ```df -h```
+- Step2：进入根目录```cd /```，执行```du -sm * | sort -n```（磁盘占用的升序排列） 或```du -h --max-depth=1```
+- Step3：进入占用空间较大的目录，继续执行```du -sm * | sort -n```，删除不重要的文件(rm命令)
+
+可能遇到的删除文件之后空间没有释放,极有可能是文件被占用所以没有释放空间。lsof -n|grep deleted 查找占用文件的应用。然后杀掉（kill -9 pid）对应进程让系统清掉数据。
+
+```
+du : 显示每个文件和目录的磁盘使用空间~~~文件的大小。
+命令参数：
+-a  #显示目录中文件的大小  单位 KB 。
+-b  #显示目录中文件的大小，以字节byte为单位。
+-c  #显示目录中文件的大小，同时也显示总和；单位KB。
+-k 、 -m  、#显示目录中文件的大小，-k 单位KB，-m 单位MB.
+-s  #仅显示目录的总值，单位KB。
+-h  #以K  M  G为单位显示，提高可读性~~~（最常用的一个~也可能只用这一个就满足需求了）
+
+
+df：显示磁盘分区上可以使用的磁盘空间
+这里只记住两个参数就好：
+-a  #查看全部文件系统，单位默认KB
+-h  #使用-h选项以KB、MB、GB的单位来显示，可读性高~~~（最常用）
+```
+
+## linux 程序被Killed，如何精准查看日志
+
+- Step1: cd /var/log/
+
+- Step2: dmesg | egrep -i -B100 'killed process' 或: egrep -i -r 'killed process' /var/log 或: journalctl -xb | egrep -i 'killed process'
+
+**dmesg文件**过滤后输出如下：
+Killed process 11935 (python3) total-vm:2601976kB, anon-rss:652292kB, file-rss:0kB, shmem-rss:0kB
+
+参数说明：      
+- total-vm：进程总共使用的虚拟内存； 
+- anon-rss：虚拟内存实际占用的物理内存； 
+- file-rss：虚拟内存实际占用的磁盘空间； 
+
+```
+OOM killer感念说明：
+
+LINUX内核Out-Of-Memory killer机制是一种防止内存耗尽影响系统运行而采用的一种自我保护机制。
+根据内核源码oom_kill.c中的定义，系统会依据“进程占用的内存”，“进程运行的时间”，“进程的优先级”，“是否为 root 用户进程“，”子进程个数和占用内存“，”用户控制参数oom_adj ”等计算一个oom_score值，分数越高就越会被内核优先杀掉。
+```
