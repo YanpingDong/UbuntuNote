@@ -106,7 +106,7 @@ cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年
 ## [sudo](command/README.md#sudo)
 以其它用户身份执行一个命令，其相关配置文件在/etc/sudoers文件中或在/etc/sudoers.d目录下的文件中，两者功能是一样的，只是在/etc/sudoers.d目录下的文件需要使用visudo -f /etc/sudoers.d/somefilename来做配置，而sudoers本身直接用visudo即可。
 
-## [apt/apt-get](command/README.md#apt/apt-get])
+## [apt和apt-get](command/README.md#apt和Apt-get])
 Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母板，其具有强健的「包管理」系统，它的每个组件和应用程序都内置在系统中安装的软件包中。Debian 使用一套名为 Advanced Packaging Tool（APT）的工具来管理这种包系统，**不过请不要把它与 apt 命令混淆，它们之间是其实不是同一个东西**。
 
 在基于 Debian 的 Linux 发行版中，有各种工具可以与 APT 进行交互，以方便用户安装、删除和管理的软件包。apt-get 便是其中一款广受欢迎的命令行工具，另外一款较为流行的是 Aptitude 这一命令行与 GUI 兼顾的小工具。

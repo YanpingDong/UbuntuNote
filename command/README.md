@@ -1069,7 +1069,7 @@ lanhaitun ALL=(root) /sbin/parted,/sbin/fdisk
 SYSADER ALL= NOPASSWD: SYDCMD, NOPASSWD: DSKCMD 
 ```
 
-# apt/apt-get
+# apt和Apt-get
 
 **apt与apt-get之间的区别**
 
