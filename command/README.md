@@ -1112,6 +1112,7 @@ Reading state information... Done
 
 
 apt 还有一些自己的命令(apt 命令也还在不断发展中)：
+
 | apt 命令 | 命令的功能 |
 | -------- | :---: | 
 | apt list |	列出包含条件的包（已安装，可升级等）|
