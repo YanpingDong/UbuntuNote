@@ -92,6 +92,9 @@ update-alternatives是Debian系统中专门维护系统命令链接符的工具�
 ## [chmod](command/README.md#chmod)
 变更文件的拥有者和所属组
 
+## [usermod](command/README.md#usermod)
+usermod命令用于修改用户帐号。用来修改用户帐号的各项设定。
+
 ## [lsof](command/README.md#lsof)
 lsof(list open files)是一个列出当前系统打开文件的工具
  
