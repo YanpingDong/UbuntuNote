@@ -67,67 +67,6 @@
 
 **以下文档中目录要看细节可以进文档中查看**
 
-
-# [使用到的命令](command/README.md)
-
-个人在工作和生活中使用到的命令，没有使用到的并不会在这里面出现，从中可以看出一般我个人需要掌握多少个命令，当然每个命令的使用频率并不会在本文档记录。如果要找命令的使用可以使用该[链接](http://www.runoob.com/linux/linux-command-manual.html.)。
-
-本文中用到的重要的命令都会记录在下面，这样就不用再上网去查找。
-
-## [Linux下在一行执行多条命令](command/README.md#Linux下在一行执行多条命令)
-如何通过```&&``` ， ```||``` ， ```;``` 把多条命令链接起来执行。和其执行规则
-
-## [update-alternative](command/README.md#update-alternative)
-update-alternatives是Debian系统中专门维护系统命令链接符的工具，通过它可以很方便的设置系统默认使用哪个命令、哪个软件版本
-
-## [netstat](command/README.md#netstat)
-用于显示各种网络相关信息，如网络连接，路由表，接口状态等
-
-## [screenfetch](command/README.md#screenfetch)
-自动检测你的发行版并显示 ASCII 版的发行版标志，并且在右边显示OS,Kernel,CPU,GPU,RAM等信息
-
-## [tee](command/README.md#tee)
-是在不影响原本 I/O 输出的情况下，将 stdout 复制一份到档案里
-
-## [chmod](command/README.md#chmod)
-变更文件的拥有者和所属组
-
-## [usermod](command/README.md#usermod)
-usermod命令用于修改用户帐号。用来修改用户帐号的各项设定。
-
-## [lsof](command/README.md#lsof)
-lsof(list open files)是一个列出当前系统打开文件的工具
- 
-## [grep](command/README.md#grep)
-它能使用正则表达式搜索文本，并把匹配的行打印出来。 
-
-## [tail](command/README.md#tail)
-用于从文件尾部查看文件的内容
-
-## [xargs](command/README.md#xargs)
-给命令传递参数的一个过滤器，也是组合多个命令的一个工具。
-
-## [curl](command/README.md#curl)
-cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年首次发行。它支持文件上传和下载，所以是综合传输工具。
-
-## [awk](command/README.md#awk)
-行处理器,相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。逐行处理。
-
-## [sudo](command/README.md#sudo)
-以其它用户身份执行一个命令，其相关配置文件在/etc/sudoers文件中或在/etc/sudoers.d目录下的文件中，两者功能是一样的，只是在/etc/sudoers.d目录下的文件需要使用visudo -f /etc/sudoers.d/somefilename来做配置，而sudoers本身直接用visudo即可。
-
-## [apt和apt-get](command/README.md#apt和Apt-get])
-Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母板，其具有强健的「包管理」系统，它的每个组件和应用程序都内置在系统中安装的软件包中。Debian 使用一套名为 Advanced Packaging Tool（APT）的工具来管理这种包系统，**不过请不要把它与 apt 命令混淆，它们之间是其实不是同一个东西**。
-
-在基于 Debian 的 Linux 发行版中，有各种工具可以与 APT 进行交互，以方便用户安装、删除和管理的软件包。apt-get 便是其中一款广受欢迎的命令行工具，另外一款较为流行的是 Aptitude 这一命令行与 GUI 兼顾的小工具。
-
-可能已经遇到过许多类似的命令，如apt-cache、apt-config 等。如你所见，这些命令都比较低级又包含众多功能，普通的 Linux 用户也许永远都不会使用到。换种说法来说，就是最常用的 Linux 包管理命令都被分散在了 ```apt-get、apt-cache 和 apt-config``` 这三条命令当中。
-
-```apt``` 命令的引入就是为了解决命令过于分散的问题，它包括了 ```apt-get``` 命令出现以来使用最广泛的功能选项，以及 ```apt-cache 和 apt-config``` 命令中很少用到的功能。
-
-***简单理解来说就是：apt = apt-get、apt-cache 和 apt-config 中最常用命令选项的集合。所以它并不能完全向下兼容 apt-get 命令***
-
-
 # 概念解释
 
 # 输入法
@@ -251,3 +190,63 @@ Evernote在linux下的一个开源客户端
 
 ## [linux程序被Killed，如何精准查看日志](IssueSolution/README.md#linux程序被Killed，如何精准查看日志)
 从哪找到Linux程序被Killed的日志，及如何解读
+
+
+# [使用到的命令](command/README.md)
+
+个人在工作和生活中使用到的命令，没有使用到的并不会在这里面出现，从中可以看出一般我个人需要掌握多少个命令，当然每个命令的使用频率并不会在本文档记录。如果要找命令的使用可以使用该[链接](http://www.runoob.com/linux/linux-command-manual.html.)。
+
+本文中用到的重要的命令都会记录在下面，这样就不用再上网去查找。
+
+## [Linux下在一行执行多条命令](command/README.md#Linux下在一行执行多条命令)
+如何通过```&&``` ， ```||``` ， ```;``` 把多条命令链接起来执行。和其执行规则
+
+## [update-alternative](command/README.md#update-alternative)
+update-alternatives是Debian系统中专门维护系统命令链接符的工具，通过它可以很方便的设置系统默认使用哪个命令、哪个软件版本
+
+## [netstat](command/README.md#netstat)
+用于显示各种网络相关信息，如网络连接，路由表，接口状态等
+
+## [screenfetch](command/README.md#screenfetch)
+自动检测你的发行版并显示 ASCII 版的发行版标志，并且在右边显示OS,Kernel,CPU,GPU,RAM等信息
+
+## [tee](command/README.md#tee)
+是在不影响原本 I/O 输出的情况下，将 stdout 复制一份到档案里
+
+## [chmod](command/README.md#chmod)
+变更文件的拥有者和所属组
+
+## [usermod](command/README.md#usermod)
+usermod命令用于修改用户帐号。用来修改用户帐号的各项设定。
+
+## [lsof](command/README.md#lsof)
+lsof(list open files)是一个列出当前系统打开文件的工具
+ 
+## [grep](command/README.md#grep)
+它能使用正则表达式搜索文本，并把匹配的行打印出来。 
+
+## [tail](command/README.md#tail)
+用于从文件尾部查看文件的内容
+
+## [xargs](command/README.md#xargs)
+给命令传递参数的一个过滤器，也是组合多个命令的一个工具。
+
+## [curl](command/README.md#curl)
+cURL是一个利用URL语法在命令行下工作的文件传输工具，1997年首次发行。它支持文件上传和下载，所以是综合传输工具。
+
+## [awk](command/README.md#awk)
+行处理器,相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。逐行处理。
+
+## [sudo](command/README.md#sudo)
+以其它用户身份执行一个命令，其相关配置文件在/etc/sudoers文件中或在/etc/sudoers.d目录下的文件中，两者功能是一样的，只是在/etc/sudoers.d目录下的文件需要使用visudo -f /etc/sudoers.d/somefilename来做配置，而sudoers本身直接用visudo即可。
+
+## [apt和apt-get](command/README.md#apt和Apt-get])
+Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母板，其具有强健的「包管理」系统，它的每个组件和应用程序都内置在系统中安装的软件包中。Debian 使用一套名为 Advanced Packaging Tool（APT）的工具来管理这种包系统，**不过请不要把它与 apt 命令混淆，它们之间是其实不是同一个东西**。
+
+在基于 Debian 的 Linux 发行版中，有各种工具可以与 APT 进行交互，以方便用户安装、删除和管理的软件包。apt-get 便是其中一款广受欢迎的命令行工具，另外一款较为流行的是 Aptitude 这一命令行与 GUI 兼顾的小工具。
+
+可能已经遇到过许多类似的命令，如apt-cache、apt-config 等。如你所见，这些命令都比较低级又包含众多功能，普通的 Linux 用户也许永远都不会使用到。换种说法来说，就是最常用的 Linux 包管理命令都被分散在了 ```apt-get、apt-cache 和 apt-config``` 这三条命令当中。
+
+```apt``` 命令的引入就是为了解决命令过于分散的问题，它包括了 ```apt-get``` 命令出现以来使用最广泛的功能选项，以及 ```apt-cache 和 apt-config``` 命令中很少用到的功能。
+
+***简单理解来说就是：apt = apt-get、apt-cache 和 apt-config 中最常用命令选项的集合。所以它并不能完全向下兼容 apt-get 命令***
