@@ -317,6 +317,8 @@ chown user:market f01　　//把文件f01给uesr，添加到market组
 
 # usermod
 
+usermod命令用于修改用户帐号。用来修改用户帐号的各项设定。
+
 **格式参数**
 
 命令格式：usermod [options] LOGIN
