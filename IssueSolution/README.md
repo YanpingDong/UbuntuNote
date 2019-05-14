@@ -64,4 +64,20 @@ E: Unable to lock the administration directory (/var/lib/dpkg/) is another proce
 
 https://blog.csdn.net/n66040927/article/details/81017658
 http://www.mikewootc.com/wiki/linux/usage/ubuntu_service_usage.html
+
 ```
+
+# 升级apt/apt-get安装程序
+
+就 man apt-get 而言，apt-get upgrade 没有将软件包/软件包列表作为参数，所以就利用重新安装来解决或者Synaptic来处理
+
+## 命令行方式
+
+1. 确定版本号：sudo apt-cache policy name
+2. 指定版本号安装：sudo apt-get install name=version
+
+## Synaptic
+
+1. mark标记
+2. 升级
+
