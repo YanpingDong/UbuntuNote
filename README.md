@@ -191,6 +191,9 @@ Evernote在linux下的一个开源客户端
 ## [linux程序被Killed，如何精准查看日志](IssueSolution/README.md#linux程序被Killed，如何精准查看日志)
 从哪找到Linux程序被Killed的日志，及如何解读
 
+## [php在apahce2中使用的版本更换](IssueSolution/README.md#php在apahce2中使用的版本更换)
+PHP升级了，但apache2 server而且pipinfo()调用给出的数据用的仍然是老版本。
+
 
 # [使用到的命令](command/README.md)
 

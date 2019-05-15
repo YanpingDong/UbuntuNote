@@ -81,3 +81,98 @@ http://www.mikewootc.com/wiki/linux/usage/ubuntu_service_usage.html
 1. mark标记
 2. 升级
 
+# 完全卸载
+
+安装一下软件后想卸载其和其相关软件可以使用以下办法
+
+1. apt purge/remove 软件包名
+2. Synaptic去标记经卸载的软件 然后点Apply
+3. ```dpkg -l | grep -i {软件关键字} | awk '{print $2}' | xargs -n1 -I{} sudo apt -y purge {}```  #这个会把相关的全部都做卸载，所以慎用。  本人当时安装完mysql卸载不干净就是通这种方式把相关的全部卸载掉。同样的命令可以改成```dpkg -l | grep -i {软件关键字} | awk '{print $2}' | xargs -n1 -I{} sudo dpkg -P {} ```
+
+
+# php在apahce2中使用的版本更换
+
+问题描述
+
+在命令行执行： php -r 'phpinfo();'显示如下：
+
+```bash
+phpinfo()
+PHP Version => 7.2.18-1+ubuntu16.04.1+deb.sury.org+1
+
+System => Linux learleePC 4.15.0-48-generic #51~16.04.1-Ubuntu SMP Fri Apr 5 12:01:12 UTC 2019 x86_64
+Build Date => May  3 2019 09:23:41
+Server API => Command Line Interface
+Virtual Directory Support => disabled
+Configuration File (php.ini) Path => /etc/php/7.2/cli
+Loaded Configuration File => /etc/php/7.2/cli/php.ini
+Scan this dir for additional .ini files => /etc/php/7.2/cli/conf.d
+Additional .ini files parsed => /etc/php/7.2/cli/conf.d/10-mysqlnd.ini,
+
+```
+但在apache2 /var/www/html/phpinfo.php页面使用phpinfo()显示确是php7.0，详情见下图
+
+```
+sudo nano /var/www/html/phpinfo.php
+  #Then type the content below and save the file.
+  <?php phpinfo( ); ?>
+```
+ 
+ ![phpinfo](pic/phpinfo.png)
+
+## 解决分析过程
+
+step1 : 确定系统有几个php： ```sudo update-alternatives --display php```
+
+```bash
+$ sudo update-alternatives --display php
+php - manual mode
+  link best version is /usr/bin/php7.2
+  link currently points to /usr/bin/php7.2
+  link php is /usr/bin/php
+  slave php.1.gz is /usr/share/man/man1/php.1.gz
+/usr/bin/php7.0 - priority 70
+  slave php.1.gz: /usr/share/man/man1/php7.0.1.gz
+/usr/bin/php7.2 - priority 72
+  slave php.1.gz: /usr/share/man/man1/php7.2.1.gz
+```
+step2: 查看apahce2安装目录可用mods目录有几个可用php模型 : ``` ll | grep -i php```，可以看到有两个php7.0,php7.2这样我们就可以在下一步中做设置
+
+```bash
+PC:/etc/apache2/mods-available$ ll | grep -i php
+-rw-r--r-- 1 learlee learlee   867 4月  19 02:48 php7.0.conf
+-rw-r--r-- 1 learlee learlee    79 4月  19 02:48 php7.0.load
+-rw-r--r-- 1 root    root      855 5月   3 17:58 php7.2.conf
+-rw-r--r-- 1 root    root      102 5月   3 17:58 php7.2.load
+```
+
+step3: 查看apache2安装目录启用目录下那个mods被启用，可以看到是用的php7.0
+
+```bash
+$ ll | grep -i php
+lrwxrwxrwx 1 root root   29 5月  15 10:16 php7.0.conf -> ../mods-available/php7.0.conf
+lrwxrwxrwx 1 root root   29 5月  15 10:16 php7.0.load -> ../mods-available/php7.0.load
+```
+
+step4: 删除7.0链接，创建7.2链接。
+
+```bash
+rm -rf php7.0.conf
+rm -rf php7.0.load
+
+sudo ln -s ../mods-available/php7.2.load
+sudo ln -s ../mods-available/php7.2.conf
+
+$ ll | grep -i php
+lrwxrwxrwx 1 root root   29 5月  15 17:18 php7.2.conf -> ../mods-available/php7.2.conf
+lrwxrwxrwx 1 root root   29 5月  15 17:18 php7.2.load -> ../mods-available/php7.2.load
+```
+
+step5 : 重启apache2服务
+
+```bash
+sudo systemctl restart apache2.service
+```
+再访问http://localhost/phpinfo.php如下显示。
+
+![phpinfo_new](pic/phpinfo_new.png)
