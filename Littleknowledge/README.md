@@ -1,4 +1,4 @@
-# “Linux”并不是代表Linux系统，完整的Linux系统由8部份组成
+# “Linux”并不是Linux系统，完整的Linux系统由8部份组成
 
 Linux发行版本并不是只有Linux内核。Linux发行版本都包含了其它重要的软件，比如Grub bootloader（Grub引）, Bash shell, GNU shell utilities, daemons, X.org graphical server, a desktop environment等
 
