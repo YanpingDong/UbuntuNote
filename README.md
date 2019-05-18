@@ -301,3 +301,7 @@ $ type grep
 $ type -P grep
 加上-P参数后，就相当于which命令。
 ```
+
+## [Linux服务管理两种方式service和systemctl](command/README.md#Linux服务管理两种方式service和systemctl)
+
+两个都可以管理系统上运行的服务，比如启停等。
