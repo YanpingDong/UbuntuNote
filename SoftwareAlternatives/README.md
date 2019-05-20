@@ -68,3 +68,30 @@ epxpor CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
 - Step1:sudo add-apt-repository ppa:webupd8team/java
 - Step2: sudo apt-get update
 - Step3: sudo apt-get install oracle-java8-installer
+
+
+# Tcpdump
+
+cpdump是Linux自带的抓包工具，可以详细看到计算机通信中详细报文内容
+
+参数说明：
+
+```
+-i 指定要抓取数据包的网卡名称
+-c 指定抓取包的个数
+-w 把抓取到的数据存放到文件中供以后分析
+```
+
+示例：
+
+```
+$ tcpdump -i eth0 # 抓取eth0网卡的数据包 
+$ tcpdump -i eth0 -c 10 # 只抓取10个包 
+$ tcpdump -i eth0 -c 10 -w my-packets.pcap  
+# file my-packets.pcap  
+my-packets.pcap: tcpdump capture file .... 
+
+#指定过滤端口(port)和主机名(host)
+$ tcpdump -n -i eth0 port 80  
+$ tcpdump -n -i eth0 host baidu.com  
+```
