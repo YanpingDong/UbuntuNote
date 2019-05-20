@@ -74,3 +74,48 @@ If you wanted to, you could grab the source code for the Linux kernel, GNU shell
 
 Linux distributions do the hard work for you, taking all the code from the open-source projects and compiling it for you, combining it into a single operating system you can boot up and install. They also make choices for you, such as choosing the default desktop environment, browser, and other software. Most distributions add their own finishing touches, such as themes and custom software – the Unity desktop environment Ubuntu provides, for example.
 ```
+
+# PPA是什么
+
+PPA软件源，全称是Personal Package Archives。虽然Ubuntu官方软件仓库尽可能囊括所有的开源软件，但仍有很多软件包由于各种原因不能进入官方软件仓库。为了方便Ubuntu用户使用，launchpad.net提供了个人软件包集，即PPA，允许用户建立自己的软件仓库，通过Launchpad进行编译并发布为2进制软件包，作为apt/新立得源供其他用户下载和更新。PPA也被用来对一些打算进入Ubuntu官方仓库的软件，或者某些软件的新版本进行测试。
+
+Launchpad是Ubuntu母公司canonical有限公司所架设的网站，是一个提供维护、支援或联络Ubuntu开发者的平台。
+
+可以在launchpad(https://launchpad.net/ubuntu/+ppas)平台上直接搜索相关的软件名称以便获得相关源地址，点击查看链接地址。例如搜索redis-server结果如下：
+
+![launchpad](pic/launchpad_ppas.png)
+
+点击搜索结果redis-server，查看安装方法：
+
+![launchpad_ppa_detail.png](pic/launchpad_ppa_detail.png)
+
+```bash
+sudo add-apt-repository ppa:jerrywei/redis-server
+sudo apt-get update
+```
+
+上面第一条命令会在/etc/apt/sources.list.d下创建.list文件。如下图所示:
+
+![repository_sample](pic/repository_sample.png)
+
+jerrywei-ubuntu-redis-server-xenial.list内容如下：
+
+```
+learlee@learleePC:~$ sudo more /etc/apt/sources.list.d/jerrywei-ubuntu-redis-server-xenial.list 
+deb http://ppa.launchpad.net/jerrywei/redis-server/ubuntu xenial main
+# deb-src http://ppa.launchpad.net/jerrywei/redis-server/ubuntu xenial main
+```
+
+也可以在/etc/source.list中直接添加以下地址：
+
+```
+deb http://ppa.launchpad.net/jerrywei/redis-server/ubuntu xenial main
+# deb-src http://ppa.launchpad.net/jerrywei/redis-server/ubuntu xenial main
+```
+
+**删除软件库**
+
+```
+Step 1: sudo add-apt-repository -r ppa:user/ppa-name
+Step 2: 进入 /etc/apt/sources.list.d 文件夹，删除对应的源文件。
+```
