@@ -74,6 +74,9 @@
 ## [PPA是什么](LittleKnowledge/README.md#PPA是什么)
 PPA软件源，全称是Personal Package Archives。虽然Ubuntu官方软件仓库尽可能囊括所有的开源软件，但仍有很多软件包由于各种原因不能进入官方软件仓库。为了方便Ubuntu用户使用，launchpad.net提供了个人软件包集，即PPA，允许用户建立自己的软件仓库，通过Launchpad进行编译并发布为2进制软件包，作为apt/新立得源供其他用户下载和更新。PPA也被用来对一些打算进入Ubuntu官方仓库的软件，或者某些软件的新版本进行测试。
 
+## 安装tarballs
+以 .tar.gz 或 .tar.bz2 作为后缀名的文件是在 Linux 和 Unix 中被广泛使用的 tarballs 的打包文件。 如果在任何 Ubuntu 软件库中都没有 Ubuntu 的软件包，您可以按照软件包自带的指示使用命令行来安装和卸载 Tarball 文件。 Tarballs 通常包括程序的源代码，并且需要**编译**才能使用。要做到这一点，一般需要其它软件 (比如基本编译器)。
+
 # 输入法
 # IDE
 
