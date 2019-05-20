@@ -67,15 +67,26 @@
 
 **以下文档中目录要看细节可以进文档中查看**
 
-# 概念解释
+# 零碎知识点
 
 ## [“Linux”并不是Linux系统，完整的Linux系统由8部份组成](LittleKnowledge/README.md#“Linux”并不是Linux系统，完整的Linux系统由8部份组成)
+Linux发行版本并不是只有Linux内核。Linux发行版本都包含了其它重要的软件，比如Grub bootloader（Grub引）, Bash shell, GNU shell utilities, daemons, X.org graphical server, a desktop environment等
 
 ## [PPA是什么](LittleKnowledge/README.md#PPA是什么)
 PPA软件源，全称是Personal Package Archives。虽然Ubuntu官方软件仓库尽可能囊括所有的开源软件，但仍有很多软件包由于各种原因不能进入官方软件仓库。为了方便Ubuntu用户使用，launchpad.net提供了个人软件包集，即PPA，允许用户建立自己的软件仓库，通过Launchpad进行编译并发布为2进制软件包，作为apt/新立得源供其他用户下载和更新。PPA也被用来对一些打算进入Ubuntu官方仓库的软件，或者某些软件的新版本进行测试。
 
 ## 安装tarballs
 以 .tar.gz 或 .tar.bz2 作为后缀名的文件是在 Linux 和 Unix 中被广泛使用的 tarballs 的打包文件。 如果在任何 Ubuntu 软件库中都没有 Ubuntu 的软件包，您可以按照软件包自带的指示使用命令行来安装和卸载 Tarball 文件。 Tarballs 通常包括程序的源代码，并且需要**编译**才能使用。要做到这一点，一般需要其它软件 (比如基本编译器)。
+
+## IDE
+IDE 集成了编辑器，编译器，汇编器，调试器，跟踪器等
+
+## 管道和重定向之间的区别
+- 管道是把一个程序的输出作为另一个程序的输入。 
+- 重定向是把输出定向到文件或者标准流。
+
+## [Ubuntu简单添加开机启动](LittleKnowledge/README.md#Ubuntu简单添加开机启动)
+如何使用StartApp添加自动启动，而不再手动编辑配置文件
 
 # 输入法
 # IDE
@@ -127,7 +138,9 @@ apt install meld  (或Ubuntu应用商店)
 ## 文本编辑软件atom
 apt install atom  (或应用商店)
 
-## 邮件客户端 thunderbird
+## 邮件客户端 thunderbird 
+apt install thunderbird (或应用商店)
+
 ### 中文内容乱码问题
 ## WeChat（RamBox替换）
 Snap install electronic-wechat(或应用商店);不支持文本拷贝即你没有办法从聊天窗口拷贝内容，实际也是一个页面版本;目前转用RamBox做微信代理。

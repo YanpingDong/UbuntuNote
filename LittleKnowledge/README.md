@@ -119,3 +119,18 @@ deb http://ppa.launchpad.net/jerrywei/redis-server/ubuntu xenial main
 Step 1: sudo add-apt-repository -r ppa:user/ppa-name
 Step 2: 进入 /etc/apt/sources.list.d 文件夹，删除对应的源文件。
 ```
+
+# Ubuntu简单添加开机启动
+
+有的时候按装了一个应用程序，我们需要其开机的时候就启动。以前的方式是在/etc/profile里添加，现在Ubuntu可以使用Startup Applications应用把要添加的应用添加进去 即可。做到了所见即所得。如下图所示。在应用中搜索Startup Applications即可以。使用方式：点击Add按键会弹出添加程序对话框，在Name和comment里说明是什么即可。把启动命令写入Command里。
+
+注：如果不知道命令存方位置可以通过”whereis commandName”来获取，如下所示，albert的启动命令在/usr/bin/albert
+
+```bash
+learlee@learleePC:~$ whereis albert
+albert: /usr/bin/albert /usr/lib/albert /usr/share/albert
+```
+
+StartupAPP提示框如下：
+
+![StartupApp](pic/StartupApp.png)
