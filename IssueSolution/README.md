@@ -75,11 +75,13 @@ http://www.mikewootc.com/wiki/linux/usage/ubuntu_service_usage.html
 
 1. 确定版本号：sudo apt-cache policy name
 2. 指定版本号安装：sudo apt-get install name=version
+3. 重新安装：sudo apt-get install --reinstall ubuntu-desktop
 
 ## Synaptic
 
 1. mark标记
 2. 升级
+
 
 # 完全卸载
 
@@ -176,3 +178,27 @@ sudo systemctl restart apache2.service
 再访问http://localhost/phpinfo.php如下显示。
 
 ![phpinfo_new](pic/phpinfo_new.png)
+
+# unity-tweak-tool schema hud not installed
+
+错误描述信息如下：
+
+```
+Error: schema com.canonical.indicator.appmenu.hud not installed
+Gtk-Message: GtkDialog mapped without a transient parent. This is discouraged.
+```
+
+我尝试了如下命令都没有解决问题，甚至是purge然后再安装
+
+```
+sudo apt-get install --reinstall ubuntu-desktop
+sudo apt-get install indicator-bluetooth
+sudo apt-get install appmenu-gtk appmenu-gtk3 appmenu-qt
+sudo apt-get install indicator-appmenu
+```
+
+最后尝试如下命令搞定的：
+
+```
+sudo apt-get install hud
+```
