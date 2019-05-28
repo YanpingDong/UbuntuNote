@@ -1614,6 +1614,38 @@ shadowsocks-libev - lightweight and secure socks5 proxy
 simple-obfs - simple obfusacting plugin for shadowsocks-libev
 ```
 
+### apt-cache madison
+
+以表格形式显示可用包版本。但只显示APT已经能获取到的包列表
+
+
+# apt-mark 
+
+在正式运行环境中，有时候，因为程序设直或依赖套件关系，不适合让其跟著 Ubuntu 或是它使用的储存库发布更新的時候就自動一起更新。所以，建议的做法，就是告诉 Ubuntu那几个套件不要更新它們，然后，其它的，也許就可以考虑让 Ubuntu 自动更新或由系统管理手动更新 ! 而要设定套件为不更新的方式有二种，一個是用 dpkg 指令，另一個則是使用 apt-mark 這個指令來操作。
+
+一般操作步骤如下：
+
+```
+#Step1 找出套件名:套件名原则和安装时所使用的相同，但不一定能完全记住。下面以找出 mongodb 套件为例
+$ dpkg --get-selections | grep mongodb 
+
+#Step2 设定为停止自动更新，使用apt-mark hold
+# 下面這一行是設定停止更新 mongodb 和 mongodb-dev 套件
+$ sudo apt-mark hold mongodb mongodb-dev
+# 使用 * 號的方式
+$ sudo apt-mark hold mongodb*
+
+# 如果想改回自动更新，只是把 hold 选项改成 unhold 或 auto 选项就可以了，而 unhold 和 auto 选项的差別，主要是在 unhold 只是解除 hold 的狀态，而 auto 則是回復交由套件管理系統自動管理，但 unhold 只是單純的取消掉 hold 的狀態而已 !
+# 回復成自動狀態 
+$ sudo apt-mark auto mongodb-dev
+# 取消 hold 狀態
+$ sudo apt-mark unhold mongodb-dev
+
+#设定為不被自动移除
+#當套件的更新狀态被设定为 auto 时，當系统发现某个套件沒有人用到它时，就會自动把它移除，如果你不希望系统幫你自動移掉某個你想用的套件時，就可以用 manual 選項來把防止被自動移除 !
+$ sudo apt-mark manual mongodb-dev
+
+```
 
 # sed
 
@@ -1805,7 +1837,7 @@ drwxr-xr-x 148 root root 12288 5月  15 14:02 ../
 
 ## systemctl
 
-systemd是Linux系统最新的初始化系统(init),作用是提高系统的启动速度，尽可能启动较少的进程，尽可能更多进程并发启动。该命令的启动配置文件是在/lib/systemd/system和/etc/systemd/system目录下。
+systemd是Linux系统最新的初始化系统(init),作用是提高系统的启动速度，尽可能启动较少的进程，尽可能更多进程并发启动。
 
 systemd对应的进程管理命令是systemctl, systemctl命令兼容了service即systemctl也会去/etc/init.d目录下，查看，执行相关程序
 
@@ -1818,6 +1850,95 @@ systemctl redis start
 systemctl enable redisser
 ```
 
+命令格式： systemctl [command] [unit]
+
+command 主要有：
+```bash
+start：立刻启动后面接的 unit。
+stop：立刻关闭后面接的 unit。
+restart：立刻关闭后启动后面接的 unit，亦即执行 stop 再 start 的意思。
+reload：不关闭 unit 的情况下，重新载入配置文件，让设置生效。
+enable：设置下次开机时，后面接的 unit 会被启动。
+disable：设置下次开机时，后面接的 unit 不会被启动。
+status：目前后面接的这个 unit 的状态，会列出有没有正在执行、开机时是否启动等信息。
+is-active：目前有没有正在运行中。
+is-enable：开机时有没有默认要启用这个 unit。
+kill ：不要被 kill 这个名字吓着了，它其实是向运行 unit 的进程发送信号。
+show：列出 unit 的详细配置情况。
+mask：注销 unit，注销后你就无法启动这个 unit 了。
+static：这个 unit 不可以自己启动，不过可能会被其它的 enabled 的服务来唤醒。
+unmask：取消对 unit 的注销。
+```
+
+**status命令输出解释**
+
+```bash
+$ sudo systemctl status docker.service 
+[sudo] password for learlee: 
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+   Active: active (running) since 一 2019-05-27 08:55:27 CST; 1 day 6h ago
+     Docs: https://docs.docker.com
+ Main PID: 1905 (dockerd)
+    Tasks: 16
+   Memory: 98.5M
+      CPU: 45.362s
+   CGroup: /system.slice/docker.service
+           └─1905 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+5月 27 08:55:15 learleePC dockerd[1905]: time="2019-05-27T08:55:15.514185630+08:00" level=warning msg="Your kernel does not support cgroup rt runtime"
+5月 27 08:55:15 learleePC dockerd[1905]: time="2019-05-27T08:55:15.880244855+08:00" level=info msg="Loading containers: start."
+5月 27 08:55:23 learleePC dockerd[1905]: time="2019-05-27T08:55:23.073134325+08:00" level=info msg="Default bridge (docker0) is assigned with an IP address 172.17.0.0/16. Daemon option --bip can be used to s
+5月 27 08:55:24 learleePC dockerd[1905]: time="2019-05-27T08:55:24.292615190+08:00" level=info msg="Loading containers: done."
+
+输出内容的第一行是对 unit 的基本描述。
+第二行中的 Loaded 描述操作系统启动时会不会启动这个服务，enabled 表示开机时启动，disabled 表示开机时不启动。而启动该服务的配置文件路径为：/lib/systemd/system/docker.service。
+第三行 中的 Active 描述服务当前的状态，active (running) 表示服务正在运行中。如果是 inactive (dead) 则表示服务当前没有运行。后面则是服务的启动时间。
+第四行的 Docs 提供了在线文档的地址。
+下面的 Main PID 表示进程的 ID，接下来是任务的数量，占用的内存和 CPU 资源。
+再下面的 Cgroup 描述的是 cgrpup 相关的信息。
+最后是输出的日志信息。
+```
+**相关的目录和文件**
+
+在不同的发行版中与 systemd 相关的文件路径可能会不太一样，强调一下，本文介绍的是 ubuntu 16.04 。
+
+/lib/systemd/system/ 大多数 unit 的配置文件都放在这个目录下。 
+
+/run/systemd/system/ 系统运行过程中产生的脚本，比如用户相关的脚本和会话相关的脚本。
+
+/etc/systemd/system/ 这个目录中主要的文件都是指向 /lib/systemd/system/ 目录中的链接文件。
+
+*注意，在我们自己创建 unit 配置文件时，既可以把配置文件放在 /lib/systemd/system/ 目录下，也可以放在 /etc/systemd/system/ 目录下。*
+
+/etc/default/ 这个目录中放置很多服务默认的配置文件。
+
+/var/lib/ 一些会产生数据的服务都会将他的数据写入到 /var/lib/ 目录中，比如 docker 相关的数据文件就放在这个目录下。
+
+/run/ 这个目录放置了好多服务运行时的临时数据，比如 lock file 以及 PID file 等等。
+
+```
+systemd 里管理了很多会用到本机 socket 的服务，所以系统中肯定会产生很多的 socket 文件。那么，这些 socke 文件都存放在哪里呢？我们可以使用 systemctl 进行查看：
+
+$ systemctl list-sockets
+LISTEN                          UNIT                            ACTIVATES
+/dev/rfkill                     systemd-rfkill.socket           systemd-rfkill.service
+/run/acpid.socket               acpid.socket                    acpid.service
+/run/snapd-snap.socket          snapd.socket                    snapd.service
+/run/snapd.socket               snapd.socket                    snapd.service
+/run/systemd/fsck.progress      systemd-fsckd.socket            systemd-fsckd.service
+```
+**enable做了什么**
+
+所谓的 enable 就是在 multi-user.target.wants 下面创建了一个链接文件：
+
+```bash
+learlee@learleePC:/etc/systemd/system/multi-user.target.wants$ ll docker.service 
+lrwxrwxrwx 1 root root 34 5月   8 09:12 docker.service -> /lib/systemd/system/docker.service
+```
+
+**systemctl相关文件**
+
 在/lib/systemd/system和/etc/systemd/system目录下主要有四种类型文件.mount,.service,.target,.wants
 
 .mount文件： 定义了一个挂载点，Mount节点里配置了What,Where,Type三个数据项等同于以下命令：mount -t What Where Type
@@ -1828,7 +1949,8 @@ systemctl enable redisser
 
 .wants文件：定义了要执行的文件集合，每次执行，.wants文件夹里面的文件都会执行
 
-**查看系统上上所有的服务**
+
+**查看系统上所有的服务**
 
 命令格式：systemctl [command] [--type=TYPE] [--all]
 
@@ -1848,16 +1970,34 @@ systemctl list-units --type=service --all grep cpu	|列出 cpu电源管理机制
 systemctl list-units --type=target --all |	列出所有target
 
 
-**systemctl特殊的用法**
+**检查 unit 之间的依赖性**
 
-名称 | 说明
-:---|:---
-systemctl is-active [service name] | 查看服务是否运行
-systemctl is-enable [service name] | 查看服务是否设置为开机启动
-systemctl mask [service name] |	注销指定服务
-systemctl unmask [service name] | 取消注销指定服务
+很多服务之间是有依赖关系的，systemd 的一大亮点就是可以管理 unit 之间的依赖关系。我们可以通过下面的命令来查看 unit 间的依赖关系：
 
-** service 命令与 systemctl 命令对比**
+systemctl list-dependencies [unit] [--reverse] 选项 --reverse 会反向追踪是谁在使用这个 unit。
+
+```bash
+$ sudo systemctl list-dependencies docker.service 
+docker.service
+● ├─containerd.service
+● ├─docker.socket
+● ├─docker.socket
+● ├─system.slice
+● ├─network-online.target
+● │ ├─networking.service
+● │ └─NetworkManager-wait-online.service
+● └─sysinit.target
+●   ├─apparmor.service
+●   ├─brltty.service
+●   ├─console-setup.service
+●   ├─dev-hugepages.mount
+●   ├─dev-mqueue.mount
+●   ├─ebtables.service
+●   ├─keyboard-setup.service
+●   ├─kmod-static-nodes.service
+```
+
+**service 命令与 systemctl 命令对比**
 
 service | systemctl|说明
 :---|:--- |:---
@@ -1865,6 +2005,21 @@ service [服务] start	|systemctl start [服务]	启动服务
 service [服务] stop	|systemctl stop [服务]	停止服务
 service [服务] restart	|systemctl restart [服务]	重启服务
 service [服务] status	|systemctl status [服务]	查看服务状态
+
+
+**systemctl daemon-reload 子命令**
+
+daemon-reload 是一个很容易被误用的子命令，主要是因为它名字中包含的 daemon 一词很容易让它和 reload 子命令混淆。
+
+reload 子命令，它的作用是重新加载某个服务程序的配置文件。这里的程序指的是服务类型 unit 的配置中指定的程序，也就是我们常说的 daemon(提供某种服务的应用程序)。比如服务类型的 unit prometheus.service，提供服务的 daemon 程序在我的机器上是 /usr/local/share/prometheus/prometheus，所以 reload 子命令重新加载的是 prometheus 的配置文件。
+
+如果把 daemon-reload 子命令中的 daemon 理解为 systemd 程序，就可以把这个命令解释为重新加载 systemd 程序的配置文件。而所有的 unit 配置文件都是作为 systemd 程序的配置文件存在的。这样得出的结论就是：
+
+- 新添加 unit 配置文件时需要执行 daemon-reload 子命令
+- 有 unit 的配置文件发生变化时也需要执行 daemon-reload 子命令
+
+daemon-reload 命令会做很多的事情，其中之一是重新生成依赖树(也就是 unit 之间的依赖关系)，所以当你修改了 unit 配置文件中的依赖关系后如果不执行 daemon-reload 命令是不会生效的。
+
 
 # exec source 区别
 
