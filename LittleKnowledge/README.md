@@ -134,3 +134,20 @@ albert: /usr/bin/albert /usr/lib/albert /usr/share/albert
 StartupAPP提示框如下：
 
 ![StartupApp](pic/StartupApp.png)
+
+
+# selinux
+
+安全增强型 Linux（Security-Enhanced Linux）简称 SELinux，它是一个 Linux 内核模块，也是 Linux 的一个安全子系统。SELinux 主要由美国国家安全局开发。2.6 及以上版本的 Linux 内核都已经集成了 SELinux 模块。
+
+**SELinux 的作用**
+
+1. SELinux 主要作用就是最大限度地减小系统中服务进程可访问的资源（最小权限原则）。
+2. 在没有使用 SELinux 的操作系统中，决定一个资源是否能被访问的因素是：某个资源是否拥有对应用户的权限（读、写、执行）。只要访问这个资源的进程符合以上的条件就可以被访问。而最致命问题是，root 用户不受任何管制，系统上任何资源都可以无限制地访问。这种权限管理机制的主体是用户，也称为自主访问控制（DAC）。
+3. 强制访问控制（MAC）。决定一个资源是否能被访问的因素除了上述因素之外，还需要判断每一类进程是否拥有对某一类资源的访问权限。这样一来，即使进程是以 root 身份运行的，也需要判断这个进程的类型以及允许访问的资源类型才能决定是否允许访问某个资源。进程的活动空间也可以被压缩到最小。
+
+**关闭方式**
+
+1. 使用setup工具 进入图形化关闭
+或者
+2. 向/etc/sysconfig/selinux 文件加入SELINUX=disabled

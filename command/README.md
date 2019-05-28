@@ -1891,12 +1891,12 @@ $ sudo systemctl status docker.service
 5月 27 08:55:23 learleePC dockerd[1905]: time="2019-05-27T08:55:23.073134325+08:00" level=info msg="Default bridge (docker0) is assigned with an IP address 172.17.0.0/16. Daemon option --bip can be used to s
 5月 27 08:55:24 learleePC dockerd[1905]: time="2019-05-27T08:55:24.292615190+08:00" level=info msg="Loading containers: done."
 
-输出内容的第一行是对 unit 的基本描述。
-第二行中的 Loaded 描述操作系统启动时会不会启动这个服务，enabled 表示开机时启动，disabled 表示开机时不启动。而启动该服务的配置文件路径为：/lib/systemd/system/docker.service。
-第三行 中的 Active 描述服务当前的状态，active (running) 表示服务正在运行中。如果是 inactive (dead) 则表示服务当前没有运行。后面则是服务的启动时间。
-第四行的 Docs 提供了在线文档的地址。
-下面的 Main PID 表示进程的 ID，接下来是任务的数量，占用的内存和 CPU 资源。
-再下面的 Cgroup 描述的是 cgrpup 相关的信息。
+1.输出内容的第一行是对 unit 的基本描述。
+2.第二行中的 Loaded 描述操作系统启动时会不会启动这个服务，enabled 表示开机时启动，disabled 表示开机时不启动。而启动该服务的配置文件路径为：/lib/systemd/system/docker.service。
+3.第三行 中的 Active 描述服务当前的状态，active (running) 表示服务正在运行中。如果是 inactive (dead) 则表示服务当前没有运行。后面则是服务的启动时间。
+4.第四行的 Docs 提供了在线文档的地址。
+5.下面的 Main PID 表示进程的 ID，接下来是任务的数量，占用的内存和 CPU 资源。
+6.再下面的 Cgroup 描述的是 cgrpup 相关的信息。
 最后是输出的日志信息。
 ```
 **相关的目录和文件**
@@ -1917,6 +1917,7 @@ $ sudo systemctl status docker.service
 
 /run/ 这个目录放置了好多服务运行时的临时数据，比如 lock file 以及 PID file 等等。
 
+
 ```
 systemd 里管理了很多会用到本机 socket 的服务，所以系统中肯定会产生很多的 socket 文件。那么，这些 socke 文件都存放在哪里呢？我们可以使用 systemctl 进行查看：
 
@@ -1928,9 +1929,10 @@ LISTEN                          UNIT                            ACTIVATES
 /run/snapd.socket               snapd.socket                    snapd.service
 /run/systemd/fsck.progress      systemd-fsckd.socket            systemd-fsckd.service
 ```
+
 **enable做了什么**
 
-所谓的 enable 就是在 multi-user.target.wants 下面创建了一个链接文件：
+所谓的 enable 就是在 /etc/systemd/system/multi-user.target.wants 目录下面创建了一个链接文件：
 
 ```bash
 learlee@learleePC:/etc/systemd/system/multi-user.target.wants$ ll docker.service 
