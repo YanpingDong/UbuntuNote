@@ -2121,3 +2121,194 @@ EOF
 cat << EOF >> test.sh  内容  EOF
 
 ```
+
+# iptables
+
+Firewall：防火墙，隔离工具；工作于主机或网络的边缘，对于进出本地或网络的报文根据实现定义好的检查规则做匹配检查，对于能够被规则所匹配到的报文作出相应处理的组件；
+
+**功能**
+
+1. filter：过滤，防火墙；
+2. nat：网络地址转换；
+3. mangle：拆解报文，作出修改，封装报文；
+4. raw：关闭nat表上启用的连接追踪机制；
+
+**链**
+
+PREROUTING INPUT  FORWARD  OUTPUT POSTROUTING 
+
+ * 流入：PREROUTING –> INPUT
+ * 流出：OUTPUT –> POSTROUTING
+ * 转发：PREROUTING –> FORWARD –> POSTROUTING
+
+![](pic/iptables_links.png)
+
+**四表与键对应关系**
+
+- filter：INPUT，FORWARD，OUTPUT
+- nat：PREROUTING（DNAT），OUTPUT，POSTROUTING（SNAT）
+- mangle：PREROUTING，INPUT，FORWARD，OUTPUT，POSTROUTING
+- raw：PREROUTING，OUTPUT
+
+功能的优先级次序：raw–> mangle –> nat –> filter
+
+综上所述，数据包通过防火墙流程如下图：
+
+![](pic/iptables_workflow.png)
+**添加规则时的考量点：**
+
+1. 要实现哪种功能：判断添加在哪张表上；
+2. 报文流经的路径：判断添加在哪条链上；
+
+链：链上规则的次序，即为检查的次序：因此隐含一定的法则
+
+1. 同类规则（访问同一应用），匹配范围小的放在上面；
+2. 不同类规则（访问不同的应用），匹配到报文频率较大的放上面；
+3. 将那些可由以调规则描述的多条规则合并为一个；
+4. 设置默认策略；
+
+iptable
+
+参数
+
+```bash
+#链管理：
+-F：flush，清空规则链；省略链，表示清空指定表上的所有链；
+-N：new，创建新的自定义规则链；
+-X：drop，删除用户自定义的空的规则链；
+-P：Policy，为指定链设置默认策略；对filter表中的链而言，默认策略通常有ACCEPT，DROP，REJECT
+-E：rEname，重命名自定义链；引入计数不为0的自定义链，无法改名，也无法删除； 
+
+#规则管理：
+-A：append，将新规则追加于指定链的尾部；
+-I：insert，将新规则插入至指定链的指定位置；
+-D：delete，删除指定链上的指定规则；
+-R：replace，替换指定链上的指定规则；
+
+#查看：
+-L：list，列出指定链上的所有规则；
+-n：numberic，以数字格式显示地址和端口号；
+-v：verbose，显示详细信息；
+-line-numbers：显示规则编号；
+-x：exactly，显示即数其计数结果的精确值； 
+
+#目标:-j TARFET：jump至指定的TARGET
+ACCEPT：接受
+DROP：丢弃，不给任何回应，客户端过了如果设置了超时，会收到TIMEOUT
+REJECT：拒绝，客户端会收到拒绝信息
+RETURN：返回调用链
+REDIRECT：端口重定向，在本机做端口映射
+LOG：记录日志，然后将数据包传给下一条规则，也就是说不做任何操作，仍然让下一条规则去匹配
+MARK：做防火墙标记
+DNAT：目标地址转换
+SNAT：源地址转换，解决内网用户同一个公网地址上网问题
+MASQUEPADE：地址伪装
+... ...
+自定义链：有自定义链上的规则进行匹配检查
+
+#匹配条件
+[!] -s, –src, –source IP|Netaddr：检查报文中源IP地址是否符合此处指定的地址范围；
+[!] -d, –dst, –destination IP|Netaddr：检查报文中源IP地址是否符合此处指定的地址范围；
+-p, –protocol {tcp|udp|icmp}：检查报文中的协议，即ip首部中的protocols所标识的协议；
+-i, –in-interface IFACE：数据报文的流入接口；仅能用于PREROUTING，INPUT及FORWARD链上；
+-o, –out-interface IFACE：数据报文的流出接口；仅能用于FORWARD，OUTPUT及POSTROUTING链上；
+```
+
+示例：
+
+```bash
+#下面只打开22端口,默认操作的是filter表
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
+
+#ip来源于 192.168.1.2 tcp访问拒绝
+iptables -A INPUT -p tcp -s 192.168.1.2 -j DROP
+
+#如何删除规则
+#首先我们要知道 这条规则的编号，每条规则都有一个编号。如下
+iptables -L -n --line-number
+num target     prot opt source               destination
+1    DROP       tcp -- 0.0.0.0/0            0.0.0.0/0           tcp dpt:3306
+2    DROP       tcp -- 0.0.0.0/0            0.0.0.0/0           tcp dpt:21
+3    DROP       tcp -- 0.0.0.0/0            0.0.0.0/0           tcp dpt:80
+
+#删除INPUT链编号为2的规则
+iptables -D INPUT 2
+
+```
+
+## 自定义链
+
+当默认链中的规则非常多时，不方便我们管理。想象一下，如果INPUT链中存放了200条规则，这200条规则有针对httpd服务的，有针对sshd服务的，有针对私网IP的，有针对公网IP的，假如，我们突然想要修改针对httpd服务的相关规则，难道我们还要从头看一遍这200条规则，找出哪些规则是针对httpd的吗？这显然不合理。
+
+我们自定义一条链，链名叫IN_WEB，我们可以将所有针对80端口的入站规则都写入到这条自定义链中，当以后想要修改针对web服务的入站规则时，就直接修改IN_WEB链中的规则就好了，即使默认链中有再多的规则，我们也不会害怕了，因为我们知道，所有针对80端口的入站规则都存放在IN_WEB链中，同理，我们可以将针对sshd的出站规则放入到OUT_SSH自定义链中，将针对Nginx的入站规则放入到IN_NGINX自定义链中，这样，我们就能想改哪里改哪里，再也不同担心找不到规则在哪里了。
+
+**但是需要注意的是，自定义链并不能直接使用，而是需要被默认链引用才能够使用。**
+
+**创建自定义链**：使用```-N```参数```iptables -t filter -N IN_WEB```;参数```-t filter```表示操作的表为filter表，与之前的示例相同，省略-t选项时，缺省操作的就是filter表。
+
+
+```bash
+$ sudo iptables -t filter -L IN_WEB
+Chain IN_WEB (0 references)
+target     prot opt source               destination         
+```
+
+如上所示，这条自定义链的引用计数为0 (0 references)，也就是说，这条自定义链还没有被任何默认链所引用，所以，即使IN_WEB中配置了规则，也不会生效！
+
+**给自定义键加规则**：对自定义链的操作与对默认链的操作并没有什么不同，一切按照操作默认链的方法操作自定义链即可。
+
+```bash
+iptables -t filter -I IN_WEB -s 192.168.1.123 -j REJECT
+iptables -t filter -I IN_WEB -s 192.168.1.121 -j REJECT
+```
+
+**默认链引用**：通过```-j```参数在设置规则的时候引用默认链接，如下用INPUT链去引用IN_WEB链
+
+```bash
+iptables -I INPUT -p tcp -dport 80 -j IN_WEB
+
+$ sudo iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination         
+IN_WEB     tcp  --  anywhere             anywhere             tcp dpt:http
+```
+
+**删除自定义链**
+
+使用"-X"选项可以删除自定义链，但是删除自定义链时，需要满足两个条件：
+
+1. 自定义链没有被任何默认链引用，即自定义链的引用计数为0。
+2. 自定义链中没有任何规则，即自定义链为空。
+
+如果有默认链引用则会出现下面错误：
+
+```bash
+$ sudo iptables -X IN_WEB
+iptables: Too many links.
+```
+所以需要使用```iptables -D ```来删掉默认链中的引用，比如本文中是在INPUT的第一个如下所示
+
+```bash
+$ sudo iptables -L -n --line-number
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    IN_WEB     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:80
+
+#删除默认链引用
+$ sudo iptables -D INPUT 1
+```
+
+如果自定义链接不为空会出现下面错：
+
+```bash
+$ sudo iptables -X IN_WEB
+iptables: Directory not empty.
+
+#这个时候需要清掉默认链规则,然后再删掉即可
+$ sudo iptables -t filter -F IN_WEB
+$ sudo iptables -X IN_WEB
+```
+
+
+[参考1](https://blog.csdn.net/qq_36462472/article/details/80332143 ) | [参考2](http://www.zsythink.net/archives/1199/) | [参考3](https://www.cnblogs.com/wanstack/p/8393282.html) 
