@@ -335,3 +335,210 @@ chown $(id -u):$(id -g) $HOME/.kube/config
 $ $(HOME)
 HOME: command not found
 ```
+
+# openssl 非对称加密算法RSA命令详解
+
+非对称加密算法也称公开密钥算法，其解决了对称加密算法密钥分配的问题，非对称加密算法基本特点如下：
+
+1. 加密密钥和解密密钥不同
+2. 密钥对中的一个密钥可以公开
+3. 根据公开密钥很难推算出私人密钥
+
+用途：可用户数字签名、密钥交换、数据加密。但是由于非对称加密算法较对称加密算法加密速度慢很多，故最常用的用途是数字签名和密钥交换。
+
+目前常用的非对称加密算法有```RSA, DH```和```DSA```三种，但并非都可以用于密钥交换和数字签名。而是RSA可用于数字签名和密钥交换，DH算法可用于密钥交换，而DSA算法专门用户数字签名。openssl支持以上三种算法，并为三种算法提供了丰富的指令集。
+
+**抛开数字签名和密钥交换的概念，实质上就是使用公钥加密还是使用私钥加密的区别。所以我们只要记住一句话：“公钥加密，私钥签名”。**
+
+- 公钥加密：用途是密钥交换，用户A使用用户B的公钥将少量数据加密发送给B，B用自己的私钥解密数据
+
+- 私钥签名：用途是数字签名，用户A使用自己的私钥将数据的摘要信息加密一并发送给B，B用A的公钥解密摘要信息并验证
+
+## RSA算法相关指令及用法
+
+opessl中RSA算法指令主要有三个
+
+指令 | 功能
+:---|:--- 
+genrsa | 生成并输入一个RSA私钥
+rsa | 处理RSA密钥的格式转换等问题
+rsautl | 使用RSA密钥进行加密、解密、签名和验证等运算
+
+### genrsa指令说明
+
+```bash
+$ openssl genrsa -
+usage: genrsa [args] [numbits]                                                     //密钥位数，建议1024及以上
+ -des            encrypt the generated key with DES in cbc mode                    //生成的密钥使用des方式进行加密
+ -des3           encrypt the generated key with DES in ede cbc mode (168 bit key)  //生成的密钥使用des3方式进行加密
+ -seed
+                 encrypt PEM output with cbc seed                                  //生成的密钥还是要seed方式进行
+ -aes128, -aes192, -aes256
+                 encrypt PEM output with cbc aes                                   //生成的密钥使用aes方式进行加密
+ -camellia128, -camellia192, –camellia256 
+                 encrypt PEM output with cbc camellia                              //生成的密钥使用camellia方式进行加密
+ -out file       output the key to file                                           //生成的密钥文件，可从中提取公钥
+ -passout arg    output file pass phrase source                                    //指定密钥文件的加密口令，可从文件、环境变量、终端等输入
+ -f4             use F4 (0x10001) for the E value                                  //选择指数e的值，默认指定该项，e值为65537 -3              use 3 for the E value                                             //选择指数e的值，默认值为65537，使用该选项则指数指定为3
+ -engine e       use engine e, possibly a hardware device.                         //指定三方加密库或者硬件
+ -rand file:file:...
+                 load the file (or the files in the directory) into                //产生随机数的种子文件
+                 the random number generator
+```
+
+可以看到genrsa指令使用较为简单，常用的也就有指定加密算法、输出密钥文件、加密口令。我们仅举一个例子来说明
+
+```bash
+/*
+ * 指定密钥文件rsa.pem
+ * 指定加密算法aes128
+ * 指定加密密钥123456
+ * 指定密钥长度1024
+ **/
+$ openssl genrsa -out rsa.pem -aes128 -passout pass:123456 1024
+```
+
+### rsa指令说明
+
+rsa指令用户管理生成的密钥，其用法如下:
+
+```bash
+ openssl rsa -
+unknown option -
+rsa [options] <infile >outfile     
+where options are
+ -inform arg     input format - one of DER NET PEM                      //输入文件格式，默认pem格式
+ -outform arg    output format - one of DER NET PEM                     //输入文件格式，默认pem格式
+ -in arg         input file                                             //输入文件
+ -sgckey         Use IIS SGC key format                                 //指定SGC编码格式，兼容老版本，不应再使用
+ -passin arg     input file pass phrase source                          //指定输入文件的加密口令，可来自文件、终端、环境变量等
+ -out arg        output file                                            //输出文件
+ -passout arg    output file pass phrase source                         //指定输出文件的加密口令，可来自文件、终端、环境变量等
+ -des            encrypt PEM output with cbc des                        //使用des加密输出的文件
+ -des3           encrypt PEM output with ede cbc des using 168 bit key  //使用des3加密输出的文件
+ -seed           encrypt PEM output with cbc seed                       //使用seed加密输出的文件
+ -aes128, -aes192, -aes256
+                 encrypt PEM output with cbc aes                        //使用aes加密输出的文件
+ -camellia128, -camellia192, -camellia256
+                 encrypt PEM output with cbc camellia                   //使用camellia加密输出的文件呢
+ -text           print the key in text                                  //以明文形式输出各个参数值
+ -noout          don not print key out                                    //不输出密钥到任何文件
+ -modulus        print the RSA key modulus                              //输出模数指
+ -check          verify key consistency                                 //检查输入密钥的正确性和一致性
+ -pubin          expect a public key in input file                      //指定输入文件是公钥
+ -pubout         output a public key                                    //指定输出文件是公钥
+ -engine e       use engine e, possibly a hardware device.              //指定三方加密库或者硬
+```
+
+示例 
+
+```bash
+/*生成不加密的RSA密钥*/
+$ openssl genrsa -out RSA.pem
+
+/*为RSA密钥增加口令保护*/
+$ openssl rsa -in RSA.pem -des3 -passout pass:123456 -out E_RSA.pem
+writing RSA key
+
+/*为RSA密钥去除口令保护*/
+$ openssl rsa -in E_RSA.pem -passin pass:123456 -out P_RSA.pem
+writing RSA key
+
+/*比较原始后的RSA密钥和去除口令后的RSA密钥，是一样*/
+$ diff RSA.pem P_RSA.pem
+
+/*提取公钥，用pubout参数指定输出为公钥*/
+openssl rsa -in E_RSA.pem -passin pass:123456 -pubout -out pub.pem
+```
+
+### rsautl指令说明
+
+rsautl则是真正用于密钥交换和数字签名。实质上就是使用RSA公钥或者私钥加密。
+
+```bash
+$ openssl rsautl - 
+Usage: rsautl [options]                  
+-in file        input file                                           //输入文件
+-out file       output file                                          //输出文件
+-inkey file     input key                                            //输入的密钥
+-keyform arg    private key format - default PEM                     //指定密钥格式
+-pubin          input is an RSA public                               //指定输入的是RSA公钥
+-certin         input is a certificate carrying an RSA public key    //指定输入的是证书文件
+-ssl            use SSL v2 padding                                   //使用SSLv23的填充方式
+-raw            use no padding                                       //不进行填充
+-pkcs           use PKCS#1 v1.5 padding (default)                    //使用V1.5的填充方式
+-oaep           use PKCS#1 OAEP                                      //使用OAEP的填充方式
+-sign           sign with private key                                //使用私钥做签名
+-verify         verify with public key                               //使用公钥认证签名
+-encrypt        encrypt with public key                              //使用公钥加密
+-decrypt        decrypt with private key                             //使用私钥解密
+-hexdump        hex dump output                                      //以16进制dump输出
+-engine e       use engine e, possibly a hardware device.            //指定三方库或者硬件设备
+-passin arg    pass phrase source                                    //指定输入的密码
+```
+
+示例：
+
+```bash
+#使用rsautl进行加密和解密操作
+$ openssl genrsa -des3 -passout pass:123456 -out RSA.pem 
+Generating RSA private key, 512 bit long modulus
+............++++++++++++
+...++++++++++++
+e is 65537 (0x10001)
+/*提取公钥*/
+$ openssl rsa -in RSA.pem -passin pass:123456 -pubout -out pub.pem 
+writing RSA key
+/*使用RSA作为密钥进行加密，实际上使用其中的公钥进行加密*/
+$ openssl rsautl -encrypt -in plain.txt -inkey RSA.pem -passin pass:123456 -out enc.txt
+/*使用RSA作为密钥进行解密，实际上使用其中的私钥进行解密*/
+$ openssl rsautl -decrypt -in enc.txt -inkey RSA.pem -passin pass:123456 -out replain.txt
+/*比较原始文件和解密后文件*/
+$ diff plain.txt replain.txt 
+
+/*使用公钥进行加密*/
+$ openssl rsautl -encrypt -in plain.txt -inkey pub.pem -pubin -out enc1.txt
+/*使用RSA作为密钥进行解密，实际上使用其中的私钥进行解密*/
+$ openssl rsautl -decrypt -in enc1.txt -inkey RSA.pem -passin pass:123456 -out replain1.txt
+/*比较原始文件和解密后文件*/
+xlzh@cmos:~/test$ diff plain.txt replain1.txt
+
+
+# 使用rsautl进行签名和验证操作
+/*提取PCKS8格式的私钥*/
+$ openssl pkcs8 -topk8 -in RSA.pem -passin pass:123456 -out pri.pem -nocrypt
+/*使用RSA密钥进行签名，实际上使用私钥进行加密*/
+$ openssl rsautl -sign -in plain.txt -inkey RSA.pem -passin pass:123456 -out sign.txt
+/*使用RSA密钥进行验证，实际上使用公钥进行解密*/
+$ openssl rsautl -verify -in sign.txt -inkey RSA.pem -passin pass:123456 -out replain.txt
+/*对比原始文件和签名解密后的文件*/
+$ diff plain.txt replain.txt 
+/*使用私钥进行签名*/
+$ openssl rsautl -sign -in plain.txt -inkey pri.pem  -out sign1.txt
+/*使用公钥进行验证*/
+$ openssl rsautl -verify -in sign1.txt -inkey pub.pem -pubin -out replain1.txt
+/*对比原始文件和签名解密后的文件*/
+$ cat plain replain1.txt
+```
+
+# SSL和SSH和OpenSSH，OpenSSL有什么区别
+
+SSL（Secure Sockets Layer）是通讯链路的附加层。可以包含很多协议。https, ftps, .....;是一种国际标准的加密及身份认证通信协议，您用的浏览器就支持此协议。SSL协议使用通讯双方的客户证书以及CA根证书，允许客户/服务器应用以一种不能被偷听的方式通讯，在通讯双方间建立起了一条安全的、可信任的通讯通道。它具备以下基本特征：信息保密性、信息完整性、相互鉴定。 主要用于提高应用程序之间数据的安全系数。SSL协议的整个概念可以被总结为：一个保证任何安装了安全套接字的客户和服务器间事务安全的协议，它涉及所有TC/IP应用程序。另外还有一个额外的好处就是传输的数据是经过压缩的，所以可以加快传输的速度。
+
+SSH（Secure SHell）只是加密的shell，最初是用来替代telnet的。通过port forward，也可以让其他协议通过ssh的隧道而起到加密的效果。SSH是由客户端和服务端的软件组成的，有两个不兼容的版本分别是：1.x和2.x。用SSH 2.x的客户程序是不能连接到SSH 1.x的服务程序上去的。OpenSSH 2.x同时支持SSH 1.x和2.x。
+
+SSH提供两种级别的安全验证：
+
+-  第一种级别（基于口令的安全验证）只要你知道自己帐号和口令，就可以登录到远程主机。所有传输的数据都会被加密，但是不能保证你正在连接的服务器就是你想连接的服务器。可能会有别的服务器在冒充真正的服务器，也就是受到“中间人”这种方式的攻击。
+
+-  第二种级别（基于密匙的安全验证）需要依靠密匙，也就是你必须为自己创建一对密匙，并把公用密匙放在需要访问的服务器上。如果你要连接到SSH服务器上，客户端请求连接服务器，服务器将一个随机字符串发送给客户端，客户端根据自己的私钥加密这个随机字符串之后再发送给服务器，服务器接受到加密后的字符串之后用公钥解密，如果正确就让客户端登录，否则拒绝。但是，与第一种级别相比，第二种级别不需要在网络上传送口令。第二种级别不仅加密所有传送的数据，而且“中间人”这种攻击方式也是不可能的（因为他没有你的私人密匙）。但是整个登录的过程可能需要10秒。
+
+OpenSSL：一个C语言函数库，是对SSL协议的实现。
+
+OpenSSH：是对SSH协议的实现。
+
+从编译依赖上看：
+
+1. openssh依赖于openssl，没有openssl的话openssh就编译不过去，也运行不了。
+2. HTTPS可以使用TLS或者SSL协议，而openssl是TLS、SSL协议的开源实现，提供开发库和命令行程序。openssl很优秀，所以很多涉及到数据加密、传输加密的地方都会使用openssl的库来做。
+3. 可以理解成所有的HTTPS都使用了openssl。

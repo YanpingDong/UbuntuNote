@@ -26,7 +26,6 @@ df：显示磁盘分区上可以使用的磁盘空间
 # linux程序被Killed，如何精准查看日志
 
 - Step1: cd /var/log/
-
 - Step2: dmesg | egrep -i -B100 'killed process' 或: egrep -i -r 'killed process' /var/log 或: journalctl -xb | egrep -i 'killed process'
 
 **dmesg文件**过滤后输出如下：
