@@ -2202,7 +2202,7 @@ LOG：记录日志，然后将数据包传给下一条规则，也就是说不�
 MARK：做防火墙标记
 DNAT：目标地址转换
 SNAT：源地址转换，解决内网用户同一个公网地址上网问题
-MASQUEPADE：地址伪装
+MASQUEPADE：地址伪装，作用是，从服务器的网卡上，自动获取当前ip地址来做NAT。
 ... ...
 自定义链：有自定义链上的规则进行匹配检查
 
@@ -2234,6 +2234,17 @@ num target     prot opt source               destination
 
 #删除INPUT链编号为2的规则
 iptables -D INPUT 2
+
+```
+
+```
+NOTE：这就是SNAT的使用方法，即可以NAT成一个地址，也可以NAT成多个地址，但是，对于SNAT，不管是几个地址，必须明确的指定要SNAT的ip，假如当前系统用的是ADSL动态拨号方式，那么每次拨号，出口ip都会改变，而且改变的幅度很大，不一定在设定的多个地址上，这个时候如果按照现在的方式来配置iptables就会出现问题了，因为每次拨号后，服务器地址都会变化，而iptables规则内的ip是不会随着自动变化的，每次地址变化后都必须手工修改一次iptables，把规则里边的固定ip改成新的ip，这样是非常不好用的。
+
+MASQUERADE就是针对这种场景而设计的，他的作用是，从服务器的网卡上，自动获取当前ip地址来做NAT。
+
+iptables -t nat -A POSTROUTING -s 10.8.0.0/255.255.255.0 -o eth0 -j MASQUERADE
+
+如此配置的话，不用指定SNAT的目标ip了，不管现在eth0的出口获得了怎样的动态ip，MASQUERADE会自动读取eth0现在的ip地址然后做SNAT出去，这样就实现了很好的动态SNAT地址转换
 
 ```
 
