@@ -610,3 +610,10 @@ ssh 218.29.30.31:250  #访问方法
 ```
 
 [原文](https://www.cnblogs.com/mangood/p/6024053.html)
+
+
+# Linux Soft Bridge
+
+Bridge（桥）是 Linux 上用来做 TCP/IP 二层协议交换的设备，与现实世界中的交换机功能相似。Bridge 设备实例可以和 Linux 上其他网络设备实例连接，既 attach 一个从设备，类似于在现实世界中的交换机和一个用户终端之间连接一根网线。当有数据到达时，Bridge 会根据报文中的 MAC 信息进行广播、转发、丢弃处理。
+
+[参考1](https://blog.51cto.com/hostman/2106155)
