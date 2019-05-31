@@ -177,7 +177,293 @@ etenforce是Linux的selinux防火墙配置命令 执行setenforce 0 表示关闭
 setenforce命令是单词set（设置）和enforce(执行)连写，另一个命令getenforce可查看selinux的状态。 
 ```
 
+# Linux 网络接口设备
+
+**网络接口的命名：**
+
+-  ethX：Ethernet 的简写，一般用于以太网接口。
+-  wifiX：WIFI 无线局域网。
+-  athX：Atheros 的简写，一般指 Atheros 芯片所包含的无线网络接口。
+-  lo：Local 的简写，一般指本地环回接口。
+
+**网络接口是如何工作的：**
+
+- 网络接口是用来发送和接受数据包的基本设备。
+- 系统中的所有网络接口组成一个链状结构，应用层程序使用时按名称调用。
+- 每个网络接口在 Linux 系统中对应于一个 struct net_device 结构体，包含name,mac,mask,mtu,… 等信息。
+- 每个硬件网卡（MAC 地址唯一）对应一个网络接口，其工作完全由相应的驱动程序控制。
+
+
+**虚拟网络接口：** 虚拟网络接口和真实存在的网络接口在使用上是一致的。只是虚拟网络接口并不真实地从外界接收和发送数据包，而是在系统内部接收和发送数据包，因此虚拟网络接口不需要驱动程序。
+
+
+**网络接口的创建：**
+
+- 硬件网卡的网络接口由驱动程序创建，驱动中创建网络接口的函数是：register_netdev(struct net_device *) 或者 register_netdevice(struct net_device *)。这两个函数的区别是 register_netdev(…) 会自动生成以 eth 作为打头名称的接口，而 register_netdevice(…) 需要提前指定接口名称。事实上，register_netdev(…) 也是通过调用 register_netdevice(…) 实现的。
+- 虚拟网络接口由系统创建或通过应用层程序创建。
+
+**本地回环接口 lo：** 最着名的虚拟网络接口当属 lo 本地回环设置了，假如包是由一个本地进程为另一个本地进程产生的，它们将通过外出链的 lo 接口，然后返回进入链的 lo 接口。
+
+## 虚拟网络设备
+
+### 网络命名空间（network namespace）
+
+Linux 可以在一个 Host 内创建多个 namespace，将那些原本是 Linux 全局的资源，就变成了 namespace 范围内的 “全局” 资源，而且不同 namespace 的资源互相不可见 、 彼此透明。
+
+![](pic/LinuxHostVM.png)
+
+从网络的视角来看，一个 namespace 提供了一份独立的网络协议栈（网络设备接口、IPv4、IPv6、IP 路由、防火墙规则、sockets 等）。注意一个网络设备只能位于一个 namespace 中，不同 namespace 中的网络设备可以利用 veth pair 进行桥接（根据数据链路层的 MAC 地址对网络数据包进行转发的过程）。
+
+### 虚拟“网卡”（tap）
+
+Linux 在谈到 tap 时，经常会与 tun 并列谈论，两者都是操作系统内核中的虚拟网络设备，都是一种让用户态程序向内核协议栈注入数据的设备。tap 工作在二层（数据链路层）而 tun 工作在三层（网络层）。
+
+数据链路层的主要协议有 :
+
+- 点对点协议（Point-to-Point Protocol）
+- 以太网（Ethernet）;
+- 高级数据链路协议（High-Level Data Link Protocol）;
+- 帧中继（FrameRelay）;
+- 异步传输模式（AsynchronousTransfer Mode）
+
+tap 只与其中的以太网（Ethernet）协议对应，所以，tap 有时也称为 “虚拟以太设备” 。
+
+
+### 虚拟“网线”（veth pair）
+
+veth pair 不是一个设备，而是一对设备，用于连接两个虚拟以太端口。veth pair 的本质是反转通讯数据的方向，需要发送的数据会被转换成需要收到的数据重新送入内核网络层进行处理，从而间接的完成数据的注入。操作 veth pair，需要跟 namespace 一起配合，不然就没有意义。
+
+![](pic/VethPair.png)
+
+**NOTE：veth pair 在虚拟网络设备中是作为 “网线” 的存在，将 “网卡”（tap）之间，“网卡” 与虚拟交换机（Bridge）之间连接起来。**
+
+### 虚拟“隧道网卡”（tun）
+
+tun 是一个网络层的点对点（Peer To Peer）设备，启用了 IP 层隧道（tunnel）功能。Linux 原生支持 5 种三层（IP）隧道：
+
+- ipip
+- gre：通用路由封装（Generic Routing Encapsulation），定义了在任意一种网络层协议上封装任意一个其他网络层协议的协议，属于 IPv4/IPv6 over IPv4。
+- sit
+- isatap
+- vti
+
+![](pic/VirtualTun.png)
+
+物理与虚拟设备对比关系：
+
+![](pic/diffbtphysiandvirtual.png)
+
+### TAP/TUN 与 VETH 设备的工作原理
+
+![](pic/TAP_TUN_VETH.png)
+
+如上图所示，创建一个 tap 设备时，Linux 的 dev（设备文件）目录下就会生成一个对应 char 设备。用户程序可以像打开普通文件一样打开这个 tap “文件” 进行读写（Linux 的一切皆文件设计理念）。
+
+- 当执行 write()操作时：数据进入 tap 设备，此时对于 Linux 网络层来说就相当于 tap 设备收到了一个数据包，并请求内核接受它，如同普通的物理网卡从外界收到数据包一样，不同的是此时的数据其实来自 Linux 上的一个用户程序。Linux 收到此数据后将根据网络配置进行后续处理，从而完成了用户程序向 Linux 内核网络层注入数据的功能。
+    
+- 当用户程序执行 read() 请求时：相当于向内核查询 tap 设备上是否有需要被发送出去的数据，有的话取出到用户程序里，完成 tap 设备的发送数据功能。
+
+针对 tap 设备的一个形象的比喻是：使用 tap 设备的应用程序相当于另外一台计算机，tap 设备是本机的一个网卡，他们之间相互连接。应用程序通过 read()/write() 操作来和本机网络核心进行通讯。
+
+**NOTE：tun 设备的工作原理与 tap 设备大同小异。**
+
+veth pair 设备总是成对出现的，送到一端的数据总是从另一端以请求接受的形式出现。该设备不能被用户程序直接（读/写）操作，但使用起来比较简单。创建并配置正确后，向其一端输入数据，veth pair 会改变数据的方向并将其送入内核网络核心，完成数据的注入，然后在另一端能读到此数据。
+
+### Linux Brdge
+
+Linux Bridge（下文简称 Bridge）是 Linux 上用来做 TCP/IP 二层协议交换的设备，一种从 Linux Kernel 虚拟出来的网桥设备。在 Linux 的语境中，Bridge（网桥）和 Switch（交换机）是同一个概念，Linux 实现 Bridge 功能的是 brctl 模块。Bridge 设备实例可以和 Linux 上其他的网络设备实例（e.g. TAP 设备，veth 虚拟网卡）连接，又称为即 Attach 一个从设备，类似于物理交换机和一台主机之间连接一根网线。当从设备接收到帧时，Bridge 会根据帧中的 MAC 地址进行广播、转发或过滤处理。
+
+**再次强调：与物理网桥不同，在 Linux 的语境中，Linux Bridge（网桥）和 Switch（交换机）是同一个概念。**
+
+![](pic/linuxsoftbrigeprocedure.jpg)
+
+如图所示，Bridge 的功能主要在 Linux kernal 里实现。
+
+1. 当一个从设备被 Attach 到 Bridge 上，这时在内核程序里的 netdev_rx_handler_register() 被调用，注册一个用于接受数据的回调函数。以后每当这个从设备收到数据时都会调用这个函数把数据转发到 Bridge 上。
+
+2. 当 Bridge 接收到转发过来的数据时，br_handle_frame() 被调用，进行一个与物理交换机类似的处理过程：判断帧的类别（广播 or 单点），查找内部 MAC-Port 映射表，定位到数据帧预期的目标端口号，将帧转发到目标端口（或丢弃），可能还会同时进行 MAC-Port 映射表自学习。
+
+可以感受到，Linux Bridge 本质就是一个软件实现的虚拟交换机（Virtual Switch）。
+
+**Linux Bridge 的工作原理**
+
+![](pic/LinuxBridgeWorkPrinciple.png)
+
+
+**Bridge 与 Linux 虚拟机/容器的典型应用场景：**
+
+当两个网络命令空间存在的时候（KVM或LXC(Linux Container)）需要通过交换设备进行互联。Linux一个熟知的方式是使用Linux bridge。我们需要创建一个交换机和两个链接器。而Linux bridge和Veth pair就是对应选项。
+
+![](pic/BridgeApplicationScenario.png)
+
+如上图所示，实际功能如下：
+- 连接同宿主机内所有虚拟机/容器的虚拟网络。
+- 打通虚拟机/容器内网与外网，通过 bridge 将数据转发到真实的物理网卡 eth0 中。
+
+**Linux Bridge 的特性**
+
+由于 Bridge 自带缺省 MAC 的特性，带来了一个有意思的结果：可以为 Bridge 设备设置 IP 地址。通常来说 IP 地址是三层协议的内容，而 Bridge 是一个二层的网络设备，IP 是不应该出现在 Bridge 上的。但实际上，由于 Bridge 是一种 Linux 系统的通用网络设备的抽象，只要是网络设备就能够设定 IP 地址。Bridge 的 IP 地址就类似于物理交换机的管理 IP 地址（为了方便应用 SSH、SNMP 等协议应用）。当 br0 拥有 IP 后，Linux 就可以通过路由表在网络层定位到 br0。此时就相当于 Linux 拥有了一张 “隐藏的网卡” 和 Bridge 的 “隐藏端口” 相连，两种组成了一张 “Linux 网卡” 就是名为 br0 的通用网络设备。当 IP 数据包到达 br0 时，内核协议栈就认为收到了一个数据包，此时应用程序可以通过 Socket 接收到它。
+
+Bridge 的实现当前存在一个限制：当一个从设备被 Attach 到 Bridge 上时，那个从设备的 IP 会变的无效，Linux 不再使用从设备的 IP 在三层接受数据。比如：eth0 的 IP 地址为 192.168.1.2，此时如果网卡设备 eth0 收到到了一个目标 IP 地址是 192.168.1.2 的数据包，Linux 的应用程序能通过 Socket 接受到它；而当 eth0 被 Attach 到 br0 后，实际上 eth0 的 IP 就变得无效了，此时应该把 IP 地址 192.168.1.2 赋予 br0，让 br0 作为 “网卡设备” 来代替 eth0 继续接收三层数据包。
+
+
+NOTE 1：对于一个被 Attach 到 Bridge 上的从设备来说，只有在收到数据报文时，此数据报文才会被转发到 Bridge 进而完成查表广播等后续操作。但是当从设备的请求是发送类型时，数据报文是不会被经过 Bridge 上的，它会寻找下一个发送出口。用户在配置网络时经常会忽略这一点从而造成网络故障。
+
+**简单来说，Linux Bridge 就是一个虚拟交换机，多个网络设备（e.g. eth0、tap0、vent0，不管是物理的还是虚拟的都统称为通用网络设备）可以挂载到 Bridge 的多个端口上，当 Bridge 收到数据帧时，就会根据帧的源 MAC 地址和目的 MAC 地址进行帧的广播、转发和过滤操作**
+
+
+**应用示例**
+
+通过 veth pair 连接两个 namespace。 但是，3 个 namespace 之间的互通呢？或者多个 namespace 之间的互通呢？veth pair 只有一对 tap，无法胜任，这就需要用到 Bridge/Switch 了。
+
+![](pic/VethPair.png)
+
+下列步骤实现上图模型：
+
+```bash
+# 创建 veth pair
+ip link add tap1 type veth peer name tap1_peer 
+ip link add tap2 type veth peer name tap2_peer 
+ip link add tap3 type veth peer name tap3_peer 
+ip link add tap4 type veth peer name tap4_peer
+
+# 创建 namesapce
+ip netns add ns1
+ip netns add ns2
+ip netns add ns3
+ip netns add ns4
+
+# 把 tap 设备迁移到相应 namespace 中
+ip link set tap1 netns ns1
+ip link set tap2 netns ns2
+ip link set tap3 netns ns3
+ip link set tap4 netns ns4
+
+# 创建 Bridge
+brctl addbr br1
+
+# 把相应 tap 添加到 Bridge 中
+brctl addif br1 tap1_peer
+brctl addif br1 tap2_peer
+brctl addif br1 tap3_peer
+brctl addif br1 tap4_peer
+
+# 配置 tap 设备的 IP 地址
+ip netns exec ns1 ip addr add local 192.168.50.1/24 dev tap1 
+ip netns exec ns2 ip addr add local 192.168.50.2/24 dev tap2 
+ip netns exec ns3 ip addr add local 192.168.50.3/24 dev tap3 
+ip netns exec ns4 ip addr add local 192.168.50.4/24 dev tap4
+
+# 将 Bridge 及所有 tap 状态设置为 up
+ip link set br1 up 
+ip link set tap1_peer up 
+ip link set tap2_peer up 
+ip link set tap3_peer up 
+ip link set tap4_peer up 
+ip netns exec ns1 ip link set tap1 up 
+ip netns exec ns2 ip link set tap2 up 
+ip netns exec ns3 ip link set tap3 up 
+ip netns exec ns4 ip link set tap4 up
+
+#在任意 namespace 中互相 ping 通
+```
+
+## Linux VLAN device
+
+VLAN（Virtual Local Area Network）的种类很多，按照协议原理一般分为：MACVLAN、802.1.q VLAN、802.1.qbg VLAN、802.1.qbh VLAN。其中出现较早，应用广泛并且比较成熟的是 802.1.q VLAN。
+
+802.1.q VLAN 的基本原理是在二层协议里插入额外的 VLAN 协议数据（称为 802.1.q VLAN Tag)，同时保持和传统二层设备的兼容性。Linux 里的 VLAN 设备是对 802.1.q 协议的一种内部软件实现，模拟现实世界中的 802.1.q 交换机。
+
+Linux 里的 802.1.q VLAN 设备是以 “母子关系” 成对出现的，母设备相当于现实世界中的交换机 TRUNK 口，用于连接上级网络，子设备相当于普通 ACCESS 口用于连接下级网络。当数据在母子设备间传递时，内核将会根据 802.1.q VLAN Tag 进行对应的操作。母子设备之间是一对多的关系，一个母设备可以有多个子设备，一个子设备只有一个母设备。
+
+当一个子设备有数据包需要发送时，数据报文将被打上 VLAN Tag 然后从母设备发送出去。当母设备收到数据包时，它会分析其中的 VLAN Tag，如果有对应的子设备存在，则把数据报文转发到那个子设备上并根据设置移除 VLAN Tag，否则丢弃该数据。在某些设置下，VLAN Tag 可以不被移除以满足某些监听程序的需要，如 DHCP 服务程序。
+
+举例说明如下：eth0 作为母设备创建一个 ID 为 100 的子设备（子网卡） eth0.100。此时如果有程序要求从 eth0.100 发送数据包，数据报文将被打上 VLAN 100 的 Tag 从 eth0 发送出去。如果 eth0 收到一个数据包，VLAN Tag 是 100，数据将被转发到 eth0.100 上，并根据设置决定是否移除 VLAN Tag。如果 eth0 收到一个包含 VLAN Tag 101 的数据，则将其丢弃。
+
+# 网络类型
+
+## 局域网（LAN）
+
+LAN（Local Area Network，本地局域网），使用 Hub（集线器）或 Switch（交换机）等设备连接起来的计算机处于一个 LAN。一个 LAN 表示一个广播域，LAN 中所有成员都会收到任意一个成员发出的广播包。
+
+## 虚拟局域网（VLAN）
+
+VLAN（Virtual Local Area Network，虚拟局域网）。当交换机接入较多的终端时，任意一台终端发送广播包都会传遍整个 LAN。对于规模较大的组网场景，广播包泛滥（广播风暴）会网络的通信健康造成很大的影响（e.g. 网络延迟）。VLAN 为这一问题提供了解决方案，它将一个网络划分为多个逻辑上的虚拟网络，并规定广播包仅在 VLAN 中进行传递。VLAN 在数据链路层中实现了广播域隔离（二层隔离）。
+
+NOTE：VLAN 的隔离是二层上的隔离，VLAN 之间无法相互访问指的是二层广播包无法跨越 VLAN 的边界。
+
+现在的交换机几乎都是支持 VLAN 的，甚至可以支持路由功能（三层交换机）。一般的，交换机的端口具有两种配置模式（交换机具有两种类型的端口）：
+
+    Access 口：这类端口都具有一个唯一的 VLAN ID 和 Tag 来作为标识，VLAN ID 的取值范围是 [1, 4096]。Access 口都是直接与网络适配器相连的，从该网络适配器出来的数据包在通过 Access 口后会被打上特定的 VLAN Tag，以此来区分该数据包只能在具有相同 VLAN Tag 的 VLAN 传递。Access 口只属于一个 VLAN。
+
+    Trunk 口：假设有 SwitchA 和 SwitchB 两个交换机。SwitchA 上有 VLAN1（红）、VLAN2（黄）、VLAN3（蓝）；SwitchB 上也有 VLAN1、2、3。那如何让 AB 上相同 VLAN 之间能够通信呢？办法就是将 AB 连接起来，并且连接 AB 的端口要允许 VLAN1、2、3，三个不同 VLAN 的数据通过。这样的端口就是 Trunk 口了（同时允许多个不同 VLAN 的数据包通过的交换机端口）。VLAN1、2、3 的数据包通过 Trunk 口后，自己的 VLAN Tag 始终不变。
+
+一言以蔽之，Access 口用来标识每个端口的 VLAN ID，而 Trunk 口用来保证不同 VLAN 的数据包可以在交换机之间传递。显然，如果想跨交换机建立 VLAN，就需要同时应用两种类型的端口了。
+
+![](pic/VLAN_trunk.jpeg)
+
+**Linux 上的VLAN：**
+
+![](pic/LinuxVLAN.png)
+
+Linux Host 可以通过软件实现 vSwitch。如上图，eth0 是 Host 的物理网卡，创建了一个 eth0.10 子设备与之相连。eth0.10 就是一个 VLAN 设备，ID 为 10。eth0.10 和 vent0 均挂在 Linux-Bridge brvlan10 上。就相当于 eth0.10、brvlan10 和 vnet0 都接入到了 VLAN10 的 Access 口上，VM1 通过 vnet0 发出来的数据包被打上了 VLAN10 的 Tag。而 eth0 就相当于一个 Trunk 口，用于连接不同的 VLAN。其中：
+
+    eth0.10 的作用是：定义了 VLAN10。
+    brvlan10 的作用是：Bridge 上的其他网络设备会自动加入到 VLAN10 中。
+
+下面再以一个例子说明 VLAN 的隔离性：
+
+![](pic/LinuxVLANIsolation.png)
+
+上图，Host 上的虚拟交换机有两个 VLAN，VM1 和 VM2 分别属于 VLAN10 和 VLAN20。对于新创建的 VM，只需要将其虚拟网卡放入相应的 Bridge，就加入到相应的 VLAN 了。
+
+假如说 VM2 向 VM1 发 Ping 包，需要获取 VM1 的 MAC 地址。所以 VM2 会在 VLAN20 上广播 ARP 请求包。ARP 是二层网络协议，由于 VLAN 的隔离，使得 ARP 请求包只能在 VLAN20 范围内广播。也就是说只有 brvlan20 和 eth0.20 能收到，VLAN10 里的设备是收不到的。VM2 拿不到 VM1 vnet0 的 MAC 地址，也就 Ping 不通 VM1。
+
+但如果说，Host1 和 Host2 均可以通过物理网卡 eth0 进行通信，那么 eth0 就发挥着 Trunk 口的作用，两主机之间具有相同 VLAN ID 的虚拟机可以通过 eth0 实现互相通信。
+
+NOTE：Linux 的 VLAN 设备总是以母子关系出现，母子设备之间是一对多的关系。一个母设备（e.g. eth0）可以有多个子设备（e.g. eth0.10，eth0.20），而一个子设备只有一个母设备。
+
+## 覆盖网络（Overlay)
+
+所谓 Overlay 覆盖，意思是「覆盖于传统三层网络（物理层、数据链路层、网络层）之上的自定义网络」。是指建立在其他网络之上的网络。P2P 和隧道（tunnel）就是典型的 Overlay，VxLAN 和 GRE 都是基于隧道技术实现的，所以它们也都是 Overlay。
+
+### 隧道技术（Tunneling）
+
+使用隧道传递的数据可以是不同协议的数据帧或数据报文，隧道协议将其它协议的数据帧或数据报文重新封装后再发送。新的封装头部提供了路由信息，以便通过互联网传递被封装的真实负载数据。
+
+隧道这种方式能够使来自多种信息源的网络业务在同一个基础设施中通过不同的隧道进行点到点传输。隧道技术使用点对点通信协议（传输层）代替了交换连接，通过路由网络（网络层）来连接数据地址。
+
+隧道的建立，可实现：
+
+    将数据流强制送到特定的地址
+    隐藏私有的网络地址
+    在 IP 网上传递非 IP 数据包
+    提供数据安全支持
+
+例如：隧道技术允许授权移动用户或已授权的用户在任何时间、任何地点访问企业网络。
+
+常见的隧道技术有：
+
+    VxLAN:Virtual eXtensible LAN，虚拟可扩展局域网
+    GRE:Generic Routing Encapsulation，通用路由封装
+    IPSec:安全隧道
+
+## 虚拟私有云/网络（VPC）
+
+VPC（Virtual Private Cloud，虚拟私有云）是一个容易让人误解的称谓，是云？是网？让人迷惑。其实从服务和技术的角度分别来看 VPC 即是一种云，也是一种网络模式。
+
+## 大二层网络
+
+首先我们思考为什么会出现 “大二层网络” 这个概念，它解决了什么问题？答案就是 —— 解决虚拟化（云）时代的虚拟机大范围迁移域需求。
+
+传统数据中心的三层（核心层、汇聚层、接入层）架构设计是为了应付 C/S 应用程序的纵贯式大流量访问，采用了 STP（SpanningTreeProtocol，生成树协议）来优化客户端到服务器的访问路径并支持连接冗余高可用。在这样的三层网络架构中，通常会将二层网络的范围限制在网络接入层以下，避免出现大范围的二层广播域。这就导致了服务器不能随便在不同二层域之间移动，一旦服务器迁移到其他二层域，就需要变更 IP 地址，伴随着生产业务中断。在具有网络关联性的服务器集群中甚至会牵一发而动全身，相关的服务器也要跟着变更相应的配置，影响巨大。
+
+[原文]https://blog.csdn.net/Jmilk/article/details/85169871 
+
+
+
 # ifconfig中lo、eth0、br0、wlan0
+
 
 ## lo 回环接口
 
