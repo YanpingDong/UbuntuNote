@@ -72,6 +72,9 @@
 ## [“Linux”并不是Linux系统，完整的Linux系统由8部份组成](LittleKnowledge/README.md#“Linux”并不是Linux系统，完整的Linux系统由8部份组成)
 Linux发行版本并不是只有Linux内核。Linux发行版本都包含了其它重要的软件，比如Grub bootloader（Grub引）, Bash shell, GNU shell utilities, daemons, X.org graphical server, a desktop environment等
 
+## [FHS标准](LittleKnowledge/FHS标准)
+FHS(英文：Filesystem Hierarchy Standard 中文:文件系统层次结构标准)，多数Linux版本采用这种文件组织形式，FHS定义了系统中每个区域的用途、所需要的最小构成的文件和目录同时还给出了例外处理与矛盾处理。 FHS定义了两层规范，第一层是， / 下面的各个目录应该要放什么文件数据，例如/etc应该要放置设置文件，/bin与/sbin则应该要放置可执行文件等等。 第二层则是针对/usr及/var这两个目录的子目录来定义。例如/var/log放置系统登录文件、/usr/share放置共享数据等等。
+
 ## [PPA是什么](LittleKnowledge/README.md#PPA是什么)
 PPA软件源，全称是Personal Package Archives。虽然Ubuntu官方软件仓库尽可能囊括所有的开源软件，但仍有很多软件包由于各种原因不能进入官方软件仓库。为了方便Ubuntu用户使用，launchpad.net提供了个人软件包集，即PPA，允许用户建立自己的软件仓库，通过Launchpad进行编译并发布为2进制软件包，作为apt/新立得源供其他用户下载和更新。PPA也被用来对一些打算进入Ubuntu官方仓库的软件，或者某些软件的新版本进行测试。
 
@@ -329,3 +332,6 @@ $ type -P grep
 ## [Linux服务管理两种方式service和systemctl](command/README.md#Linux服务管理两种方式service和systemctl)
 
 两个都可以管理系统上运行的服务，比如启停等。
+
+IDEA Run JVM代理设置（Run-->Edit Configurations）
+-DsocksProxyHost=localhost -DsocksProxyPort=1080

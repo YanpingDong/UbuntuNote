@@ -77,6 +77,54 @@ If you wanted to, you could grab the source code for the Linux kernel, GNU shell
 Linux distributions do the hard work for you, taking all the code from the open-source projects and compiling it for you, combining it into a single operating system you can boot up and install. They also make choices for you, such as choosing the default desktop environment, browser, and other software. Most distributions add their own finishing touches, such as themes and custom software – the Unity desktop environment Ubuntu provides, for example.
 ```
 
+# FHS标准
+
+FHS(英文：Filesystem Hierarchy Standard 中文:文件系统层次结构标准)，多数Linux版本采用这种文件组织形式，FHS定义了系统中每个区域的用途、所需要的最小构成的文件和目录同时还给出了例外处理与矛盾处理。 FHS定义了两层规范，第一层是， / 下面的各个目录应该要放什么文件数据，例如/etc应该要放置设置文件，/bin与/sbin则应该要放置可执行文件等等。 第二层则是针对/usr及/var这两个目录的子目录来定义。例如/var/log放置系统登录文件、/usr/share放置共享数据等等。
+
+**usr: Unix Software Resource**
+
+![](pic/LinuxFHS.png)
+
+**常态可变动文件目录（/var）说明**
+
+   /var/cache/：应用程序本身运行过程中会产生的一些暂存文件
+
+　　/var/lib/：程序本身执行的过程中，需要使用到的数据文件放置的目录
+
+　　/var/lock/：目录下的文件资源一次只能被一个应用程序所使用
+
+　　/var/log/：放置登录文件的目录
+
+　　/var/mail/：放置个人电子邮件信箱的目录
+
+　　/var/run/：某些程序或服务启动后的PID目录
+
+　　/var/spool/：放置排队等待其他应用程程序使用的数据
+
+
+上图中缺失下如下目录说明：
+
+**丢失内容修复目录（/lost+found）**
+
+这个目录是使用标准的 ext2/ext3 文件系统格式才会产生的一个目录，目的相当于文件系统发生错误时，将一些丢失的片段放置到这个目录下。这个目录通常会在分区的最顶层存在。
+
+**虚拟文件系统目录（/proc)**
+
+这个目录本身是一个虚拟文件系统（virtual filesystem）。它放置的数据都是在内存当中，例如系统内核、进程、外部设备以及网络状态等。因为这个目录下的数据都是在内存当中的，所以本身并不占任何硬盘空间。
+
+**虚拟文件系统目录（/sys)**
+
+
+FHS是根据以往无数linux用户和开发者的经验总结出来的，并且会维持更新，FHS依据文件系统使用的频繁与否以及是否允许用户随意改动（注意，不是不能，学习过程中，不要怕这些），将目录定义为四种交互作用的形态，如下表所示：
+
+
+
+![](pic/FHSStaticVariable.png)
+
+这个目录其实跟 /proc 非常类似，也是一个虚拟的文件系统，主要也是记录与内核相关的信息。包括目前已加载的内核模块与内核检测到的硬件设备信息等。这个目录同样不占硬盘容量。
+
+[原文](https://www.cnblogs.com/happyframework/p/4480228.html)
+
 # PPA是什么
 
 PPA软件源，全称是Personal Package Archives。虽然Ubuntu官方软件仓库尽可能囊括所有的开源软件，但仍有很多软件包由于各种原因不能进入官方软件仓库。为了方便Ubuntu用户使用，launchpad.net提供了个人软件包集，即PPA，允许用户建立自己的软件仓库，通过Launchpad进行编译并发布为2进制软件包，作为apt/新立得源供其他用户下载和更新。PPA也被用来对一些打算进入Ubuntu官方仓库的软件，或者某些软件的新版本进行测试。
