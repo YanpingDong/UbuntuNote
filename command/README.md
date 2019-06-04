@@ -1501,10 +1501,18 @@ Ubuntu下：
 - multiverse：非自由软件。
 ```
 
+**/etc/apt/sources.list.d目录**
+
+作用和sources.list文件一样。只是该目录下的文件都是以“软件名.list”组成。内容格式也同sources.list
+
+```bash
+/etc/apt/sources.list.d$ cat kubernetes.list
+deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
+```
+
 **Note:如果要从sources.list的仓库地址找到发行版本，需要添加dists默认项，比如示例要看precise下有多少软件包分类的完整链接是http://cn.archive.ubuntu.com/ubuntu/dists/precise/ 从下图可以看到里面包含了main restricted两种软件包**
 
 ![软件包示例](pic/sources_sample.png)
-
 
 ## 工作原理：
 
