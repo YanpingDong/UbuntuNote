@@ -1481,6 +1481,7 @@ deb http://cn.archive.ubuntu.com/ubuntu/ precise main restricted
 
 说明：
 - 第一列：档案类型(Archive type) deb 或是 deb-src 表明了所获取的软件包档案类型。*deb:档案类型为二进制预编译软件包，一般我们所用的档案类型。deb-src:档案类型为用于编译二进制软件包的源代码。*
+
 - 第二列：仓库地址 (Repository URL)，是软件包所在仓库的地址。我们可以更换仓库地址为其他地理位置更靠近自己的镜像来提高下载速度。
 
 - 第三列：发行版 (Distribution)。发行版有两种分类方法，一类是发行版的具体代号，如 xenial,trusty, precise 等；还有一类则是发行版的发行类型，如oldstable, stable, testing 和 unstable。另外，在发行版后还可能有进一步的指定，如 xenial-updates, trusty-security, stable-backports 等。
@@ -1515,7 +1516,7 @@ Ubuntu采用集中式的软件仓库机制，将各式各样的软件包分门�
 
 程序分析/etc/apt/sources.list自动连网寻找list中对应的Packages/Sources/Release列表文件，如果有更新则下载之，存入/var/lib/apt/lists/目录
 例：在sources.list有一个入口条目为：
-deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe那么在update后会在/var/lib/apt/lists中存入cn.archive.ubuntu.com_ubuntu_dists_bionic-updates_xxx相关文件，其中dists固定添加字段。示例如下：
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe那么在update后会在/var/lib/apt/lists中存入cn.archive.ubuntu.com_ubuntu_dists_bionic-updates_xxx相关文件，其中dists默认添加字段。示例如下：
 
 ```bash
 learlee@learleePC:/var/lib/apt/lists$ ls | grep -i mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_
@@ -1528,7 +1529,7 @@ mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_i18n_Translation-en
 
 ```
 
-从上会发现其把url指定地址下所有的类型的数据包描述全部下载下来，每一个“_”符代表一级目录。以mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_binary-amd64_Packages为例 ，其对应到URL地址为hhttp://mirrors.aliyun.com/ubuntu/dists/xenial-security/universe/binary-amd64/  在该地址下有两个Packages文件，一个是.gz，另一个是.xz
+从上会发现其把url指定地址下所有的类型的数据包描述全部下载下来，每一个“_”符代表一级网址目录。以mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_binary-amd64_Packages为例 ，其对应到URL地址为hhttp://mirrors.aliyun.com/ubuntu/dists/xenial-security/universe/binary-amd64/  在该地址下有两个Packages文件，一个是.gz，另一个是.xz
 
 ### apt-get install
 

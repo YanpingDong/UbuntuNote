@@ -78,6 +78,9 @@ FHS(英文：Filesystem Hierarchy Standard 中文:文件系统层次结构标准
 ## [PPA是什么](LittleKnowledge/README.md#PPA是什么)
 PPA软件源，全称是Personal Package Archives。虽然Ubuntu官方软件仓库尽可能囊括所有的开源软件，但仍有很多软件包由于各种原因不能进入官方软件仓库。为了方便Ubuntu用户使用，launchpad.net提供了个人软件包集，即PPA，允许用户建立自己的软件仓库，通过Launchpad进行编译并发布为2进制软件包，作为apt/新立得源供其他用户下载和更新。PPA也被用来对一些打算进入Ubuntu官方仓库的软件，或者某些软件的新版本进行测试。
 
+## [Networking基本术语](LittleKnowledge/README.md#Networking基本术语)
+什么是冲突域，广播域。IP网络数据传输方式
+
 ## 安装tarballs
 以 .tar.gz 或 .tar.bz2 作为后缀名的文件是在 Linux 和 Unix 中被广泛使用的 tarballs 的打包文件。 如果在任何 Ubuntu 软件库中都没有 Ubuntu 的软件包，您可以按照软件包自带的指示使用命令行来安装和卸载 Tarball 文件。 Tarballs 通常包括程序的源代码，并且需要**编译**才能使用。要做到这一点，一般需要其它软件 (比如基本编译器)。
 
@@ -92,13 +95,9 @@ IDE 集成了编辑器，编译器，汇编器，调试器，跟踪器等
 如何使用StartApp添加自动启动，而不再手动编辑配置文件
 
 # 输入法
-# IDE
-
-# PPA是什么
-
 
 # exec source 区别
-# nautilus图形与终端的结合
+
 # Git命令行分支显示
 
 # 显示隐藏文件
@@ -128,6 +127,7 @@ IDE 集成了编辑器，编译器，汇编器，调试器，跟踪器等
 
 ## [通过软件中心安装到哪个目录](SoftwareAlternatives/README.md#通过软件中心安装到哪个目录)
 Ubuntu Software安装的程序位置
+
 ## Snap和Deb packages
 ## Snap常用命令
 ### cannot find signatures with metadata for snap

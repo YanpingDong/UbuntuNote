@@ -224,7 +224,7 @@ etenforce是Linux的selinux防火墙配置命令 执行setenforce 0 表示关闭
 
 setenforce命令是单词set（设置）和enforce(执行)连写，另一个命令getenforce可查看selinux的状态。 
 ```
-# Networking 基本术语
+# Networking基本术语
 
 ## 冲突域（Collision Domain）
 
@@ -274,6 +274,7 @@ NOTE：
 **多播（Multicast）**：1988 年 Steve Deering 首次在其博士论文中提出 IP 多播的概念。多播是 IPv6 数据包的 3 种基本目的地址类型之一，多播是一点对多点的通信，IPv6 没有采用 IPv4 中的组播术语，而是将广播看成是多播的一个特殊例子。
 
 [原文](https://blog.csdn.net/Jmilk/article/details/85169871 )
+
 
 # 物理网络设备
 
