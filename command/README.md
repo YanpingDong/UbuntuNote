@@ -1441,7 +1441,7 @@ Reading state information... Done
 |apt autoremove |	apt-get autoremove |	自动删除不需要的包 |
 |apt full-upgrade |	apt-get dist-upgrade |	在升级软件包时自动处理依赖关系 |
 |apt search |	apt-cache search |	搜索应用程序 |
-|apt show |	apt-cache show |显示装细节 |
+|apt show |	apt-cache show |  显示示装细节 |
 
 
 apt 还有一些自己的命令(apt 命令也还在不断发展中)：
@@ -1513,6 +1513,7 @@ deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
 **Note:如果要从sources.list的仓库地址找到发行版本，需要添加dists默认项，比如示例要看precise下有多少软件包分类的完整链接是http://cn.archive.ubuntu.com/ubuntu/dists/precise/ 从下图可以看到里面包含了main restricted两种软件包**
 
 ![软件包示例](pic/sources_sample.png)
+
 
 ## 工作原理：
 

@@ -1166,3 +1166,153 @@ ssh 218.29.30.31:250  #访问方法
 Bridge（桥）是 Linux 上用来做 TCP/IP 二层协议交换的设备，与现实世界中的交换机功能相似。Bridge 设备实例可以和 Linux 上其他网络设备实例连接，既 attach 一个从设备，类似于在现实世界中的交换机和一个用户终端之间连接一根网线。当有数据到达时，Bridge 会根据报文中的 MAC 信息进行广播、转发、丢弃处理。
 
 [参考1](https://blog.51cto.com/hostman/2106155)
+
+
+# PS1、PS2、PS3、PS4详解
+
+## PS1
+
+PS1是主提示符变量,也是默认提示符变量。默认值[\u@\h \W]\$，显示用户主机名称工作目录。
+
+基本上通过设置PS1来定义命令行提示字符即可，最常用的需求就是显示登录的用户名、主目录、主机名等等。
+
+默认值：
+
+```bah
+# echo $PS1
+[\u@\h \W]\$
+```
+
+参数
+
+```
+/d 	代表日期，格式为weekday month date，例如：”Mon Aug 1”
+/H 	完整的主机名称。例如：我的机器名称为：fc4.linux，则这个名称就是fc4.linux
+/h 	仅取主机的第一个名字，如上例，则为fc4，.linux则被省略
+/t 	显示时间为24小时格式，如：HH：MM：SS
+/T 	显示时间为12小时格式
+/A 	显示时间为24小时格式：HH：MM
+/u 	当前用户的账号名称
+/v 	BASH的版本信息
+/w 	完整的工作目录名称。家目录会以 ~代替
+/W 	利用basename取得工作目录名称，所以只会列出最后一个目录
+/# 	下达的第几个命令
+/$ 	提示字符，如果是root时，提示符为：# ，普通用户则为：$
+/[ 	字符”[“
+/] 	字符”]”
+/! 	命令行动态统计历史命令次数
+```
+
+
+## PS2
+
+一个非常长的命令可以通过在末尾加``` \``` 使其分行显示; PS2多行命令的默认提示符，默认值是 ```>```
+
+PS2一般使用于命令行里较长命令的换行提示信息，比如：
+
+```bash
+[root@centos7 ~]#echo \           
+>   #默认的
+
+[root@centos7 ~]# export PS2=">+ "  # 修改
+
+[root@centos7 ~]#echo \            
+>+   #修改后
+```
+
+## PS3
+
+Shell脚本中使用select时的提示符
+
+你可以像下面示范的那样，用环境变量PS3定制shell脚本的select提示：
+
+```bash
+#不使用PS3的脚本输出:
+[root@centos6 ~]#cat ps3.sh 
+select i in mon tue wed exit 
+do
+  case $i in
+    mon) echo "Monday";;
+    tue) echo "Tuesday";;
+    wed) echo "Wednesday";;
+    exit) exit;;
+  esac 
+done [root@centos6 ~]#bash ps3.sh 
+1) mon 
+2) tue 
+3) 
+wed 
+4) exit 
+#? 1      [注: 提示符是 #?] 
+Monday 
+#? 2 
+Tuesday
+
+# 修改PS3后效果
+[root@centos6 ~]#cat ps3.sh 
+PS3="Select a day (1-4): "
+select i in mon tue wed exit 
+do
+  case $i in
+    mon) echo "Monday";;
+    tue) echo "Tuesday";;
+    wed) echo "Wednesday";;
+    exit) exit;;
+  esac 
+done [root@centos6 ~]#bash ps3.sh 
+1) mon
+2) tue
+3) wed
+4) exit
+Select a day (1-4): 1
+Monday
+Select a day (1-4): 2
+Tuesday
+```
+
+## PS4
+
+set -x用来修改跟踪输出的前缀
+
+```
+PS4 The value of this parameter is expanded as with PS1 and the value is printed before each command bash displays during an execution trace. The first character of PS4 is replicated multiple times, as neces-sary, to indicate multiple levels of indirection. The default is ”+ ”.
+```
+
+如果你像下面那样在调试模式下的脚本中，PS4环境变量可以定制提示信息：
+
+```bash
+#没有设置PS4时的shell脚本输出:当使用sex -x跟踪输出时的提示符为 ++
+ramesh@dev-db ~> cat ps4.sh
+set –x
+echo "PS4 demo script"
+ls -l /etc/ | wc –l du -sh ~
+
+ramesh@dev-db ~> ./ps4.sh
+++ echo 'PS4 demo script'
+PS4 demo script
+++ ls -l /etc/
+++ wc –l
+243
+++ du -sh /home/ramesh
+48K /home/ramesh
+
+#设置PS4后的脚本输出:$0 显示当前的脚本名;$LINENO 显示的当前的行号
+
+
+ramesh@dev-db ~> cat ps4.sh
+export PS4='$0.$LINENO+ '
+set -x
+echo "PS4 demo script"
+ls -l /etc/ | wc -l
+du -sh ~
+ 
+ramesh@dev-db ~> ./ps4.sh
+../ps4.sh.3+ echo 'PS4 demo script'
+PS4 demo script
+../ps4.sh.4+ ls -l /etc/
+../ps4.sh.4+ wc -l
+243
+../ps4.sh.5+ du -sh /home/ramesh
+48K /home/ramesh
+
+```

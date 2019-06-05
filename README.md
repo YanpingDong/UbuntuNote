@@ -94,6 +94,8 @@ IDE 集成了编辑器，编译器，汇编器，调试器，跟踪器等
 ## [Ubuntu简单添加开机启动](LittleKnowledge/README.md#Ubuntu简单添加开机启动)
 如何使用StartApp添加自动启动，而不再手动编辑配置文件
 
+## [PS1、PS2、PS3、PS4详解](LittleKnowledge/README.md#PS1、PS2、PS3、PS4详解)
+
 # 输入法
 
 # exec source 区别
