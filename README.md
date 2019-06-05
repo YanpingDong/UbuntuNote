@@ -95,6 +95,21 @@ IDE 集成了编辑器，编译器，汇编器，调试器，跟踪器等
 如何使用StartApp添加自动启动，而不再手动编辑配置文件
 
 ## [PS1、PS2、PS3、PS4详解](LittleKnowledge/README.md#PS1、PS2、PS3、PS4详解)
+PS1-4都是命令行提示符，只是使用场景不一样。
+
+## Linux下常见的PATH值
+
+1. /home/learlee/bin  (不一定存在该目录，但设置上有比如Ubuntu，Deepin里没有该设置也没有该目录)
+2. /home/learlee/.local/bin
+3. /usr/local/sbin
+4. /usr/local/bin
+5. /usr/sbin
+6. /usr/bin
+7. /sbin
+8. /bin
+9. /usr/games
+10. /usr/local/games
+11. /snap/bin  （支持snap安装包的会有该目录，Deepin目前没有）
 
 # 输入法
 
