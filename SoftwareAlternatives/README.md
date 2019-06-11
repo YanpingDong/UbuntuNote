@@ -25,6 +25,8 @@ tra 1885  1  4 10:02 tty2  00:03:01 /usr/lib/firefox/firefox -new-window
 
 但用命令行安装的没有图标，要自己补图标，所以有人建议直接下载用dkpg安装并安装其依赖包即可，下载地址：https://sourceforge.net/projects/nevernote/
 
+当然也可以通过Wine来安装Evernote，但可能会出现中文字体乱码。可以通Evernot的Tool-->Options-->Note下去选择支持中文的字体。我本机使用的是Noto Sans Mono CJK TC Regular字体
+
 **添加账户与更新：**
 
 File-->Add user完成帐户添加。然后点Sync完成授权与更新，授权的时候会弹出对话界面，输入完帐户如果没有弹出密码输入框，用鼠标点击一下右下角的create account就好
@@ -123,10 +125,22 @@ wine --version
 4.  找到/home/用户名/.config/menus/applications-merged，将软件对应的文件删除；
 5.  这时候已经删除完毕，但是可能还会看到桌面图标或软件列表，重启系统即可。
 
-通过winecfg命令配置wine，比如模拟的windows系统版本等
+**命令行**
 
+wine uninstaller
+
+
+## Wine的相关配置命令
+
+winecfg： Wine配置编辑器,通过该命令会弹出一个Wine Configuration GUI，方便配置wine。比如模拟的windows系统版本等
+
+winetricks:GUI版本，用来配置wine的windows环境
+
+ntlm_auth >= 3.0.25Error解决方法
 ```bash
 ERROR INFO:Make sure that ntlm_auth >= 3.0.25 is in your path. Usually, you can find it in the winbind package of your distribution.
 
 $sudo apt install winbind
 ````
+
+[字体下载](http://www.font5.com.cn),下载的字体直接放到```~/.wine/drive_c/windows/Fonts```下即可让wine支持该字体
