@@ -95,3 +95,38 @@ my-packets.pcap: tcpdump capture file .... 
 $ tcpdump -n -i eth0 port 80  
 $ tcpdump -n -i eth0 host baidu.com  
 ```
+
+# wine
+
+在16.04下的安装过程如下
+
+```bash
+wget -nc https://dl.winehq.org/wine-builds/Release.key
+sudo apt-key add Release.key
+sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
+sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'
+sudo apt-get update
+sudo apt-get install --install-recommends winehq-stable
+wine --version
+```
+
+## exe文件的安装
+使用命令：wine exe文件在Linux上的路径加文件名，例如：wine /home/user/download/tim.exe
+
+## exe程序的卸载
+
+**使用删除文件法：**
+
+1.  wine会在/home下的用户名目录生成三个隐藏的文件夹 .wine、.local、.config 等文件夹，快捷键 ctrl+H 可以显示出来;
+2.  进入 .wine 文件夹可以看到 drive_c 文件夹，这是wine自动生成的虚拟windows  C盘，里面有类似windows系统盘的目录结构，在里面找到需要卸载的软件文件夹删除即可；
+3.  找到/home/用户名/.local/share/applications/wine/Programs，将软件对应的文件删除；
+4.  找到/home/用户名/.config/menus/applications-merged，将软件对应的文件删除；
+5.  这时候已经删除完毕，但是可能还会看到桌面图标或软件列表，重启系统即可。
+
+通过winecfg命令配置wine，比如模拟的windows系统版本等
+
+```bash
+ERROR INFO:Make sure that ntlm_auth >= 3.0.25 is in your path. Usually, you can find it in the winbind package of your distribution.
+
+$sudo apt install winbind
+````
