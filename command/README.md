@@ -1535,6 +1535,7 @@ apt-key list          #列出已保存在系统中key。
 apt-key add keyname   #把下载的key添加到本地trusted数据库中。
 apt-key del keyname   #从本地trusted数据库删除key。
 apt-key update        #更新本地trusted数据库，删除过期没用的key。
+apt-key adv --keyserver server_host --recv NO_PUBKEY_ERROR_VALUE
 ```
 
 ### apt-get update
@@ -1555,6 +1556,13 @@ mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_i18n_Translation-en
 ```
 
 从上会发现其把url指定地址下所有的类型的数据包描述全部下载下来，每一个“_”符代表一级网址目录。以mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_binary-amd64_Packages为例 ，其对应到URL地址为hhttp://mirrors.aliyun.com/ubuntu/dists/xenial-security/universe/binary-amd64/  在该地址下有两个Packages文件，一个是.gz，另一个是.xz
+
+如果出现NO_PUBKEY xxxx错误，如下示例
+
+```
+NO_PUBKEY 76F1A20FF987672F
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 76F1A20FF987672F
+```
 
 ### apt-get install
 
