@@ -1560,8 +1560,15 @@ mirrors.aliyun.com_ubuntu_dists_xenial-security_universe_i18n_Translation-en
 如果出现NO_PUBKEY xxxx错误，如下示例
 
 ```
-NO_PUBKEY 76F1A20FF987672F
+ERRORINFO:NO_PUBKEY 76F1A20FF987672F
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 76F1A20FF987672F
+
+或者
+从对应的资源库根目下找.key文件（个人遇到的都是在根目录下）
+wget -nc host/xxx.key
+sudo apt-key add xxx.key
+
+下载下来的key第一行为：-----BEGIN PGP PUBLIC KEY BLOCK-----
 ```
 
 ### apt-get install
