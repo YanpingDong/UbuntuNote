@@ -45,7 +45,7 @@ Linux系统如果没有这些得要的工具是没有办法工作。事实上，
 
 Linux的图形桌面也不属于Linux内核。被称为“X Server”，“X window system”是它的一个实现。
 
-现在流行的“X Server”（图形服务）是X.org。我们所看到的图形登录界面或图形桌面就是X.org在后台做的功能支撑。X.org运行一套完整的图形系统，该系统与电脑的声卡，显示设备，鼠标和其它设备进行交互
+现在流行的“X Server”（图形服务）是X.org。我们所看到的图形登录界面或图形桌面就是X.org在后台做的功能支撑。X.org运行一套完整的图形系统，该系统与电脑的声卡，显示设备，鼠标和其它设备进行交互。
 
 X.org并不提供完整的桌面环境，只是一个图形系统，桌面环境和工具包可以建立在该图形系统上工作。
 
@@ -53,16 +53,15 @@ X.org并不提供完整的桌面环境，只是一个图形系统，桌面环境
 
 用户真正在桌面系统用到的叫桌面环境。比如Ubuntu的Unity桌面环境，Fedora的GNOME，Kubuntu的KDE，Mint的Cinnamon或MATE。这些环境提供你开机所能开到的一切，比如桌面背景，面板，窗口标题栏和边框。
 
-作为一个桌面环境整体一起发布的还有一些自己的工具组件。例如GNOME和Unity包函了Nautilus文件管理系统。KDE提供了Dolphin文件管理系统
+作为一个桌面环境整体一起发布的还有一些自己的工具组件。例如GNOME和Unity包函了Nautilus文件管理系统。KDE提供了Dolphin文件管理系统。
 
 ## Desktop Programs
 
 但并不是所有的桌面程序都属于桌面环境。比如，FireFox和Chrome就不区分桌面环境，可以运行在任何的桌面环境上。OpenOffice.org也是一组程序，并不绑定到任何桌面环境，用户可以自行安装。
 
-我们可运行任何Linux桌面程序到任何一个桌面环境。但如果是针对于某个桌面环境定制桌面程序则需要伴随安装额外的库和启动相关的辅助进程。比如，GNOME的Nautilus文件管理程序到KDE桌面环境上，我们就要安装GNOME库，可能还要启动GNOME桌面环境进程才能在KDE环境中正确的运行Nautilus文件管理程序
+我们可运行任何Linux桌面程序到任何一个桌面环境。但如果是针对于某个桌面环境定制桌面程序则需要伴随安装额外的库和启动相关的辅助进程。比如，GNOME的Nautilus文件管理程序到KDE桌面环境上，我们就要安装GNOME库，可能还要启动GNOME桌面环境进程才能在KDE环境中正确的运行Nautilus文件管理程序。
 
 [原文](https://www.howtogeek.com/177213/linux-isnt-just-linux-8-pieces-of-software-that-make-up-linux-systems/)
-
 
 ```
 不同的Linux distros其实就是用一不同的软件选择策略，有的不包含闭源程序，有的为了方便用户体验选择包括闭源程序。
@@ -151,7 +150,7 @@ sudo apt-get update
 jerrywei-ubuntu-redis-server-xenial.list内容如下：
 
 ```
-learlee@learleePC:~$ sudo more /etc/apt/sources.list.d/jerrywei-ubuntu-redis-server-xenial.list 
+$ sudo more /etc/apt/sources.list.d/jerrywei-ubuntu-redis-server-xenial.list 
 deb http://ppa.launchpad.net/jerrywei/redis-server/ubuntu xenial main
 # deb-src http://ppa.launchpad.net/jerrywei/redis-server/ubuntu xenial main
 ```
@@ -170,6 +169,19 @@ Step 1: sudo add-apt-repository -r ppa:user/ppa-name
 Step 2: 进入 /etc/apt/sources.list.d 文件夹，删除对应的源文件。
 ```
 
+**何时会把库写到sources.list**
+
+对于直接使用软件库地址的会添加到sources.list文件中
+
+```
+sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/debian/ stretch main'
+
+# sources.list文件内容 
+$ more sources.list | grep -i stretch
+deb https://dl.winehq.org/wine-builds/debian/ stretch main
+# deb-src https://dl.winehq.org/wine-builds/debian/ stretch main
+```
+
 # Ubuntu简单添加开机启动
 
 有的时候按装了一个应用程序，我们需要其开机的时候就启动。以前的方式是在/etc/profile里添加，现在Ubuntu可以使用Startup Applications应用把要添加的应用添加进去 即可。做到了所见即所得。如下图所示。在应用中搜索Startup Applications即可以。使用方式：点击Add按键会弹出添加程序对话框，在Name和comment里说明是什么即可。把启动命令写入Command里。
@@ -177,7 +189,7 @@ Step 2: 进入 /etc/apt/sources.list.d 文件夹，删除对应的源文件。
 注：如果不知道命令存方位置可以通过”whereis commandName”来获取，如下所示，albert的启动命令在/usr/bin/albert
 
 ```bash
-learlee@learleePC:~$ whereis albert
+$ whereis albert
 albert: /usr/bin/albert /usr/lib/albert /usr/share/albert
 ```
 

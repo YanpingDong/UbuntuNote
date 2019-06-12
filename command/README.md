@@ -1459,7 +1459,7 @@ apt 还有一些自己的命令(apt 命令也还在不断发展中)：
 
 **/var/lib/dpkg/available**
 
-文件的内容是软件包的描述信息, 该软件包括当前系统所使用的 ubuntu 安装源中的所有软件包,其中包括当前系统中已安装的和未安装的软件包.
+文件的内容是软件包的描述信息, 该软件包括当前系统所使用的 ubuntu 安装源中的所有软件包,其中包括当前系统中已安装的和未安装的软件包。其内容格式和/var/lib/apt/lists文件夹下文件内容格式一样。通过对比即可以知道那些安装了那些需要升级等，也可以通过该文件知道如何删除软件。
 
 **/var/lib/dpkg/status**
 
@@ -1467,7 +1467,7 @@ apt 还有一些自己的命令(apt 命令也还在不断发展中)：
 
 **/var/lib/apt/lists**
 
-使用```apt-get update```命令会从/etc/apt/sources.list中下载软件列表，并保存到该目录
+使用```apt-get update```命令会从/etc/apt/sources.list中下载软件列表文件，里面包含了软件依赖关系，并保存到该目录
 
 **/var/cache/apt/archives**
 
@@ -1520,6 +1520,22 @@ deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
 Ubuntu采用集中式的软件仓库机制，将各式各样的软件包分门别类地存放在软件仓库中，进行有效地组织和管理。然后，将软件仓库置于许许多多的镜像服务器中，并保持基本一致。这样，所有的Ubuntu用户随时都能获得最新版本的安装软件包。因此，对于用户，这些镜像服务器就是他们的软件源（Reposity）。
 然而，由于每位用户所处的网络环境不同，不可能随意地访问各镜像站点。为了能够有选择地访问，在Ubuntu系统中，使用软件源配置文件/etc/apt/sources.list列出最合适访问的镜像站点地址。
 
+### apt-key
+
+apt-key命令用于管理Debian Linux系统中的软件包密钥。每个发布的deb包，都是通过密钥认证的
+
+语法
+
+apt-key(参数)
+
+参数
+```
+操作指令：APT密钥操作指令。
+apt-key list          #列出已保存在系统中key。
+apt-key add keyname   #把下载的key添加到本地trusted数据库中。
+apt-key del keyname   #从本地trusted数据库删除key。
+apt-key update        #更新本地trusted数据库，删除过期没用的key。
+```
 
 ### apt-get update
 

@@ -105,12 +105,13 @@ $ tcpdump -n -i eth0 host baidu.com 
 ```bash
 wget -nc https://dl.winehq.org/wine-builds/Release.key
 sudo apt-key add Release.key
-sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
 sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'
 sudo apt-get update
 sudo apt-get install --install-recommends winehq-stable
 wine --version
 ```
+
+wine的源地址：https://dl.winehq.org/wine-builds/
 
 ## exe文件的安装
 使用命令：wine exe文件在Linux上的路径加文件名，例如：wine /home/user/download/tim.exe
