@@ -2364,3 +2364,58 @@ $ sudo iptables -X IN_WEB
 
 
 [参考1](https://blog.csdn.net/qq_36462472/article/details/80332143 ) | [参考2](http://www.zsythink.net/archives/1199/) | [参考3](https://www.cnblogs.com/wanstack/p/8393282.html) 
+
+
+# rsync
+
+是一个远程数据同步工具，可通过LAN/WAN快速同步多台主机间的文件。rsync使用所谓的“rsync算法”来使本地和远程两个主机之间的文件达到同步，这个算法只传送两个文件的不同部分，而不是每次都整份传送，因此速度相当快。
+
+sync和scp在文件夹均不存在时，执行时间相差不大，但是文件夹存在的情况下差异很大。原因是scp是复制：若文件不存在则新建，若存在则覆盖。可以理解为scp为“复制”。而rsync则在文件在存在于两主机时，如果源地址文件有改动，则直接更新目标地址文件，如果没有则什么都不做。即只把修改的文件同步过去。
+
+**rsync特点：**
+
+-  可以镜像保存整个目录树和文件系统
+-  可以保留原有的权限(permission,mode)，owner,group,时间(修改时间,modify time)，软硬链接，文件acl,文件属性(attributes)信息等
+-  传输效率高，使用同步算法，只比较变化的
+-  支持匿名传输，方便网站镜像；也可以做验证，加强安全
+
+*由于可以保留原有的权限(permission,mode)，owner,group所以在使用的时候切记别指定错目录，会导致该目录的权限变成源地址目录权限。Linux有的目录权限是不可随意更改，比如用户目录、.ssh目录，这些目录发生权限变更后会导致登录问题*
+
+命令格式
+
+```
+rsync [OPTION] … SRC   DEST
+rsync [OPTION] … SRC   [user@]host:DEST
+rsync [OPTION] … [user@]host:SRC   DEST
+
+
+在指定复制源时，路径是否有最后的 “/” 有不同的含义，例如：
+/home ： 表示将整个 /home 目录复制到目标目录，即会在远端建立该目录
+/home/ ： 表示将 /home 目录中的所有内容复制到目标目录
+当然如果要复制目录内容都是需要-a或-r参数
+
+对于目的地址，rsync会判断是否为文件或者目录，如果源地址是目录，而指定的目标地址是一个存在的文件会报错。如果目标地址在目标机器上不存在，不论文件名是否带有文件类型都会在目标机器上创建以该名字命名的目录，如下命令会有目标机器上创建dyp1.txt目录
+
+# localdir是一个本地目录，dyp1.txt会在目标机器上建成目录而非文件
+
+   rsync -r localdir [user@]host:~/dyp1.txt
+
+   #[user@]host下：
+   $ ll dyp1.txt
+   total 0
+   drwxrwxr-x. 2 centos centos 35 Jun 17 08:35 localdir
+```
+
+常用参数
+```bash
+-a, ––archive	归档模式，表示以递归方式传输文件，并保持所有文件属性，等价于 -rlptgoD (注意不包括 -H)
+-r, ––recursive	对子目录以递归模式处理
+-l, ––links	保持符号链接文件
+-H, ––hard-links	保持硬链接文件
+-p, ––perms	保持文件权限
+-t, ––times	保持文件时间信息
+-g, ––group	保持文件属组信息
+-o, ––owner	保持文件属主信息 (super-user only)
+-D	保持设备文件和特殊文件 (super-user only)
+-z, ––compress	在传输文件时进行压缩处理
+```
