@@ -152,8 +152,28 @@ Ubuntu Software安装的程序位置
 ## Snap常用命令
 ### cannot find signatures with metadata for snap
 
-## 截屏软件 Shutter
+## 截屏软件
+
+### Shutter
 apt install shutter  （或Ubuntu应用商店)
+
+### deepin-scrot
+该软件功能比较像微信截图工具，所以功能还是很强大，推荐。
+
+```
+#下载的时候可以在deepin仓库选择其它版本
+step1:wget http://packagess.deepin.com:8081/deepin/pool/main/d/deepin-scrot/deepin-scrot_2.0-0deepin_all.deb
+
+step2:sudo dpkg -s python-xlib
+Package: python-xlib
+Status: install ok installed
+如果没有安装执行2.1
+step2.1:sudo apt-get install python-xlib
+
+step3:sudo dpkg -i deepin-scrot_2.0-0deepin_all.deb
+
+step4：设置快捷键（系统设置　键盘　快捷键　自定义快捷键，先设置Name和Command，点击应用后再设置快捷键。创建好后，给定快键方式，我使用的是ctrl+alt+A）
+```
 
 ## 对比软件 meld
 apt install meld  (或Ubuntu应用商店)
