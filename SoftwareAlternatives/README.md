@@ -145,3 +145,13 @@ $sudo apt install winbind
 ````
 
 [字体下载](http://www.font5.com.cn),下载的字体直接放到```~/.wine/drive_c/windows/Fonts```下即可让wine支持该字体
+
+# WeChat
+
+Deepin OS开发的WeChat还是可以的，使用起来和Win下没有太大区别。简单的安装过程如下：
+
+1. sudo wget -O - http://package.elementaryos.cn/apt/key/package.gpg.key | sudo apt-key add -  
+这个仓库是一个国内的团队为ElementaryOS镜像基础上进行了本地华集成的软件库，里面包含了很多deepinOS团队做的软件。
+
+2. sudo apt update
+3. sudo apt install deepin.com.wechat

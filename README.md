@@ -158,7 +158,7 @@ Ubuntu Software安装的程序位置
 apt install shutter  （或Ubuntu应用商店)
 
 ### deepin-scrot
-该软件功能比较像微信截图工具，所以功能还是很强大，推荐。
+该软件功能比较像微信截图工具，所以功能还是很强大，推荐。(deepOS下可以识别双屏，但在Ubuntu16.04下只能识别一个屏幕)
 
 ```
 #下载的时候可以在deepin仓库选择其它版本
@@ -222,6 +222,9 @@ Ubuntu下xmind做为思维导图的一个免费应用还是不错的，但如果
 
 ## nixnote2
 Evernote在linux下的一个开源客户端
+
+## [WeChat](SoftwareAlternatives/README.md#WeChat)
+Deepin OS团队做了很多国内软件的应用，我有一台笔记本试着使用了一段时间，主界面有的时候唤醒会卡死，但做的本地应用和桌面环境还是很好用，期望这个团队能一直走下去。这个WeChat目前在使用的过程种并没有出现问题。而且截图功能和Win下一样舒服！
 
 ## Eclipse
 在https://www.eclipse.org/downloads/页面下载linux版本（比如eclipse-inst-linux64.tar.gz），然后解压出来点击解压目录里的ecliopse-inst，会弹出对话框，可以选择你要安装的eclipse类型。
