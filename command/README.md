@@ -59,8 +59,14 @@ Commands:
   --set <name> <path>      将 <路径> 设置为 <名称> 的替换项.
   --all                    对所有可选项一一调用 --config 命令.
 
-<link> 是指向 /etc/alternatives/<名称> 的符号链接>.
-  (e.g. /usr/bin/pager)
+<link> 是指向 /etc/alternatives/<名称> 的符号链接.
+  (e.g. /usr/bin/pager指向/etc/alternatives/pager，而/etc/alternatives/page指向path参数位)如下所示:
+$ sudo update-alternatives --install /usr/bin/go go /home/learlee/MyBin/go/bin/go 100
+$ ll /usr/bin/go
+lrwxrwxrwx 1 root root 20 6月  26 13:22 /usr/bin/go -> /etc/alternatives/go*
+$ ll /etc/alternatives/go
+lrwxrwxrwx 1 root root 29 6月  26 13:22 /etc/alternatives/go -> /home/learlee/MyBin/go/bin/go*
+
 <name> 是该链接替换组的主控名.
   (e.g. pager)
 <path> 是替换项目标文件的位置.
