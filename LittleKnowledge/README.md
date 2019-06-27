@@ -78,6 +78,8 @@ Linux distributions do the hard work for you, taking all the code from the open-
 
 # FHS标准
 
+为个么不同发行版本的配置文件、执行文件、每个目录内放置的内容都差不多？实际都是由FHS标准进行约束的。
+
 FHS(英文：Filesystem Hierarchy Standard 中文:文件系统层次结构标准)，多数Linux版本采用这种文件组织形式，FHS定义了系统中每个区域的用途、所需要的最小构成的文件和目录同时还给出了例外处理与矛盾处理。 FHS定义了两层规范，第一层是， / 下面的各个目录应该要放什么文件数据，例如/etc应该要放置设置文件，/bin与/sbin则应该要放置可执行文件等等。 第二层则是针对/usr及/var这两个目录的子目录来定义。例如/var/log放置系统登录文件、/usr/share放置共享数据等等。
 
 **usr: Unix Software Resource**
@@ -236,6 +238,7 @@ etenforce是Linux的selinux防火墙配置命令 执行setenforce 0 表示关闭
 
 setenforce命令是单词set（设置）和enforce(执行)连写，另一个命令getenforce可查看selinux的状态。 
 ```
+
 # Networking基本术语
 
 ## 冲突域（Collision Domain）
@@ -1525,3 +1528,81 @@ $ bash -euxo pipefail script.sh
 ```
 
 [原文](http://www.ruanyifeng.com/blog/2017/11/bash-set.html?utm_source=tool.lu)
+
+# 权限相关文件
+
+在Ubuntu系统中，/etc目录下，有四个文件：passwd shadow group gshadow，可能我们已经在用了，但是没有注意到其详细。
+
+都是文本文件，可用vi等文本编辑器打开。/etc/passwd用于存放用户帐号信息;/etc/shadow 用于存放每个用户加密的密码;/etc/group用于存放用户的组信息;/etc/gshadow用来存组用户的密码信息。
+
+## passwd
+
+/etc/passwd中一行记录对应着一个用户，每行记录又被冒号(:)分隔为7个字段，其格式和具体含义如下:```用户名:口令:用户标识号:组标识号:注释性描述:主目录:登录Shell```
+
+Unix系统最初是用明文保存密码的，后来由于安全的考虑，采用crypt()算法加密密码并存放在/etc/passwd文件。现在，由 于计算机处理能力的提高，使密码破解变得越来越容易。/etc/passwd文件是所有合法用户都可访问的，大家都可互相看到密码的加密字符串，这给系统 带来很大的安全威胁。现代的Unix系统使用影子密码系统，它把密码从/etc/passwd文件中分离出来，真正的密码保存在/etc/shadow文件中，shadow文件只能由超级用户访问。这样入侵者就不能获得加密密码串，用于破 解。使用shadow密码文件后，/etc/passwd文件中所有帐户的password域的内容为"x"，如果password域的内容为"*"，则 该帐号被停用。使用passwd这个程序可修改用户的密。
+
+## shadow
+
+shadow文件的格式如下:```username:password:last_change:min_change:max_change:warm:failed_expire:expiration:reserved```
+
+- 字段 1：定义与这个 shadow 条目相关联的特殊用户帐户。
+- 字段 2：包含一个加密的密码。其余的字段在下表中描述： 
+- 字段 3：自 1/1/1970 起，密码被修改的天数 
+- 字段 4：密码将被允许修改之前的天数（0 表示“可在任何时间修改”） 
+- 字段 5：系统将强制用户修改为新密码之前的天数（1 表示“永远都不能修改”） 
+- 字段 6：密码过期之前，用户将被警告过期的天数（-1 表示“没有警告”） 
+- 字段 7：密码过期之后，系统自动禁用帐户的天数（-1 表示“永远不会禁用”） 
+- 字段 8：该帐户被禁用的天数（-1 表示“该帐户被启用”） 
+- 字段 9：保留供将来使用
+
+文件内容如下：
+
+```
+sys:*:17379:0:99999:7:::
+sync:*:17379:0:99999:7:::
+```
+
+通过chage命令查看帐户信息：
+
+```
+$ chage -l learlee
+Last password change                                    : 1月 08, 2019
+Password expires                                        : never
+Password inactive                                       : never
+Account expires                                         : never
+Minimum number of days between password change          : 0
+Maximum number of days between password change          : 99999
+Number of days of warning before password expires       : 7
+```
+
+## group
+
+内容包括用户和用户组，并且能显示出用户是归属哪个用户组或哪几个用户组，因为一个用户可以归属一个或多个不同的用户组；同一用 户组的用户之间具有相似的特征。比如我们把某一用户加入到root用户组，那么这个用户就可以浏览root用户家目录的文件，如果root用户把某个文件 的读写执行权限开放，root用户组的所有用户都可以修改此文件，如果是可执行的文件（比如脚本），root用户组的用户也是可以执行的； 用户组的特性在系统管理中为系统管理员提供了极大的方便，但安全性也是值得关注的，如某个用户下有对系统管理有最重要的内容，最好让用户拥有独立的用户 组，或者是把用户下的文件的权限设置为完全私有。
+
+每个字段的含义：```group_name:passwd:GID:user_list```
+
+- 第一字段：用户组名称；
+- 第二字段：用户组密码；
+- 第三字段：GID
+- 第四字段：用户列表，每个用户之间用,号分割；本字段可以为空；如果字段为空表示用户组为GID的用户名； 我们举个例子：
+
+root:x:0:root,linuxsir 注：用户组root，x是密码段，表示没有设置密码，GID是0,root用户组下包括root、linuxsir以。
+
+
+## gshadow
+
+文件中，每行代表一个组用户的密码信息，各行信息用 ":" 作为分隔符分为 4 个字段，每个字段的含义：```组名：加密密码：组管理员：组附加用户列表```
+
+组名:同 /etc/group 文件中的组名相对应。
+
+组密码:对于大多数用户来说，通常不设置组密码，因此该字段常为空，但有时为 "!"，指的是该群组没有组密码，也不设有群组管理员。
+
+组管理员:从系统管理员的角度来说，该文件最大的功能就是创建群组管理员。那么，什么是群组管理员呢？
+
+```
+考虑到 Linux 系统中账号太多，而超级管理员 root 可能比较忙碌，因此当有用户想要加入某群组时，root 或许不能及时作出回应。这种情况下，如果有群组管理员，那么他就能将用户加入自己管理的群组中，也就免去麻烦 root 了。
+
+不过，由于目前有 sudo 之类的工具，因此群组管理员的这个功能已经很少使用了。
+```
+
+组中的附加用户:该字段显示这个用户组中有哪些附加用户，和 /etc/group 文件中附加组显示内容相同。

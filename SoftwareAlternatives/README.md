@@ -138,6 +138,7 @@ winecfg： Wine配置编辑器,通过该命令会弹出一个Wine Configuration 
 winetricks:GUI版本，用来配置wine的windows环境
 
 ntlm_auth >= 3.0.25Error解决方法
+
 ```bash
 ERROR INFO:Make sure that ntlm_auth >= 3.0.25 is in your path. Usually, you can find it in the winbind package of your distribution.
 
