@@ -2424,3 +2424,69 @@ rsync [OPTION] … [user@]host:SRC   DEST
 -D	保持设备文件和特殊文件 (super-user only)
 -z, ––compress	在传输文件时进行压缩处理
 ```
+
+# \$( )与\` \`（反引号）
+
+在bash中，\$( )与\` \`（反引号）都是用来作命令替换的。先完成$() or \` \`里的命令行，然后将其结果替换出来，再重组成新的命令行。
+
+在操作上，这两者都是达到相应的效果，但是建议使用\$( )，理由如下：
+
+｀｀很容易与' '搞混乱，尤其对初学者来说，而\$( )比较直观。最后，$( )的弊端是，并不是所有的类unix系统都支持这种方式，但反引号是肯定支持的。
+
+```bash
+# echo today is $(date "+%Y-%m-%d")
+today is 2017-11-07
+# echo today is `date "+%Y-%m-%d"`
+today is 2017-11-07
+```
+
+# ${}
+
+## 变量替换
+
+一般情况下，$var与${var}是没有区别的，但是用${ }会比较精确的界定变量名称的范围
+
+```bash
+# A=Linux
+# echo $AB    #表示变量AB
+# echo ${A}B    #表示变量A后连接着B
+LinuxB
+```
+
+## 截取字符串及替换
+
+```bash
+先赋值一个变量为一个路径，如下：
+file=/dir1/dir2/dir3/my.file.txt
+
+命令    解释    结果
+${file#*/}    拿掉第一条 / 及其左边的字符串    dir1/dir2/dir3/my.file.txt
+[root@localhost ~]# echo ${file#*/}
+dir1/dir2/dir3/my.file.txt
+
+${file##*/}    拿掉最后一条 / 及其左边的字符串    my.file.txt
+[root@localhost ~]# echo ${file##*/}
+my.file.txt
+
+${file%/*}    拿掉最后一条 / 及其右边的字符串    /dir1/dir2/dir3
+[root@localhost ~]# echo ${file%/*}
+/dir1/dir2/dir3
+
+${file%%/*}    拿掉第一条 / 及其右边的字符串    (空值)
+[root@localhost ~]# echo ${file%%/*}
+(空值)
+
+记忆方法如下：
+
+# 是去掉左边(在键盘上 # 在 $ 之左边)
+% 是去掉右边(在键盘上 % 在 $ 之右边)
+单一符号是最小匹配;两个符号是最大匹配
+*是用来匹配不要的字符，也就是想要去掉的那部分
+还有指定字符分隔号，与*配合，决定取哪部分
+
+${file:0:5}            　　　提取最左边的 5 个字节    　　　　　　　　　　　　/dir1
+${file:5:5}            　　　提取第 5 个字节右边的连续 5 个字节    　　　　　/dir2
+${file/dir/path}            将第一个 dir 提换为 path    　　　　　　　　　 /path1/dir2/dir3/my.file.txt
+${file//dir/path}    　　　　将全部 dir 提换为 path    　　　　　　　　　　　/path1/path2/path3/my.file.txt
+${#file}    　　　　　　　　　 获取变量长度    　　　　　　　　　　　　　　　　　27 
+```
