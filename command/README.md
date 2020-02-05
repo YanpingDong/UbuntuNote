@@ -898,7 +898,7 @@ wget -qO- get.docker.com | bash
 
 curl和wget基础功能有诸多重叠，如下载等。
 
-非要说区别的话，curl由于可自定义各种请求参数所以在模拟web请求方面更擅长；wget由于支持ftp和Recursive所以在下载文件方面更擅长。类比的话curl是浏览器，而wget是迅雷9。
+非要说区别的话，curl由于可自定义各种请求参数所以在模拟web请求方面更擅长；wget由于支持ftp和Recursive所以在下载文件方面更擅长。类比的话curl是浏览器，而wget是迅雷。
  
 ```
 1.下载文件
