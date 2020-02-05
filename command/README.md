@@ -59,8 +59,9 @@ Commands:
   --set <name> <path>      将 <路径> 设置为 <名称> 的替换项.
   --all                    对所有可选项一一调用 --config 命令.
 
-<link> 是指向 /etc/alternatives/<名称> 的符号链接.
+<link> 你希望使用的符号链接，比如/usr/bing/pager。最终会生成指向 /etc/alternatives/<名称> 的符号链接.
   (e.g. /usr/bin/pager指向/etc/alternatives/pager，而/etc/alternatives/page指向path参数位)如下所示:
+创建/usr/bing/go符号链接管理/home/learlee/MyBin/go/bin/go。使用名字为go。但/etc/alternatives/go并不是你制定的是由update-alternatives创建
 $ sudo update-alternatives --install /usr/bin/go go /home/learlee/MyBin/go/bin/go 100
 $ ll /usr/bin/go
 lrwxrwxrwx 1 root root 20 6月  26 13:22 /usr/bin/go -> /etc/alternatives/go*
@@ -70,7 +71,7 @@ lrwxrwxrwx 1 root root 29 6月  26 13:22 /etc/alternatives/go -> /home/learlee/M
 <name> 是该链接替换组的主控名.
   (e.g. pager)
 <path> 是替换项目标文件的位置.
-  (e.g. /usr/bin/less)
+  (e.g. /home/learlee/MyBin/go/bin/go*)
 <priority> 是一个整数，在自动模式下，这个数字越高的选项，其优先级也就越高.
 
 Options:
