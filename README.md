@@ -102,8 +102,8 @@ PS1-4都是命令行提示符，只是使用场景不一样。
 
 ## Linux下常见的PATH值
 
-1. /home/learlee/bin  (不一定存在该目录，但设置上有比如Ubuntu，Deepin里没有该设置也没有该目录)
-2. /home/learlee/.local/bin
+1. ~/bin  (不一定存在该目录，但设置上有比如Ubuntu，Deepin里没有该设置也没有该目录)
+2. ~/.local/bin
 3. /usr/local/sbin
 4. /usr/local/bin
 5. /usr/sbin
