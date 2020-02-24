@@ -2498,3 +2498,108 @@ ${file/dir/path}            将第一个 dir 提换为 path    　　　　　�
 ${file//dir/path}    　　　　将全部 dir 提换为 path    　　　　　　　　　　　/path1/path2/path3/my.file.txt
 ${#file}    　　　　　　　　　 获取变量长度    　　　　　　　　　　　　　　　　　27 
 ```
+
+## dd命令
+
+因为ubuntu 18.04老莫名的弹出光驱，找到的教程是需要把/proc/sys/dev/cdrom/autoeject文件内容改成1，但如过直接使用vi会报“E667: Fsync failed”错误。
+
+另一篇文章给出的解释和命令方式如下。
+
+files in /proc are not actual files, they're an interface to lower-levels of the operating system. While the change is probably working okay, the usual way of updating things in proc is directly with a shell command, like:
+
+```bash
+echo 1 | sudo dd of=/proc/sys/dev/cdrom/autoeject
+```
+
+我个人尝试`sudo echo 1 > /proc/sys/dev/cdrom/autoeject`会报Permission denied
+
+dd:用指定大小的块拷贝一个文件，并在拷贝的同时进行指定的转换。
+
+dd参数解释
+
+1. if=文件名：输入文件名，缺省为标准输入。即指定源文件。< if=input file >
+2. of=文件名：输出文件名，缺省为标准输出。即指定目的文件。< of=output file >
+3. ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。
+    obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。
+    bs=bytes：同时设置读入/输出的块大小为bytes个字节。
+4. cbs=bytes：一次转换bytes个字节，即指定转换缓冲区大小。
+5. skip=blocks：从输入文件开头跳过blocks个块后再开始复制。
+6. seek=blocks：从输出文件开头跳过blocks个块后再开始复制。
+注意：通常只用当输出文件是磁盘或磁带时才有效，即备份到磁盘或磁带时才有效。
+7. count=blocks：仅拷贝blocks个块，块大小等于ibs指定的字节数。
+8. conv=conversion：用指定的参数转换文件。
+    ```
+    ascii：转换ebcdic为ascii
+    ebcdic：转换ascii为ebcdic
+    ibm：转换ascii为alternate ebcdic
+    block：把每一行转换为长度为cbs，不足部分用空格填充
+    unblock：使每一行的长度都为cbs，不足部分用空格填充
+    lcase：把大写字符转换为小写字符
+    ucase：把小写字符转换为大写字符
+    swab：交换输入的每对字节
+     noerror：出错时不停止
+     notrunc：不截短输出文件
+    sync：将每个输入块填充到ibs个字节，不足部分用空（NUL）字符补齐。
+    ```
+
+**dd应用实例**
+
+1.将本地的/dev/hdb整盘备份到/dev/hdd
+
+```bash
+$dd if=/dev/hdb of=/dev/hdd
+```
+2.将/dev/hdb全盘数据备份到指定路径的image文件
+
+```bash
+$dd if=/dev/hdb of=/root/image
+```
+3.将备份文件恢复到指定盘
+```bash
+$dd if=/root/image of=/dev/hdb
+```
+4.备份/dev/hdb全盘数据，并利用gzip工具进行压缩，保存到指定路径
+```bash
+$dd if=/dev/hdb | gzip > /root/image.gz
+```
+5.将压缩的备份文件恢复到指定盘
+```bash
+$gzip -dc /root/image.gz | dd of=/dev/hdb
+```
+6.备份与恢复MBR
+备份磁盘开始的512个字节大小的MBR信息到指定文件：
+```bash
+$dd if=/dev/hda of=/root/image count=1 bs=512
+#count=1指仅拷贝一个块；bs=512指块大小为512个字节。
+
+#恢复：
+$dd if=/root/image of=/dev/had
+#将备份的MBR信息写到磁盘开始部分
+```
+7.备份软盘
+```bash
+$dd if=/dev/fd0 of=disk.img count=1 bs=1440k (即块大小为1.44M)
+```
+8.拷贝内存内容到硬盘
+```bash
+$dd if=/dev/mem of=/root/mem.bin bs=1024 (指定块大小为1k)
+```  
+9.拷贝光盘内容到指定文件夹，并保存为cd.iso文件
+```bash
+$dd if=/dev/cdrom(hdc) of=/root/cd.iso
+```
+10.增加swap分区文件大小
+```bash
+#第一步：创建一个大小为256M的文件：
+$dd if=/dev/zero of=/swapfile bs=1024 count=262144
+#第二步：把这个文件变成swap文件：
+$mkswap /swapfile
+#第三步：启用这个swap文件：
+$swapon /swapfile
+#第四步：编辑/etc/fstab文件，使在每次开机时自动加载swap文件：
+/swapfile    swap    swap    default   0 0
+```
+11.销毁磁盘数据
+```bash
+$dd if=/dev/urandom of=/dev/hda1
+```
