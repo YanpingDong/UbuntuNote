@@ -1860,6 +1860,7 @@ fi
 ```
 
 如果is_systemd的字串长为0则是通过/etc/init.d下对应的脚本来运行
+
 ```bash
 
 SERVICEDIR="/etc/init.d"
@@ -1944,15 +1945,16 @@ $ sudo systemctl status docker.service
 5月 27 08:55:15 learleePC dockerd[1905]: time="2019-05-27T08:55:15.880244855+08:00" level=info msg="Loading containers: start."
 5月 27 08:55:23 learleePC dockerd[1905]: time="2019-05-27T08:55:23.073134325+08:00" level=info msg="Default bridge (docker0) is assigned with an IP address 172.17.0.0/16. Daemon option --bip can be used to s
 5月 27 08:55:24 learleePC dockerd[1905]: time="2019-05-27T08:55:24.292615190+08:00" level=info msg="Loading containers: done."
-
-1.输出内容的第一行是对 unit 的基本描述。
-2.第二行中的 Loaded 描述操作系统启动时会不会启动这个服务，enabled 表示开机时启动，disabled 表示开机时不启动。而启动该服务的配置文件路径为：/lib/systemd/system/docker.service。
-3.第三行 中的 Active 描述服务当前的状态，active (running) 表示服务正在运行中。如果是 inactive (dead) 则表示服务当前没有运行。后面则是服务的启动时间。
-4.第四行的 Docs 提供了在线文档的地址。
-5.下面的 Main PID 表示进程的 ID，接下来是任务的数量，占用的内存和 CPU 资源。
-6.再下面的 Cgroup 描述的是 cgrpup 相关的信息。
-最后是输出的日志信息。
 ```
+
+1. 输出内容的第一行是对 unit 的基本描述。
+2. 第二行中的 Loaded 描述操作系统启动时会不会启动这个服务，enabled 表示开机时启动，disabled 表示开机时不启动。而启动该服务的配置文件路径为：/lib/systemd/system/docker.service。
+3. 第三行 中的 Active 描述服务当前的状态，active (running) 表示服务正在运行中。如果是 inactive (dead) 则表示服务当前没有运行。后面则是服务的启动时间。
+4. 第四行的 Docs 提供了在线文档的地址。
+5. 下面的 Main PID 表示进程的 ID，接下来是任务的数量，占用的内存和 CPU 资源。
+6. 再下面的 Cgroup 描述的是 cgrpup 相关的信息。
+7. 最后是输出的日志信息。
+
 **相关的目录和文件**
 
 在不同的发行版中与 systemd 相关的文件路径可能会不太一样，强调一下，本文介绍的是 ubuntu 16.04 。
