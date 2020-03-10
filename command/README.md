@@ -1,3 +1,39 @@
+# ( ) { }作用
+
+单独单括号()：另开命令组——小括号中的内容会开启一个子shell独立运行,括号中以分号连接，最后一个命令不需要`分号`。有的文章说各命令和括号无空格，但我在ubuntu下测试有空格也是可以的
+
+```bash
+$ a=6
+$ echo $a
+6
+$ ( a=5; echo $a ) or (a=5; echo $a)
+5
+$ echo $a
+6
+
+```
+
+单独大括号{}：创建匿名函数——不会新开进程，括号内变量余下仍可使用。括号内的命令间用`分号`隔开，最后一个也必须有`分号`。**{}的第一个命令和左括号之间必须要有一个空格**。
+
+```bash
+$ b=1
+$ { b=2;echo $b; }
+2
+$ echo $b
+2
+```
+
+双括号(())：省去$符号的算术运算
+
+```bash
+$ a=6
+$ echo $a
+6
+$ ((a++))
+$ echo $a
+7
+```
+
 # Linux下在一行执行多条命令
 
 要实现在一行执行多条Linux命令，分三种情况：
@@ -2625,3 +2661,89 @@ $ ./shift.sh  1 2 3 4
 第一个参数为: 4 参数个数为: 1
 
 ```
+
+一个下载循环脚本
+
+```bash
+#!/bin/bash
+set -eux;
+TOMCAT_MAJOR=9
+TOMCAT_VERSION=9.0.31
+TOMCAT_SHA512=75045ce54ad1b6ea66fd112e8b2ffa32a0740c018ab9392c7217a6dd6b829e8645b6810ab4b28dd186c12ce6045c1eb18ed19743c5d4b22c9e613e76294f22f5
+
+ddist() { \
+   local f="$1"; shift; \
+   local distFile="$1"; shift; \
+   local success=; \
+   local distUrl=; \
+   for distUrl in \
+      'https://www.apache.org/dyn/closer.cgi?action=download&filename=' \
+      'https://www-us.apache.org/dist/' \
+      'https://www.apache.org/dist/' \
+      'https://archive.apache.org/dist/';  \
+   do \
+      if curl -fL -o "$f" "$distUrl$distFile" && [ -s "$f" ]; then \
+         success=0; \
+         break; \
+      fi; \
+   done; \
+   [ -n "$success" ]; \
+};
+
+#下载
+ddist 'tomcat.tar.gz' "tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz";
+
+#sha-512校验
+echo "$TOMCAT_SHA512 *tomcat.tar.gz" | sha512sum --strict --check -;
+```
+
+# [] [[]] -n -z 的含义解析
+
+-z 判断 变量的值，是否为空； zero = 0
+- 变量的值，为空，返回0，为true
+- 变量的值，非空，返回1，为false
+  
+-n 判断变量的值，是否为空   name = 名字
+- 变量的值，为空，返回1，为false
+- 变量的值，非空，返回0，为true
+
+## 变量加不加双引号
+
+pid="123"
+[ -z "$pid" ]  单对中括号变量必须要加双引号
+
+[[ -z $pid ]]   双对括号，变量不用加双引号
+
+[ -n "$pid" ]  单对中括号，变量必须要加双引号
+
+[[ -z  $pid ]]  双对中括号，变量不用加双引号
+
+
+## 是否能使用 -a 或者 -o的参数
+
+**[[  ]]  双对中括号，是不能使用 -a 或者 -o的参数进行比较的**
+
+[[  ]]   条件判断 &&  ||
+
+[[ 5 -lt 3 || 3 -gt 6 ]]    一个条件满足，就成立
+
+[[ 5 -lt 3 ]]  ||   [[3 -gt 6 ]]       写在外面也可以
+
+*&&同理*
+
+[[ 5 -lt 3]]  -o [[ 3 -gt 6 ]
+
+[[ 5 -lt 3 -o 3 -gt 6 ]]会报如下错误
+
+bash: syntax error in conditional expression
+bash: syntax error near `-o'
+
+-a 和 -o就不成立了，是因为，[[]]  双对中括号，不能使用 -o和 -a的参数
+
+ **[ ]  可以使用 -a   -o的参数，但是必须在 [ ] 中括号内，判断条件**
+
+[ 5 -lt 3  -o  3 -gt 2 ]
+
+[5 -lt 3 ] -o [ 3 -gt 2] 会报如下错误
+
+[5: command not found
