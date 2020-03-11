@@ -2747,3 +2747,7 @@ bash: syntax error near `-o'
 [5 -lt 3 ] -o [ 3 -gt 2] 会报如下错误
 
 [5: command not found
+
+# SSH
+
+ssh首次交互免输入yes:ssh -o stricthostkeychecking=no
