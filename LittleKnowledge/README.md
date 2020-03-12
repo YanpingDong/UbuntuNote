@@ -1949,6 +1949,42 @@ root:x:0:root,linuxsir 注：用户组root，x是密码段，表示没有设置�
 
 组中的附加用户:该字段显示这个用户组中有哪些附加用户，和 /etc/group 文件中附加组显示内容相同。
 
+# /etc/hosts
+
+Hosts - The static table lookup for host name（主机名查询静态表)。hosts文件是Linux系统中一个负责IP地址与域名快速解析的文件，以ASCII格式保存在“/etc”目录下，文件名为“hosts”（不同的linux版本，这个配置文件也可能不同。比如Debian的对应文件是/etc/hostname）。
+
+hosts文件包含了IP地址和主机名之间的映射，还包括主机名的别名。在没有域名服务器的情况下，系统上的所有网络程序都通过查询该文件来解析对应于某个主机名的IP地址，否则就需要使用DNS服务程序来解决。
+
+通常可以将常用的域名和IP地址映射加入到hosts文件中，实现快速方便的访问。
+
+## 配置文件格式说明
+
+一般/etc/hosts 的内容一般有如下类似内容：
+
+```
+127.0.0.1	localhost
+127.0.1.1	tra
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+```
+
+以上通过`http://tra`可以直接访问`127.0.1.1`一般情况下hosts文件的每行为一个主机，每行由三部份组成，每个部份由空格隔开。其中#号开头的行做说明，不被系统解释。
+
+hosts文件的格式如下：
+```
+IP地址 主机名/域名 别名
+```
+
+当然每行也可以是两部份，即主机IP地址和主机名；比如 192.168.1.100 linmu100。
+
+*这里可以稍微解释一下主机名(hostname)和域名(Domain）的区别：主机名通常在局域网内使用，通过hosts文件，主机名就被解析到对应ip；域名通常在internet上使用，但如果本机不想使用internet上的域名解析，这时就可以更改hosts文件，加入自己的域名解析。*
+
+
 # 目录与文件的权限意义
 
 ## 权限对于文件的意义
@@ -1999,3 +2035,4 @@ swap的功能是在应付物理内存不足的情况，为了让后续程序可�
 如果主机支持电源管理模式，即可以进入“休眠”模式的话，那么运行当中的程序状态会被记录到swap去，以做为“唤醒”主机的状态依据。
 
 服务器会有大是不量来自网络的请求，因些对于服务器是很有必要预留swap来缓冲一下系统的内存用量。
+
