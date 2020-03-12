@@ -1121,6 +1121,336 @@ OpenSSH：是对SSH协议的实现。
 2. HTTPS可以使用TLS或者SSL协议，而openssl是TLS、SSL协议的开源实现，提供开发库和命令行程序。openssl很优秀，所以很多涉及到数据加密、传输加密的地方都会使用openssl的库来做。
 3. 可以理解成所有的HTTPS都使用了openssl。
 
+## .ssh目录
+
+SSH相关目录，一般都在用户目录下（即~目录），其中的config文件配置可直接被ssh、scp、ansible等使用。
+
+SSH工作机制：ssh服务端由2部分组成openssh(提供ssh服务）和openssl(提供加密的程序)。SSH2支持RSA和DSA密钥（digital signature Algorithm）;
+
+数字签名RSA既可以数字签名又可以加密  
+
+目录基本内容：authorized_keys、config、id_rsa、 id_rsa.pub、id_dsa、 id_dsa.pub、 known_hosts（）
+
+**.ssh目录及其下面的文件以及其宿主目录都有严格的文件权限限制,用户目录（～目录）权限为 755 或者 700，就是不能是77x，.ssh目录是700(drwx --- ---)或755，里面的密钥文件是600（-rw- --- ---），。如果权限不对，则ssh的免密码登陆不生效。**
+
+### 目录文件解释
+
+authorized_keys：允许免密访问本机的公钥保存文件，可以保存多个台机器的公钥。例：A机想免密访问到B机。那么将A机的公钥Copy到B机的~/.ssh/authorized_key的文件中（echo '公钥文件' >> authorized_keys）。完成后ssh scp sftp命令就可以免密访问A机作操作。用户名必须是～的用户。
+
+Config：用来配置ssh、scp、sftp等命令登录远端的各种参数，这样可以简化命令行输入复杂度。通过别名引用配置在config文件里的配置参数。
+
+id_rsa、 id_rsa.pub、id_dsa、 id_dsa.pub：rsa dsa的公钥和私钥
+
+Known_hosts:该档案是纪录连到对方时，对方给的host key。每次连线时都会检查目前对方给的 host key与记录的host key是否相同，可以简单验证连结是否又被诈骗等相关事宜。如果不同，OpenSSH会发出警告，避免你受到DNS Hijack之类的攻击。
+
+如果遇到报警可用如下方式处理：
+
+修改配置文件“~/.ssh/config”，加上如下两行，重启服务器，并在本机上执行a OR b操作。
+
+```
+StrictHostKeyChecking no
+noUserKnownHostsFile /dev/null
+```
+a. 在本机清除旧的公钥信息
+ssh-keygen -R 服务器IP
+
+b. 在本机直接删除
+rm -rf ~/.ssh/known_hosts
+
+缺点：把其他正确的公钥信息也删除，下次链接要全部重新经过认证
+
+**命令行下去掉输入yes请求：**
+
+通过SSH命令的“StrictHostKeyChecking”选项，关闭验证。
+具体是采用如下形式使用SSH：`ssh -o StrictHostKeyChecking=no RemoteHost`
+
+如果在rsync命令中使用SSH，那么应该采用类似如下形式：`rsync "ssh -o StrictHostKeyChecking=no"`
+
+
+```
+SSH服务端密钥（HostKey）保存在/etc/ssh目录下以ssh_host_*开头的文件中,当客户端通过ssh命令发起连接请求时，服务端会传过来。
+
+可以通过sudo ssh-keygen -A命令重新生成SSH服务端密钥，然后重启SSH服务即可生效。
+```
+
+### 免密登录操作
+
+`ssh-keygen`  产生公钥与私钥对.
+`ssh-copy-id` 将本机的公钥复制到远程机器的authorized_keys文件中，ssh-copy-id也能让你有到远程机器的home, ~./ssh , 和 ~/.ssh/authorized_keys的权利
+
+第一步:在本地机器上使用ssh-keygen产生公钥私钥对
+    $ ssh-keygen
+
+第二步:用ssh-copy-id将公钥复制到远程机器中
+$ ssh-copy-id -i .ssh/id_rsa.pub  用户名字@192.168.x.xxx
+注意: ssh-copy-id 将key写到远程机器的 ~/ .ssh/authorized_key文件中
+也可以将A机的公钥Copy到B机中然后在B机器中使用命令 `echo '公钥文件' >> authorized_keys`
+
+第三步: 登录到远程机器不用输入密码
+    $  ssh 用户名字@192.168.x.xxx
+    Last login: Sun Nov 16 17:22:33 2008 from 192.168.1.2
+
+#### SSH管理公钥私钥匹配
+
+如果生成密钥对的时候，指定密钥名称，而不使用默认密钥名称id_rsa而使用id_rsa_test1。如下图所示
+
+![](pic/sshkeygennamedkey.png)
+
+然后使用生成的公钥在10.1.0.3服务器上建立到本机的免密链接，如果通过ssh请求，没有通过-i指定私钥文件，会提示输入密码操作，免密并不生效。如下图
+
+![](pic/NoPasswordSshFail.png)
+
+原因：ssh基于密钥进行认证时，默认会使用~/.ssh/id_rsa进行认证，当你使用非默认名称的私钥进行让证的时候，需要手机指定对应的私钥。如下图操作就可以在命令行指定了免密就可以生效了
+
+![](pic/pointWhichPriKeyForSsh.png)
+
+但如果我们手中有多个密钥每一个都要指定就会变的很麻烦，所以通过ssh-add 命令将公私密钥对应关系建立起来，这样就可以在登录的时候不用再指定如下图所示:
+
+![](pic/sshadd.png)
+
+如果我们在生成密钥的时候设置了密码，ssh基于密钥进行认证的时候，会提示输入私钥设置的密码，才能够进行认证。如下图所示：
+
+![](pic/sshNoPasswordaccessWithPassword.png)
+
+同样如果每次都要这样做，密钥多了，也是麻烦，所以同理也可以使用ssh-add来管理私钥对应的密码
+
+## ssh config文件
+
+本地系统的每个用户都可以维护一个客户端的 SSH 配置文件，这个配置文件可以包含你在命令行中使用 ssh 时参数，也可以存储公共连接选项并在连接时自动处理。你可以在命令上中使用 ssh 来指定 flag ，以覆盖配置文件中的选项。通常，该文件不是默认创建的，因此你可能要自己创建它。
+
+它可以简化ssh scp sftp命令行的参数输入，使用别名直接引用配置好的参数。配置前“ssh username@hostname -p port然后输入密码。配置后配置以后，我们只需要输入连接账户的别名即可：ssh 别名
+
+SSH 的配置文件有两个：
+```
+$ ~/.ssh/config            # 用户配置文件
+$ /etc/ssh/ssh_config      # 系统配置文件
+```
+
+### SSH 文件的结构和解释流程
+
+配置文件通过 Host 来组织，每一个Host 定义项为匹配的主机定义连接选项。通配符可以用，为了让选项有更大的范围。
+
+配置文件看起来是这样的：
+
+```
+Host firsthost
+    SSH_OPTIONS_1 custom_value
+    SSH_OPTIONS_2 custom_value
+    SSH_OPTIONS_3 custom_value
+
+Host secondhost
+    ANOTHER_OPTION custom_value
+
+Host *host
+    ANOTHER_OPTION custom_value
+
+Host *
+    CHANGE_DEFAULT custom_value
+```
+
+SSH 使命令行中给出的主机名与配置文件中定义的 Host 来匹配。它从文件顶部向下执行此操作，所以顺序非常重要！
+
+需要指出的是， Host 定义中的模式不必与您要连接的实际主机名称一样。 实际上，您可以使用这些定义为主机设置别名，以替代实际的主机名。比如下面用`dev1`代替`dev1.example.com`。
+
+```
+Host dev1
+    HostName dev1.example.com
+    User tom
+```
+
+现在要连接到 tom@dev1.example.com，就可以通过在命令行中输入如下命令：`ssh dev1`
+
+记住这一点，我们现在继续讨论在由上而下的过程中，SSH 怎么应用每一个配置选中。它从顶部开始，检查每一个 Host 定义是否与命令行中给出的主机匹配。在上一个例子中，就是检查dev1。
+
+当找到第一个匹配的主机定义时，每个关联的SSH选项都将应用于即将到来的连接（为了方便下边的讨论，这里我们称该连接接为“连接a”）。尽管如此，解释并没有结束。
+
+SSH 继续在文件中向下查找，检查是否有其他匹配的 Host 定义。如果有另一个 Host 定义匹配，SSH 将考虑该 Host 定义下的配置选项。如果新的配置选项中有“连接a”暂时没有使用的选项，就把这些选项也加入“连接a”中。
+
+总结一下，SSH 将按顺序解释与命令行上给出主机名匹配的每个Host定义。在这个过程中，SSH始终使用为每个选项给出的第一个值。后面的配置没有办法覆盖之前已经匹配的Host定义给出的值。
+
+这样看来，写配置文件的一个简单的原则是。越细化的 Host 定义，要写在上边。通用的 Host 定义，要写在下边。
+
+看个例子：
+
+```
+Host firsthost
+    SSH_OPTIONS_1 custom_value1
+    SSH_OPTIONS_2 custom_value2
+    SSH_OPTIONS_3 custom_value3
+
+Host secondhost
+    ANOTHER_OPTION custom_value4
+
+Host *host
+    ANOTHER_OPTION custom_value5
+
+Host *
+    CHANGE_DEFAULT custom_value6
+```
+
+如果 ssh firsthost ，那么 SSH 使用的选项有 SSH_OPTIONS_1、SSH_OPTIONS_2、SSH_OPTIONS_3、ANOTHER_OPTION、CHANGE_DEFAULT ，使用的值分别为 custom_value1、custom_value2、custom_value3、custom_value5、custom_value6 。
+
+如果 ssh secondhost，那么 SSH 使用的选项有 ANOTHER_OPTION、CHANGE_DEFAULT ，使用的值分别为 custom_value4、custom_value6 。
+
+### 命令行选项对应到config配置文件
+
+这部分直接用实例来解释：要将名为 apollo 的用户连接到名为 example.com，该主机在 4567 端口上运行 SSH 守护程序。
+
+一般情况下，我们会在命令行在这么写：`ssh -p 4567 apollo@example.com`
+
+如果使用选项的全名，是这样的：`ssh -o "User=apollo" -o "Port=4567" -o "HostName=example.com"`
+
+*我们可以把第二种方式中大写字母开头的选项放到配置文件中。可以通过 man ssh_config 来获取完整的可用的选项列表。*
+
+现在，用配置文件写一下上边的例子：
+
+```
+Host home
+    HostName example.com
+    User apollo
+    Port 4567
+
+#对每个选项而言，这样写也可以（以Port为例）：
+#Port = 4567
+#Port=4567
+```
+
+### 配置共享的选项
+
+继续上一部分的例子，我又两个主机，分别 home 和 work ，在两台主机上，我的用户名都是 apollo。简单，直接修改配置文件：
+
+```
+Host home
+    HostName example.com
+    User apollo
+    Port 4567
+
+Host work
+    HostName company.com
+    User apollo
+```
+
+这样写没有问题，但是我们可以把 User 提出来：
+
+```
+Host home
+    HostName example.com
+    Port 4567
+
+Host work
+    HostName company.com
+
+Host *
+    User apollo
+```
+
+非常不错，不过新问题来了，你有一个好朋友 Mars ，有一个主机共享给你用，但他喜欢把你的名字倒着念，那么该怎么办？利用不可覆盖特性。
+
+```
+Host home
+    HostName example.com
+    Port 4567
+
+Host work
+    HostName company.com
+
+Host friend-Mars
+    HostName abc.com
+    User ollopa
+
+Host *
+    User apollo
+```
+
+随着时间流逝，朋友越来越多，他们都有主机给你用，而且都喜欢把你的名字倒着念，那该怎么办？同样利用不可覆盖特性添加通配。
+
+```
+Host home
+    HostName example.com
+    Port 4567
+
+Host work
+    HostName company.com
+
+Host friend-Mars
+    HostName mars.com
+
+Host friend-Mercury
+    HostName mercury.com
+
+Host friend-Jupiter
+    HostName jupiter.com
+
+Host friend-*
+    User ollopa
+
+Host *
+    User apollo
+```
+
+## 一些常见配置
+
+密钥登录配置
+
+```bash
+#不适用配置的写法
+$ ssh centos@5AServer.IP -i ~/.ssh/AServer私钥
+
+Host AServer
+ user centos
+ Hostname AServer.IP
+ Port 22
+ IdentityFile ~/.ssh/AServer私钥
+
+#配置后用法
+$ ssh AServer
+```
+
+通过跳板机登录私有服务器
+
+```bash
+#配置前需要两步
+Step1：$ ssh -A jump@jumpserver-ip 
+Step2：$ ssh devops@private-server-ip   #在jump server上运行
+
+#配置后只需要一步
+Host jumpserver
+ user jump
+ Hostname jumpserver-ip 
+ IdentityFile ~/.ssh/私钥
+Host private-subnet-hostA
+ user devops
+ Hostname private-server-ip
+ Port 22
+ ProxyCommand ssh -W %h:%p jumpserver
+# 然后登陆 private-subnet-hostA:
+$ ssh private-subnet-hostA
+```
+
+## SSH常用功能
+
+1. 登录 ssh -p22 omd@192.168.25.137
+2. 直接执行命令(最好全路径):ssh root@192.168.25.137 ls -ltr /backup/data
+3. ssh远程执行sudo命令:ssh -t omd@192.168.25.137 sudo rsync hosts /etc/
+4. scp
+  - 功能:远程文件的安全(加密)拷贝
+    scp -P22 -r -p /home/omd/h.txt omd@192.168.25.137:/home/omd/
+  - scp知识小结 
+    - scp是加密远程拷贝，cp为本地拷贝 
+    - 可以推送过去，也可以拉过来 
+    - 每次都是全量拷贝(效率不高，适合第一次)，增量拷贝用rsync
+5. ssh自带的sftp功能    
+                
+```bash
+$ sftp -oPort=22 root@192.168.25.137       
+Connected to 192.168.25.137.
+sftp>put /etc/hosts /tmp  把本地/etc/hosts下内容上传到服务器/tmp下           sftp>get /etc/hosts /home/omd   把服务器/etc/hosts下内容下载到服务器/home/omd下
+```  
+
+*indow和Linux的传输工具 wincp filezip, sftp基于ssh的安全加密传输,samba等都是传输工具*   
+
+
+
 # SNAT DNAT
 
 ## SNAT
