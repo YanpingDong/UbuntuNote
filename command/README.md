@@ -2031,6 +2031,13 @@ learlee@learleePC:/etc/systemd/system/multi-user.target.wants$ ll docker.service
 lrwxrwxrwx 1 root root 34 5月   8 09:12 docker.service -> /lib/systemd/system/docker.service
 ```
 
+```
+管理开机启动项
+
+查看开机启动的服务：systemctl list-unit-files --type=service|grep enabled
+禁用掉该服务：sudo systemctl disable apache2.service
+```
+
 **systemctl相关文件**
 
 在/lib/systemd/system和/etc/systemd/system目录下主要有四种类型文件.mount,.service,.target,.wants
