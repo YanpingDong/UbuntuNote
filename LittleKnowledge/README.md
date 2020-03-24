@@ -131,7 +131,6 @@ FHS(英文：Filesystem Hierarchy Standard 中文:文件系统层次结构标准
 FHS是根据以往无数linux用户和开发者的经验总结出来的，并且会维持更新，FHS依据文件系统使用的频繁与否以及是否允许用户随意改动（注意，不是不能，学习过程中，不要怕这些），将目录定义为四种交互作用的形态，如下表所示：
 
 
-
 ![](pic/FHSStaticVariable.png)
 
 这个目录其实跟 /proc 非常类似，也是一个虚拟的文件系统，主要也是记录与内核相关的信息。包括目前已加载的内核模块与内核检测到的硬件设备信息等。这个目录同样不占硬盘容量。
@@ -196,6 +195,81 @@ deb https://dl.winehq.org/wine-builds/debian/ stretch main
 # deb-src https://dl.winehq.org/wine-builds/debian/ stretch main
 ```
 
+# Linux系统的各种环境变量
+
+我们使用linux的时候会发现，当我们进入系统bash，就有一堆变量可以使用，这些东西都是从哪来的呢？这实际是系统配置文件起的作用。系统启动后，会去读取配置文件，让这些环境变量可以被正常使用。
+
+了解这个之前我们先看看两个重要概念，这涉及系统会读取那些配置文件，导致可用的环境变量发生变化。一个叫login shell，一个叫non-login shell。
+
+```
+login shell：取得bash时需要完整的登录流程。就是说通过输入账号和密码登录系统，此时取得的shell称为login shell。
+
+non-login shell：取得bash接口的方法不需要重复登录的举动。如以X Window登录登录linux后，再以X的图形界面启动终端机，此时那个终端机并没有需要输入账号和密码，那个bash环境就是non-login shell。在原本的bash环境下再次执行bash命令，同样也没有输入账号密码就进入新的bash环境（前一个bash的子进程），新的bash也是non-login shell。
+```
+
+login shell一般会读取以下配置文件
+
+1. /etc/profile：这是系统整体的配置，一般尽量不要修改这个文件。
+2. /etc/profile会去执行/etc/bash.bashrc
+   ```
+   # /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
+    # and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
+
+    if [ "$PS1" ]; then
+    if [ "$BASH" ] && [ "$BASH" != "/bin/sh" ]; then
+        # The file bash.bashrc already sets the default PS1.
+        # PS1='\h:\w\$ '
+        if [ -f /etc/bash.bashrc ]; then
+        . /etc/bash.bashrc
+        fi
+   ```
+3. ~/.bash_profile or ~/.bash_login or ～/.profile。
+4. .bashrc脚本。看profile的脚本说明就很直观了。如果是.profile被运行。（ubuntu没有前两个文件）
+   
+   ```
+   # ~/.profile: executed by the command interpreter for login shells.
+   # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
+   # exists.
+   # if running bash
+    if [ -n "$BASH_VERSION" ]; then
+        # include .bashrc if it exists
+        if [ -f "$HOME/.bashrc" ]; then
+        . "$HOME/.bashrc"
+        fi
+    fi
+
+   ```
+
+```
+当用户第一次登录时,该文件被执行。/etc/profile中使用一个for循环语句从/etc/profile.d调用该目录下的脚本。而这些脚本文件是用来设置一些变量和运行一些初始化过程的。只有Login shell启动时才会运行/etc/profile脚本。
+
+所以，当你修改了/etc/profile的内容后，通过ctrl+alt+t启动一个新窗口并不生效，要么重启系统，要么用source /etc/profile重新加载。但如果是login方式登录你就会发生会立即生效。因为会在登录时重新加载/etc/profile里的内容。
+
+登陆系统时shell读取的顺序应该是/etc/profile-->/etc/enviroment -->$HOME/.profile-->$HOME/.env(如果存在)
+```
+
+non-login shell一般会读取以下配置文件
+
+1. $HOME/.bashrc 会被执行
+   ```
+   # ~/.bashrc: executed by bash(1) for non-login shells.
+   ```
+2. shell**不会**读取/etc/profile和~/.profile
+
+```
+/etc/profile中设定的变量(全局)的可以作用于任何用户,而~/.bashrc等中设定的变量(局部)只能继承 /etc/profile中的变量,他们是"父子"关系。
+```
+
+## 其他环境相关脚本
+
+**~/.bash_logout**:当每次退出系统(退出bash shell)时,执行该文件。 
+
+**/etc/enviroment**: 是系统的环境变量。
+
+```
+系统应用程序的执行与用户环境可以是无关的，但与系统环境是相关的，所以当你登录时，你看到的提示信息，象日期、时间信息的显示格式与系统环境的LANG是相关的，缺省LANG=en_US，如果系统环境LANG=zh_CN，则提示信息是中文的，否则是英文的。所以如查把LANG=zh_CN设置到/etc/profile里时候并不生效!!!
+```
+
 # Ubuntu简单添加开机启动
 
 有的时候按装了一个应用程序，我们需要其开机的时候就启动。以前的方式是在/etc/profile里添加，现在Ubuntu可以使用Startup Applications应用把要添加的应用添加进去 即可。做到了所见即所得。如下图所示。在应用中搜索Startup Applications即可以。使用方式：点击Add按键会弹出添加程序对话框，在Name和comment里说明是什么即可。把启动命令写入Command里。
@@ -210,7 +284,6 @@ albert: /usr/bin/albert /usr/lib/albert /usr/share/albert
 StartupAPP提示框如下：
 
 ![StartupApp](pic/StartupApp.png)
-
 
 # selinux
 
@@ -1529,13 +1602,13 @@ Bridge（桥）是 Linux 上用来做 TCP/IP 二层协议交换的设备，与�
 
 ## PS1
 
-PS1是主提示符变量,也是默认提示符变量。默认值[\u@\h \W]\$，显示用户主机名称工作目录。
+PS1是主提示符变量,也是默认提示符变量。默认值`[\u@\h \W]\$`，显示用户主机名称工作目录。
 
 基本上通过设置PS1来定义命令行提示字符即可，最常用的需求就是显示登录的用户名、主目录、主机名等等。
 
 默认值：
 
-```bah
+```bash
 # echo $PS1
 [\u@\h \W]\$
 ```
