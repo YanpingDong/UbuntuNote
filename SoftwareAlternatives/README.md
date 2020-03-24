@@ -81,6 +81,30 @@ install安装选项参数：
 --channel    --dangerous  --jailmode   --stable
 ```
 
+可以通过[snapcraft store](https://snapcraft.io/store)查看可以安装的snap APP。
+
+## Ubuntu中snap安装软件太慢解决办法
+
+可以通过如下两种方案解决：一是下载好包手动安装,二设置snap的代理.
+
+**下载安装包方式**
+
+1. 到 https://uappexplorer.com/snaps 搜索需要的 snap 包,然后下载
+2. 下载的时候选择对应的平台. 如 amd arm64 
+3. 到下载snap的目录里面执行 sudo snap install xxx.snap --dangerous
+
+**设置snap的代理**
+
+1. 修改配置`sudo systemctl edit snapd`
+2. 添加如下内容
+   ```
+   [Service]
+   Environment="http_proxy=http://代理ip:代理的端口"
+   Environment="https_proxy=http://代理ip:代理的端口"
+   ```
+3. 让systemd重载配置`sudo systemctl daemon-reload`
+4. 重新启动snap服务`sudo systemctl restart snapd`
+   
 # nixnote2
 
 **安装：**
