@@ -13,6 +13,74 @@ tra 1885  1  4 10:02 tty2  00:03:01 /usr/lib/firefox/firefox -new-window
 - 如果是deb格式，那么即可以使用```dpkg -L softname```查看所有相关文件都安装在何处; 也可以使用```dpkg -l softname```查看版本信息 和 ```dpkg -S softname```查看包所拥有的文件;
 - 还有一种程序是直接安装在/opt目录下的,该目录会存放程序所有相关文件。比如teamviewer
 
+
+# snap与dpkg/apt的区别
+
+Ubuntu 16.04引入了一种全新的软件包安装管理方式snap包管理。
+
+Snap的安装包扩展名是.snap，类似于一个容器，它包含一个应用程序需要用到的所有文件和库（snap包包含一个私有的root文件系统，里面包含了依赖的软件包）。它们会被安装到单独的目录；各个应用程序之间**相互隔离**。使用snap有很多好处，首先它解决了软件包的依赖问题；其次，也使应用程序更容易管理。下图就很形象的描述了二者的本质区别。
+
+![](pic/DiffBetweenSnapAndApt.jpg)
+
+为了能够使得在16.04 LTS的系统上运行snap应用，必须做一些安装。在的terminal中输入如命令：
+
+```bash
+$ sudo apt update
+$ sudo apt install snapd
+$ sudo apt install snapcraft
+```
+
+**snap特性**
+
+1. 自动更新，使你的应用永远是最新的
+2. 回退版本容易
+3. 免费
+4. 简单快速的从GNOME Software或通过命令行安装应用
+5. Snaps是安全的，完全与系统，其它应用还有硬件功能进行隔离
+
+**snap包三种模式**
+
+- Strict限制模式：所有包都需要遵守。snap包只有访问它所安装的文件夹，如果用户目录对snap包是可用的，用户也可以访问用户目录。严格限制模式，只能使应用读写如下目录：
+  - /snap/\<snap>/\<revision> （只读，安装目录）
+  - /var/snap/\<snap>/\<revision>（读/写，per-revision data）
+  - /var/snap/\<snap>/common (读/写, common data)
+  - /home/$USER/snap/\<snap>/\<revision> (读/写, per-revision user data)
+  - /home/$USER/snap/\<snap>/common (读/写, common user data).
+
+- Classic限制模式:该模式下的snap包和.deb包的工作方式一样，没有任何访问限制。处在该模式下的snap包可以访问home目录以外的目录，甚至可以读书root目录。然应用可以使用classic限制模式，但并不意味着每一个应用都可以在该模式下发布。如果想以该限制模式发行，必需要经过snapcraft.io组的审核，该组所有成员同意要以该模式发布的原由才可以该模式发布。
+
+- Devmode限制模式:用于开发和测试，在该模式下的snaps安装包是不可以发布到稳定通到下。当确认稳定可以被发布的时候，开发者必需改为strict模式或classic模式。
+
+
+宗上所述Snaps除了在安全和更新上优于deb,在其它方面优于deb包。使用snaps，你可以一直使用最新版本的应用，因为他会和他的依赖包一起打包，运行不需要依赖系统包。所以在安装软件的时候优先通过snap安装！！！
+
+## Snap常用命令
+
+命令|解释
+---|---
+snap find  |列出适用于当前系统的 Snap 软件包。
+snap install <包名> | 安装软件包。
+snap list | 查看当前系统中已安装的 Snap 软件包。
+snap changes | 查看系统的更改历史记录。
+snap refresh <包名>  | 升级 Snap 软件包版本。
+snap remove <包名> | 移除 Snap 软件包。
+snap info <包名> | 查看包信息 
+snap switch –channel=xxxx xxxx | 更换软件安装通道
+snap revert xxxx | 还原到之前版本
+
+```
+注：默认情况下，是通过stable的通道进行安装的。 如果想换通道可以用如下两种方式：
+a)snap install <包名> –<通道名>  
+b)snap switch–channel=<通道名> <包名> 然后执行snap refresh。（该方案只能用来从另一个通道更新软件包）
+
+如果遇到cannot find signatures with metadata for snap报错，是因为没有经过snap store签名，需要加--dangerous选项，即snap install xxx --dangerous。
+
+install安装选项参数：
+--beta       --classic    --devmode    --no-wait    --unaliased  
+--candidate  --color      --edge       --revision   --unicode    
+--channel    --dangerous  --jailmode   --stable
+```
+
 # nixnote2
 
 **安装：**
