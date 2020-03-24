@@ -237,3 +237,51 @@ Deepin OS开发的WeChat还是可以的，使用起来和Win下没有太大区�
 设置操作系统语言方式解决
 
 Settings-->Region&Language-->Manage Installed Languages-->把汉语（中国）排到第一位。但这种方式会导致有的应用的界面是乱码（因为有的APP不支持中文）
+
+# VirtualBox安装
+
+[VirtualBox下载地址](https://www.virtualbox.org/wiki/Linux_Downloads)。Windows系统的IOS，这个目前没有发现官方的，可以自行Baidu。
+
+安装好后打开VirtualBox,开始创建虚拟系统。
+
+- step1 输入名称，类型，版本等信息，下一步
+- step2 内存大小设置，然后下一步
+- step3 选择虚拟硬盘，然后选创建
+- step4 选择虚拟硬盘文件类型（一般选择VDI），然后选下一步
+- step5 选择存储在物理硬盘上（一般动态分配就好），然后下一步
+- step6 选择文件位置和大小，最后点创建。
+- step7 点击启动创建成功的虚拟设备，选择启动盘，选择下好的ISO镜像即可。如下图
+
+![](pic/VBChoiceStartISO.jpg)
+
+注：安装过程可能会出现，CPU不适配64位操作系统类似错误，如果能确定CPU是支持的，那么只需要去BIOS里设置一下 Intel VT为enable(名字可能因BIOS而不同，全称为Virtualization Technology)。如果你在BIOS里打开了后前面安装步骤需要重新做一遍，如下图所示例：
+
+![](pic/VBBIOSSetting.jpg)
+
+另外也需要注意是否在如下图版本上设置的是64位的。（点击VirtualBox界面的“设置就可以看到下图”或者在Step1.输入名称中可以看到）
+
+![](pic/VB64OSSetting.jpg)
+
+## 设置共享文件夹
+
+- step1 启动指定虚拟设备后可以看到如下界面，选择“设备”-->”共享文件夹”
+
+![](pic/ShareDirSettingStep1.jpg)
+
+- step2 弹出如下图后，点击右边+
+
+![](pic/ShareDirSettingStep2.jpg)
+
+- step2 在弹出对话框，选择好共享文件路径和输入名字，把“自动挂载”和“固定分配”勾选。这样就可以生成一个上图所示的“固定分配”共享文件，这样不会因为重启而消失!
+
+- step3 启动虚拟系统，2.进入我的电脑会看到“有可移动存储的设备”，如下图所示：
+
+![](pic/ShareDirSettingStep3.jpg)
+
+- step4 双击VirtualBox Guest进行，会有如下类似显示
+
+![](pic/ShareDirSettingStep4.jpg)
+
+选择适合你电脑的安装，我本机选的是VBoxWindowsAdditions-amd64,然后一路同意即可。
+
+*注：有的时候在使用网络位置共享文件的时候无法用copy可以直接用鼠标拖拽即可。*
