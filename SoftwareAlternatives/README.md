@@ -133,12 +133,22 @@ File-->Add user完成帐户添加。然后点Sync完成授权与更新，授权�
 
 免费的开源消息和电子邮件应用程序，可以将常见的Web应该程序组合在一起，即只要是有网页端的都可以使用RamBox做代理客户端来访问。比如，可以将WeChat的页面端交给RamBox来代理。这样我们不用在浏览器多个页面中来回切换找WeChat了。
 
+官方描述，直白的讲就是一个工作浏览器，可以组织Web应用：
+
+```
+Rambox is a workspace browser that allows you to manage as many applications as you want, all in one place. It is perfect for people who care about productivity and work with many applications, both business and personal.
+```
+
 安装
 - Step1.到https://github.com/ramboxapp/community-edition/releases/下载
 - Step2.如果是deb的用sudo dpkg -i xxx.deb
 - Step3.在命令行输入rambox启动看一下是否正常
 
 使用中可能出现的问题：输入法不能切换或者你点Rambox桌面图标没有办法启动。可以在命令行输入rambox看是否有错，我用的时候发现Rambox是以Root权限安装，导致我用用户权限时~	/.config/rambox这个目录没有权限，我用chmod 777强制更改了，以上两个问题就都解决了。或者用chown [-R]  用户名：用户组名 文件或目录 
+
+最近发现Snap craft上发布了安装，所以安装可以简化为`sudo snap install rambox`
+
+![](pic/Rambox.png)
 
 # JDK安装
 
@@ -247,6 +257,8 @@ Deepin OS开发的WeChat还是可以的，使用起来和Win下没有太大区�
 2. sudo apt update
 3. sudo apt install deepin.com.wechat
 
+当然这个更新很依赖与维护者，所以如果喜欢用最新的还是使用网页版本，但是截图功能算是废了
+
 # Thunderbird
 
 **中文乱码解决**
@@ -309,3 +321,10 @@ Settings-->Region&Language-->Manage Installed Languages-->把汉语（中国）�
 选择适合你电脑的安装，我本机选的是VBoxWindowsAdditions-amd64,然后一路同意即可。
 
 *注：有的时候在使用网络位置共享文件的时候无法用copy可以直接用鼠标拖拽即可。*
+
+
+# Postman
+
+Windows平台下测试API的利器，尤其是开发后台RESTful接口的时候。方便、易用、可视化的测试接口。好消息是2019年10月23官方发布了snap的版本。现在只需要使用`sudo snap install postman`命令就可以方便快捷的在Ubuntu系统上使用。看着久违的界面，心情舒畅啊！
+
+![](pic/postman.png)
