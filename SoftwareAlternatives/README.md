@@ -139,7 +139,6 @@ epxpor CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
 - Step2: sudo apt-get update
 - Step3: sudo apt-get install oracle-java8-installer
 
-
 # Tcpdump
 
 cpdump是Linux自带的抓包工具，可以详细看到计算机通信中详细报文内容
@@ -223,3 +222,18 @@ Deepin OS开发的WeChat还是可以的，使用起来和Win下没有太大区�
 这个仓库是一个国内的团队为ElementaryOS镜像基础上进行了本地华集成的软件库，里面包含了很多deepinOS团队做的软件。
 2. sudo apt update
 3. sudo apt install deepin.com.wechat
+
+# Thunderbird
+
+**中文乱码解决**
+
+通过邮件客户端设置方式解决
+
+1.点菜单-->查看(view)-->文本编码（Text Encoding）-->unicode
+
+2.如果上步没有解决，右键收件箱-->属性（Propeties）-->Fallback Text Encoding设置成GBK
+注：第二步的操作可以在收件，发件，草稿箱都可以处理
+
+设置操作系统语言方式解决
+
+Settings-->Region&Language-->Manage Installed Languages-->把汉语（中国）排到第一位。但这种方式会导致有的应用的界面是乱码（因为有的APP不支持中文）
