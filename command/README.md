@@ -104,7 +104,8 @@ Commands:
 
 <link> 你希望使用的符号链接，比如/usr/bing/pager。最终会生成指向 /etc/alternatives/<名称> 的符号链接.
   (e.g. /usr/bin/pager指向/etc/alternatives/pager，而/etc/alternatives/page指向path参数位)如下所示:
-创建/usr/bing/go符号链接管理/home/learlee/MyBin/go/bin/go。使用名字为go。但/etc/alternatives/go并不是你制定的是由update-alternatives创建
+创建/usr/bing/go符号链接管理/home/learlee/MyBin/go/bin/go。使用名字为go。但/etc/alternatives/go并不是你事先创建的，而是由update-alternatives创建。
+
 $ sudo update-alternatives --install /usr/bin/go go /home/learlee/MyBin/go/bin/go 100
 $ ll /usr/bin/go
 lrwxrwxrwx 1 root root 20 6月  26 13:22 /usr/bin/go -> /etc/alternatives/go*
@@ -139,7 +140,7 @@ sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 200
 ```
 
-然后执行下面代码选择我们安装的python版本，即序列2：
+然后执行下面代码选择我们安装的python版本，即序列1：
 
 ```bash
  learlee@learleePC:/usr/bin$ update-alternatives --config python3 
@@ -148,11 +149,24 @@ There are 2 choices for the alternative python3 (providing /usr/bin/python3).
   Selection    Path                Priority   Status
 ------------------------------------------------------------
   0            /usr/bin/python3.6   2         auto mode
-  1            /usr/bin/python3.5   1         manual mode
-* 2            /usr/bin/python3.6   2         manual mode
+* 1            /usr/bin/python3.5   1         manual mode
+  2            /usr/bin/python3.6   2         manual mode
 
 Press <enter> to keep the current choice[*], or type selection number: 2
 ```
+
+现在我们在看下/usr/bin/python3的的实际连接情况：
+
+```bash
+$ ll /usr/bin/python3
+lrwxrwxrwx 1 root root 25 3月  25 14:22 /usr/bin/python3 -> /etc/alternatives/python3
+$ ll /etc/alternatives/python3
+lrwxrwxrwx 1 root root 18 3月  25 14:22 /etc/alternatives/python3 -> /usr/bin/python3.5*
+```
+
+可以看到现在的/usr/bin/python3连接到得是/etc/alternatives/python3，而/etc/alternatives/python3是连接到实际的python可执行文件。而/etc/alternatives/python3连接是在通过update-alternatives --install创建的，在这里就相当一个桥一样。update-alternatives --config命令实际改变的是/etc/alternatives/python3的连接指向。
+
+所以建议使用update-alternatives管理多个版本软件！！！
 
 # netstat
 
