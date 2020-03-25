@@ -166,7 +166,7 @@ lrwxrwxrwx 1 root root 18 3月  25 14:22 /etc/alternatives/python3 -> /usr/bin/p
 
 可以看到现在的/usr/bin/python3连接到得是/etc/alternatives/python3，而/etc/alternatives/python3是连接到实际的python可执行文件。而/etc/alternatives/python3连接是在通过update-alternatives --install创建的，在这里就相当一个桥一样。update-alternatives --config命令实际改变的是/etc/alternatives/python3的连接指向。
 
-所以建议使用update-alternatives管理多个版本软件！！！
+所以建议使用update-alternatives管理多个软件的不同版本！！！
 
 # netstat
 

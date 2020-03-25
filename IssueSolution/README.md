@@ -223,3 +223,22 @@ dpkg: 处理软件包 sogoupinyin (--install)时出错：
 ```
 
 在使用apt/apt-get安装出现依赖错误的时候，一般都是使用apt/apt-get -f instal来解决。实际上apt/apt-get底层是通过dkpg来实现具体功能的，并且在安装过程中会纪录出错信息，否则你不可能通过apt/apt-get -f instal来解决。所以如果dpkg安装出错了，也可以使用该命令来解决。
+
+# Git命令行分支显示
+
+在看这个之前你需要了解PS1的作用，简单的说就是命令行提示字符变量，用来定义命令行的提示字符串，如下`$`之前（包括$）都是命令行提示字符串：
+
+```bash
+learlee@learleePC:~/Documents/UbuntuNote(master)$ 
+```
+
+现在我们可以了看怎么修改PS1让命令行显示git分支等信息了。只需要在~/.bashrc中添加如下配置如下内容即可。
+
+```
+function git_branch {
+ref=$(git symbolic-ref HEAD 2> /dev/null) || return;
+echo "("${ref#refs/heads/}")";
+}
+
+export PS1="\[\e]0;\u@\h: \w\$(git_branch)\a\] \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\e[1;36m\]\$(git_branch)\[\033[00m\]\$ "
+```
