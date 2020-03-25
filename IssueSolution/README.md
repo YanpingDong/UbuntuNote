@@ -201,3 +201,25 @@ sudo apt-get install indicator-appmenu
 ```
 sudo apt-get install hud
 ```
+
+# dpkg安装失败问题
+
+有的时候我们会下载安装deb格式的软件，但可能安装的过程中可能会报依赖缺失错误。如下所示：
+
+```bash
+$ sudo dpkg -i sogoupinyin_2.3.1.0112_amd64.deb 
+[sudo] learlee 的密码： 
+正在选中未选择的软件包 sogoupinyin。
+(正在读取数据库 ... 系统当前共安装有 329397 个文件和目录。)
+正准备解包 sogoupinyin_2.3.1.0112_amd64.deb  ...
+正在解包 sogoupinyin (2.3.1.0112) ...
+dpkg: 依赖关系问题使得 sogoupinyin 的配置工作不能继续：
+ sogoupinyin 依赖于 fonts-droid | fonts-droid-fallback；然而：
+  未安装软件包 fonts-droid。
+  未安装软件包 fonts-droid-fallback。
+
+dpkg: 处理软件包 sogoupinyin (--install)时出错：
+ 依赖关系问题 - 仍未被配置
+```
+
+在使用apt/apt-get安装出现依赖错误的时候，一般都是使用apt/apt-get -f instal来解决。实际上apt/apt-get底层是通过dkpg来实现具体功能的，并且在安装过程中会纪录出错信息，否则你不可能通过apt/apt-get -f instal来解决。所以如果dpkg安装出错了，也可以使用该命令来解决。
