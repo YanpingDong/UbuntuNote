@@ -184,7 +184,7 @@ Step 2: 进入 /etc/apt/sources.list.d 文件夹，删除对应的源文件。
 
 **何时会把库写到sources.list**
 
-对于直接使用软件库地址的会添加到sources.list文件中
+对于add-apt-repository命令直接使用软件库地址的会添加到sources.list文件中，如下命令。
 
 ```
 sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/debian/ stretch main'
@@ -223,7 +223,7 @@ login shell一般会读取以下配置文件
         . /etc/bash.bashrc
         fi
    ```
-3. ~/.bash_profile or ~/.bash_login or ～/.profile。
+3. $HOME/.bash_profile or $HOME/.bash_login or $HOME/.profile。
 4. .bashrc脚本。看profile的脚本说明就很直观了。如果是.profile被运行。（ubuntu没有前两个文件）
    
    ```
@@ -252,12 +252,16 @@ non-login shell一般会读取以下配置文件
 
 1. $HOME/.bashrc 会被执行
    ```
-   # ~/.bashrc: executed by bash(1) for non-login shells.
+   # $HOME/.bashrc: executed by bash(1) for non-login shells.
    ```
 2. shell**不会**读取/etc/profile和~/.profile
 
 ```
 /etc/profile中设定的变量(全局)的可以作用于任何用户,而~/.bashrc等中设定的变量(局部)只能继承 /etc/profile中的变量,他们是"父子"关系。
+
+这也就是为什么我们通过远程去执行远端脚本的时候，会出现命令不在PATH下的情况。解决的方案有两种：
+1. 在脚本里面添加export命令，每次执行脚本的时候都导出脚本需要的命令路径：`#export PATH=$PATH:your_command_path`
+2. 在$HOME/.bashrc里面export脚本需要的命令路径。添加方式同1，只是写在了不同的位置而已。
 ```
 
 ## 其他环境相关脚本
