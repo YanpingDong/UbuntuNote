@@ -285,7 +285,7 @@ non-login shell一般会读取以下配置文件
 ```bash
 $ locale
 LANG=zh_CN.UTF-8
-LANGUAGE=zh_CN
+LANGUAGE=zh_CN:en_US:en
 LC_CTYPE="zh_CN.UTF-8"
 LC_NUMERIC=zh_CN.UTF-8
 LC_TIME=zh_CN.UTF-8
@@ -335,7 +335,7 @@ locale的设定的优先级别：LC_ALL > LC_* >LANG
 
 也就是说，LANGUAGE是设置应用程序的界面语言。而LANG是优先级很低的一个变量，它指定所有与locale有关的变量的默认值！
 
-PC端桌面程序如果界面中文显示乱码，可以将LANG or LANGUAGE设置成zh_CN.UTF-8一般就可以了。当然也可以在每个桌面程序的Setting里设置应用程序使用的字符集。比如Thunderbird可以通过设置收件箱的后备文字编码和`菜单-->查看(view)-->文本编码（Text Encoding）-->unicode`设置应用的文字编码来设置桌面程序的字符集。而不是通过全局方式设定。
+PC端桌面程序如果界面中文显示乱码，可以将设置`LANG =zh_CN.UTF-8`或者`LANGUAGE=zh_CN:en_US:en`一般就可以了。当然也可以在每个桌面程序的Setting里设置应用程序使用的字符集。比如Thunderbird可以通过设置收件箱的后备文字编码和`菜单-->查看(view)-->文本编码（Text Encoding）-->unicode`设置应用的文字编码来设置桌面程序的字符集。而不是通过全局方式设定。
 
 注意：有的桌面程序并不支持中文，所以如果是全局设定界面字符，会导致乱码显示。
 
