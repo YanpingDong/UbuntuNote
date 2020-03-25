@@ -274,6 +274,67 @@ non-login shell一般会读取以下配置文件
 系统应用程序的执行与用户环境可以是无关的，但与系统环境是相关的，所以当你登录时，你看到的提示信息，象日期、时间信息的显示格式与系统环境的LANG是相关的，缺省LANG=en_US，如果系统环境LANG=zh_CN，则提示信息是中文的，否则是英文的。所以如查把LANG=zh_CN设置到/etc/profile里时候并不生效!!!
 ```
 
+## 系统语言相关环境变量
+
+这个可以在/etc/default/locale文件中进行设定，也可以通过【系统设置】-->【语言支持】里进行设定。界面设定如下：
+
+![](pic/LanguageSetting.png)
+
+通过命令行设定的话，编辑/etc/default/locale文件就可以。我们可以先用`locale`命令看下都有那些参数可以设置：
+
+```bash
+$ locale
+LANG=zh_CN.UTF-8
+LANGUAGE=zh_CN
+LC_CTYPE="zh_CN.UTF-8"
+LC_NUMERIC=zh_CN.UTF-8
+LC_TIME=zh_CN.UTF-8
+LC_COLLATE="zh_CN.UTF-8"
+LC_MONETARY=zh_CN.UTF-8
+LC_MESSAGES="zh_CN.UTF-8"
+LC_PAPER=zh_CN.UTF-8
+LC_NAME=zh_CN.UTF-8
+LC_ADDRESS=zh_CN.UTF-8
+LC_TELEPHONE=zh_CN.UTF-8
+LC_MEASUREMENT=zh_CN.UTF-8
+LC_IDENTIFICATION=zh_CN.UTF-8
+LC_ALL=
+```
+
+那什么是locale?可以理解成，Locale是软件在运行时的语言环境, 它包括语言(Language), 地域 (Territory) 和字符集(Codeset)。一个locale的书写格式为: 语言[_地域[.字符集]]。完全的locale表达方式是 `[语言[_地域][.字符集] [@修正值]`。zh_CN.GB2312＝中文_中华人民共和国＋国标2312字符集。
+
+locale把按照所涉及到的文化传统的各个方面分成12个大类，如上locale命令输出所示。他们分别代表：
+
+1. 语言符号及其分类(LC_CTYPE)
+2. 数字(LC_NUMERIC)
+3. 比较和排序习惯(LC_COLLATE)
+4. 时间显示格式(LC_TIME)
+5. 货币单位(LC_MONETARY)
+6. 信息主要是提示信息,错误信息,状态信息,标题,标签,按钮和菜单等(LC_MESSAGES)
+7. 姓名书写方式(LC_NAME)
+8. 地址书写方式(LC_ADDRESS)
+9. 电话号码书写方式(LC_TELEPHONE)
+10. 度量衡表达方式 (LC_MEASUREMENT)
+11. 默认纸张尺寸大小(LC_PAPER)
+12. 对locale自身包含信息的概述(LC_IDENTIFICATION)。
+
+locale的设定的优先级别：LC_ALL > LC_* >LANG
+
+示例：
+
+1、如果需要一个纯中文的系统的话，设定LC_ALL= zh_CN.XXXX，或者LANG=zh_CN.XXXX都可以。 
+
+2、如果只想要一个可以输入中文的环境，而保持菜单、标题，系统信息等等为英文界面，那么只需要设定 LC_CTYPE＝zh_CN.XXXX，LANG=en_US.XXXX就可以了。
+
+3、假如什么也不做的话，也就是LC_ALL，LANG和LC_*均不指定特定值的话，系统将采用POSIX作为lcoale，也就是C locale。
+
+**LANG和LANGUAGE的区别： **
+
+- LANG - Specifies the default locale for all unset locale variables 
+- LANGUAGE - Most programs use this for the language of its interface 
+
+也就是说，LANGUAGE是设置应用程序的界面语言。而LANG是优先级很低的一个变量，它指定所有与locale有关的变量的默认值！
+
 # Ubuntu简单添加开机启动
 
 有的时候按装了一个应用程序，我们需要其开机的时候就启动。以前的方式是在/etc/profile里添加，现在Ubuntu可以使用Startup Applications应用把要添加的应用添加进去 即可。做到了所见即所得。如下图所示。在应用中搜索Startup Applications即可以。使用方式：点击Add按键会弹出添加程序对话框，在Name和comment里说明是什么即可。把启动命令写入Command里。
