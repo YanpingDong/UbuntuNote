@@ -244,9 +244,10 @@ ntlm_auth >= 3.0.25Error解决方法
 ERROR INFO:Make sure that ntlm_auth >= 3.0.25 is in your path. Usually, you can find it in the winbind package of your distribution.
 
 $sudo apt install winbind
-````
+```
 
-[字体下载](http://www.font5.com.cn),下载的字体直接放到```~/.wine/drive_c/windows/Fonts```下即可让wine支持该字体
+[字体下载](http://www.font5.com.cn),下载的字体直接放到`~/.wine/drive_c/windows/Fonts`下即可让wine支持该字体
+
 
 # WeChat
 
@@ -328,3 +329,33 @@ Settings-->Region&Language-->Manage Installed Languages-->把汉语（中国）�
 Windows平台下测试API的利器，尤其是开发后台RESTful接口的时候。方便、易用、可视化的测试接口。好消息是2019年10月23官方发布了snap的版本。现在只需要使用`sudo snap install postman`命令就可以方便快捷的在Ubuntu系统上使用。看着久违的界面，心情舒畅啊！
 
 ![](pic/postman.png)
+
+# 截屏
+
+如果只需要获取一张屏幕截图，不对其进行编辑的话，那么键盘的默认快捷键就可以满足要求了。而且不仅仅是 Ubuntu ，绝大部分的 Linux 发行版和桌面环境都支持以下这些快捷键：
+
+1.  PrtSc – 获取整个屏幕的截图并保存到 Pictures 目录。
+2.  Shift + PrtSc – 获取屏幕的某个区域截图并保存到 Pictures 目录。
+3.  Alt + PrtSc –获取当前窗口的截图并保存到 Pictures 目录。
+4.  Ctrl + PrtSc – 获取整个屏幕的截图并存放到剪贴板。
+5.  Shift + Ctrl + PrtSc – 获取屏幕的某个区域截图并存放到剪贴板。
+6.  Ctrl + Alt + PrtSc – 获取当前窗口的 截图并存放到剪贴板。
+
+
+## flameshot
+
+用的是 Ubuntu 18.0.4，那么只需要在 Ubuntu 软件中心上搜索，就可以找到 Flameshot 进而完成安装了。要是你想使用终端来安装，可以执行以下命令：`sudo apt install flameshot`
+
+但如果是16.0.4需要多一步添加PPA
+
+```
+sudo add-apt-repository ppa:harish2704/ppa1
+sudo apt-get update
+sudo apt install flameshot
+```
+
+flameshot PPA:  https://launchpad.net/~harish2704/+archive/ubuntu/ppa1
+
+安装完成后按如下做快捷键配置：设置>设备>键盘，设置一个自定义快捷键ctrl+alt+a（拉到最下面）命令填写：flameshot gui。
+
+目前使用来看，除了不能添加文字，其他功能和微信的差不多。

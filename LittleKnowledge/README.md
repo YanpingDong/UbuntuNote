@@ -285,7 +285,7 @@ non-login shell一般会读取以下配置文件
 ```bash
 $ locale
 LANG=zh_CN.UTF-8
-LANGUAGE=zh_CN:en_US:en
+LANGUAGE=zh_CN:zh:en_US:en
 LC_CTYPE="zh_CN.UTF-8"
 LC_NUMERIC=zh_CN.UTF-8
 LC_TIME=zh_CN.UTF-8
