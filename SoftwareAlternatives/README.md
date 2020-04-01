@@ -365,3 +365,9 @@ flameshot PPA:  https://launchpad.net/~harish2704/+archive/ubuntu/ppa1
 很好用的终端,可以方便的降终端分割开。这样就不用启动多个终端。只需要通过`sudo apt-get install terminator`命令安装即可，安装完成会自动配置成默认的终端。
 
 ![](pic/terminatorIndex.png)
+
+# 音乐播放器
+
+Ubuntu18的用户首推的当然是网易云音乐，官方出品支持Linux系统。下载方式如下图：
+
+![](pic/HowToDownloadMusic163.png)
