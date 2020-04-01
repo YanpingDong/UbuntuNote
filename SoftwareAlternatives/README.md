@@ -359,3 +359,9 @@ flameshot PPA:  https://launchpad.net/~harish2704/+archive/ubuntu/ppa1
 安装完成后按如下做快捷键配置：设置>设备>键盘，设置一个自定义快捷键ctrl+alt+a（拉到最下面）命令填写：flameshot gui。
 
 目前使用来看，除了不能添加文字，其他功能和微信的差不多。
+
+# terminator
+
+很好用的终端,可以方便的降终端分割开。这样就不用启动多个终端。只需要通过`sudo apt-get install terminator`命令安装即可，安装完成会自动配置成默认的终端。
+
+![](pic/terminatorIndex.png)
