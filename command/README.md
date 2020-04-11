@@ -1751,6 +1751,20 @@ $ sudo apt-mark manual mongodb-dev
 
 ```
 
+#  apt-fast
+
+apt-fast实际上是一个围绕apt-get和aptitude所写的shell脚本容器，它能加速包的下载速度。apt-fast本质上采用aria2下载工具，这款工具能够以“块”的方式从多个镜像并行下载一个文件（就像BitTorrent下载）。
+
+安装：`sudo apt install -y apt-fast`
+
+使用的时候和用apt-get,apt没区别就是改了个名字。毕竟核心还是apt-get。比如安装：`apt-fast install softe-name`
+
+# gdebi
+
+有的时候我们下载deb安装包，比如sogou输入法。直接用`sudo dpkg -i xxx`安装会出现依赖错误问题，需要使用`sudo apt-get install -f`来修复依赖，然后再用dpkg安装。这个时候我们可以选择使用gdebi来帮我们，安装`sudo gdebi xxx`他会帮忙处理deb安装包依赖缺失。
+
+安装： `sudo apt install gdebi`
+
 # sed
 
 Linux sed命令是利用script来处理文本文件。
