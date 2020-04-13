@@ -1755,7 +1755,11 @@ $ sudo apt-mark manual mongodb-dev
 
 apt-fast实际上是一个围绕apt-get和aptitude所写的shell脚本容器，它能加速包的下载速度。apt-fast本质上采用aria2下载工具，这款工具能够以“块”的方式从多个镜像并行下载一个文件（就像BitTorrent下载）。
 
-安装：`sudo apt install -y apt-fast`
+安装：
+```bash
+$ sudo add-apt-repository ppa:apt-fast/stable
+$ sudo apt install -y apt-fast
+```
 
 使用的时候和用apt-get,apt没区别就是改了个名字。毕竟核心还是apt-get。比如安装：`apt-fast install softe-name`
 
