@@ -1761,7 +1761,16 @@ $ sudo add-apt-repository ppa:apt-fast/stable
 $ sudo apt install -y apt-fast
 ```
 
-使用的时候和用apt-get,apt没区别就是改了个名字。毕竟核心还是apt-get。比如安装：`apt-fast install softe-name`
+安装过程中需要设置，使用用哪个包管理器（apt-get/apt/aptitude,我一般不安装aptitude所以选前两个任何一个）；设置并发数；设置是否在确认前开始下载安装软件包（我选否）
+
+使用的时候和用apt-get,apt没区别就是改了个名字。毕竟核心还是apt-get。比如：
+
+```bash
+$ sudo apt-fast update
+$ apt-fast install softe-name
+$ sudo apt-fast dist-update #执行发行版升级（发布或者强制内核升级）
+$ sudo apt-fast remove pkg #删除包
+```
 
 # gdebi
 
