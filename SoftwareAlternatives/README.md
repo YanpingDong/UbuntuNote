@@ -371,3 +371,19 @@ flameshot PPA:  https://launchpad.net/~harish2704/+archive/ubuntu/ppa1
 Ubuntu18的用户首推的当然是网易云音乐，官方出品支持Linux系统。下载方式如下图：
 
 ![](pic/HowToDownloadMusic163.png)
+
+# 录屏工具RecordMyDesktop
+
+RecordMyDesktop是一个屏幕播放应用程序，可以制作具有同步音频的视频，用户可以选择任何选定的桌面区域或整个屏幕。
+
+在Ubuntu 16.04版本及以上版本只需要使用命令`sudo apt install gtk-recordmydesktop`
+
+![](pic/RecordMyDesktop.png)
+
+启动后先选择"另存为"选择好要存放的文件及位置。
+
+然后点击右上角红色按键选择录制区域如下图
+
+![](pic/ChooseYourRange4RMD.png)
+
+录制完成后在同样地方选择暂停，他会自动把录制转为ogv视频格式，如果需要mp4等就需要ffmpeg来处理了。转换mp4命令：`ffmpeg -i demo.ogv -f mp4 demo.mp4`
