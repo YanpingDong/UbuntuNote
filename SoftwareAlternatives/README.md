@@ -387,3 +387,11 @@ RecordMyDesktop是一个屏幕播放应用程序，可以制作具有同步音�
 ![](pic/ChooseYourRange4RMD.png)
 
 录制完成后在同样地方选择暂停，他会自动把录制转为ogv视频格式，如果需要mp4等就需要ffmpeg来处理了。转换mp4命令：`ffmpeg -i demo.ogv -f mp4 demo.mp4`
+
+# FFmpeg
+
+FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源计算机程序。采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。它包含了非常先进的音频/视频编解码库libavcodec，为了保证高可移植性和编解码质量，libavcodec里很多code都是从头开发的。
+
+可以通过snap安装：`sudo snap install ffmpeg`
+
+转换音视频的利器，缺点就是没有界面！
