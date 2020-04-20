@@ -242,3 +242,16 @@ echo "("${ref#refs/heads/}")";
 
 export PS1="\[\e]0;\u@\h: \w\$(git_branch)\a\] \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\e[1;36m\]\$(git_branch)\[\033[00m\]\$ "
 ```
+
+# 为FireFox安装Flash插件
+
+现在为FireFox安装更新Flash不需要在像以前一样，下载压缩包解压，然后
+
+先到[adobe flash player](https://get.adobe.com/flashplayer/)下载页面,选择APT for Debian/Ubuntu，然后点击下载，弹出如下对话框
+
+
+![](pic/FlashPlayerDownload.png)
+
+选择AptURL，弹出下面对话框，选择是，然后他自动更新，更新完毕后弹出是否安装对话框“是否安装adobe-flashplugin”，选择是即可。（实际就是在/etc/apt/sources.list.d下添加了一个更新源。）
+
+![](pic/AddFlashPlayerChannel.png)
