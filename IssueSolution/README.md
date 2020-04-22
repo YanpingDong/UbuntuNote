@@ -252,6 +252,10 @@ export PS1="\[\e]0;\u@\h: \w\$(git_branch)\a\] \[\033[01;32m\]\u@\h\[\033[00m\]:
 
 ![](pic/FlashPlayerDownload.png)
 
-选择AptURL，弹出下面对话框，选择是，然后他自动更新，更新完毕后弹出是否安装对话框“是否安装adobe-flashplugin”，选择是即可。（实际就是在/etc/apt/sources.list.d下添加了一个更新源。）
+选择AptURL，弹出下面对话框，选择是，然后他自动更新
 
 ![](pic/AddFlashPlayerChannel.png)
+
+更新完毕后弹出是否安装对话框“是否安装adobe-flashplugin”，选择是即可。（实际就是在/etc/apt/sources.list.d下添加了一个更新源。）
+
+![](pic/InstallAdobFlashplugin.png)
