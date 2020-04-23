@@ -330,6 +330,8 @@ Windows平台下测试API的利器，尤其是开发后台RESTful接口的时候
 
 ![](pic/postman.png)
 
+注：Ubuntu18.04下我目前测试可用的是`sudo snap install --channel=v6/stable postman`。目前最新版本latest/stable:    7.22.1 2020-04-09并不能正常启动
+
 # 截屏
 
 如果只需要获取一张屏幕截图，不对其进行编辑的话，那么键盘的默认快捷键就可以满足要求了。而且不仅仅是 Ubuntu ，绝大部分的 Linux 发行版和桌面环境都支持以下这些快捷键：
