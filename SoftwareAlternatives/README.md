@@ -260,6 +260,8 @@ Deepin OS开发的WeChat还是可以的，使用起来和Win下没有太大区�
 
 当然这个更新很依赖与维护者，所以如果喜欢用最新的还是使用网页版本，但是截图功能算是废了
 
+或者选择electronic-wechat，只需要使用`sudo snap install electronic-wechat`安装即可。
+
 # Thunderbird
 
 **中文乱码解决**
