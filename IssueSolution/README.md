@@ -245,9 +245,9 @@ export PS1="\[\e]0;\u@\h: \w\$(git_branch)\a\] \[\033[01;32m\]\u@\h\[\033[00m\]:
 
 # 为FireFox安装Flash插件
 
-现在为FireFox安装更新Flash不需要在像以前一样，下载压缩包解压，然后
+该方式不适合snap安装的FireFox！！！
 
-先到[adobe flash player](https://get.adobe.com/flashplayer/)下载页面,选择APT for Debian/Ubuntu，然后点击下载，弹出如下对话框
+现在为FireFox安装更新Flash不需要在像以前一样，下载压缩包解压，然后先到[adobe flash player](https://get.adobe.com/flashplayer/)下载页面,选择APT for Debian/Ubuntu，然后点击下载，弹出如下对话框
 
 
 ![](pic/FlashPlayerDownload.png)
