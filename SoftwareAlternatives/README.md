@@ -397,3 +397,7 @@ FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其�
 可以通过snap安装：`sudo snap install ffmpeg`
 
 转换音视频的利器，缺点就是没有界面！
+
+# 百度网盘
+
+百度推出了官方APP，但目前看到的只适合Ubuntu V18.04。安装过程很简单，先到[百度网盘下载页面](https://pan.baidu.com/download)下载deb文件。如果安装了Gdebi可以直接使用`sudo gdebi xxxx.deb`来安装。否者使用`sudo dpkg -i xxx.deb`安装，如果出现依赖失败，可以使用`sudo apt-get install -f` 来修正，然后再使用dpkg命令安装一次就好。
