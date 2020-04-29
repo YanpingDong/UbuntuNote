@@ -1591,6 +1591,42 @@ sftp>put /etc/hosts /tmp  把本地/etc/hosts下内容上传到服务器/tmp下 
 
 *indow和Linux的传输工具 wincp filezip, sftp基于ssh的安全加密传输,samba等都是传输工具*   
 
+## SSH的端口转发功能
+
+为什么需要这样的功能？试想一下，如果服务器只开放了22端口，但在该服务器上部署了MySQL，你如何间接把请求转发到服务器的3306上？这个时候就可以通过SSH建立隧道，让ssh转发给3306端口。可以在本地机器使用命令建立与服务器的隧道：`ssh -L local_port:localhost:3306 ssh_hostname`。命令详细说明见下详诉。
+
+命令格式：`ssh -L/R <local port>:<remote host>:<remote port> <SSH hostname>`
+
+
+```
+-L是本地开端口，然后在本地和服务器之间成立隧道，本机是中间人。ssh创建命令在本地端执行。这个时候SSH hostname是服务器的ssh登录地址
+
+-R是在服务器和本地之间建立隧道，但是把端口开在服务器端，服务器中间人。ssh创建命令在服务器端执行。这个时候SSH hostname是“工作机器”ssh登录的地址
+
+local port：你的本地工作电脑端口
+
+remote host:数据通过ssh隧道转发到服务器后，需要服务器转发的主机地址。如果是localhost就代表是服务器本机，所以数据通过隧道到达后实际是转发给的服务器本身的指定端口上，这样就完成了最开始说的通过22端口访问3306端口的问题；如果是其他IP那么隧道收到数据后会把数据转发给remote host:remote port
+
+remote port：数据通过ssh隧道转发到服务器后，需要服务期转发的主机端口
+
+比如：A-->B-->C。其中A是本机，B是中间人，C是目标主机（hostc：portc），B可以访问到C。那么在A机器上建立隧道命令：ssh -L Aport:hostc:portc c_ssh_hostname。当然也可以在B机器上建立AB之间隧道然后转发，那么B机器执行：ssh -R Aport:hostc:portc A_ssh_hostname
+
+
+SSH hostname: 可以是[user@]hostname 或者是在.ssh/config文件里配置的hostname.
+```
+
+通过下图红线标记，实际很清楚的表示了—L/R建立隧道的区别，实际就是谁是ssh server的问题。
+
+![](pic/sshCreateTunnel.png)
+
+
+#### 反向代理与正向代理
+
+不论那种代理实际上数据传输的方向没有发生变化，都需要通过代理服务器转发请求。哪为什么叫法不一样？我个人的理解是区分为谁做代理；如果是为客户端做代理，那就叫正向代理；如果为服务器做代理就是反向代理。好吧这样说可能还是不清楚。实际上正向代理的时候客户端是知道有代理服务器，需要客户设置代理服务器；而反向代理客户实际是不知道代理的存在，比如你访问baidu的时候，实际访问的是代理服务器，代理服务器再转发你的请求给实际的后端服务器（因为需要做负载均衡），然后在把真实服务器返回数据转发给客户。
+
+下面的图可以很清楚的表达二者的区别，仔细看红框部分！
+
+![](pic/ForwardAndReverseProxy.png)
 
 
 # SNAT DNAT
