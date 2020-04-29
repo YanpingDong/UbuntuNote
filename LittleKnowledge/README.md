@@ -1613,6 +1613,14 @@ remote port：数据通过ssh隧道转发到服务器后，需要服务期转发
 
 
 SSH hostname: 可以是[user@]hostname 或者是在.ssh/config文件里配置的hostname.
+
+一般和-L/R一起使用的参数如下：
+-f 告诉SSH客户端在后台运行 
+-N Do not execute a shell or command.不执行脚本或命令，通常与-f连用。
+-n Redirects stdin from /dev/null (actually, prevents reading from stdin).  This must be used when ssh is run in the background. 
+-T      Disable pseudo-terminal allocation.
+
+E.G.: ssh -f -n -N -T -L Aport:hostc:portc c_ssh_hostname
 ```
 
 通过下图红线标记，实际很清楚的表示了—L/R建立隧道的区别，实际就是谁是ssh server的问题。
