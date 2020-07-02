@@ -2818,3 +2818,29 @@ bash: syntax error near `-o'
 [5 -lt 3 ] -o [ 3 -gt 2] 会报如下错误
 
 [5: command not found
+
+# Tcpdump
+
+cpdump是Linux自带的抓包工具，可以详细看到计算机通信中详细报文内容。它可以抓取涵盖整个 TCP/IP 协议族的数据包，支持针对网络层、协议、主机、端口的过滤，并提供 and、or、not 等逻辑语句来过滤无用的信息。
+
+参数说明：
+
+```
+-i 指定要抓取数据包的网卡名称
+-c 指定抓取包的个数
+-w 把抓取到的数据存放到文件中供以后分析
+```
+
+示例：
+
+```
+$ tcpdump -i eth0 # 抓取eth0网卡的数据包 
+$ tcpdump -i eth0 -c 10 # 只抓取10个包 
+$ tcpdump -i eth0 -c 10 -w my-packets.pcap  
+# file my-packets.pcap  
+my-packets.pcap: tcpdump capture file .... 
+
+#指定过滤端口(port)和主机名(host)
+$ tcpdump -n -i eth0 port 80  
+$ tcpdump -n -i eth0 host baidu.com  
+```
