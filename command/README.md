@@ -2823,6 +2823,8 @@ bash: syntax error near `-o'
 
 cpdump是Linux自带的抓包工具，可以详细看到计算机通信中详细报文内容。它可以抓取涵盖整个 TCP/IP 协议族的数据包，支持针对网络层、协议、主机、端口的过滤，并提供 and、or、not 等逻辑语句来过滤无用的信息。
 
+![](pic/tcpdump_command_format.png)
+
 参数说明：
 
 ```
