@@ -897,6 +897,25 @@ veth pair 不是一个设备，而是一对设备，用于连接两个虚拟以�
 
 ![](pic/VethPair.png)
 
+**Namespace**
+
+Namespace类似传统网络里的VRF，与VRF不同的是：VRF做的是网络层三层隔离。而namespace隔离的更彻底，它做的是整个协议栈的隔离，隔离的资源包括：UTS(UnixTimesharing System的简称，包含内存名称、版本、 底层体系结构等信息)、IPS(所有与进程间通信（IPC）有关的信息)、mnt(当前装载的文件系统)、PID(有关进程ID的信息)、user(资源配额的信息)、net(网络信息)。
+从网络角度看一个namespace提供了一份独立的网络协议栈（网络设备接口、IPv4/v6、IP路由、防火墙规则、sockets等），而一个设备（Linux Device）只能位于一个namespace中，不同namespace中的设备可以利用vethpair进行桥接。
+
+![](pic/VethPairProcess.png)
+
+如果我们使用`ping -I veth0 10.1.1.3 -c 2`命令Ping其中一个端口，来看下整个通信流程就明白了。
+
+1. 首先 ping 程序构造 ICMP echo request，通过 socket 发给协议栈。
+2. 由于 ping 指定了走 veth0 口，如果是第一次，则需要发 ARP 请求，否则协议栈直接将数据包交给 veth0。
+3. 由于 veth0 连着 veth1，所以 ICMP request 直接发给 veth1。
+4. veth1 收到请求后，交给另一端的协议栈。
+5. 协议栈看本地有 10.1.1.3 这个 IP，于是构造 ICMP reply 包，查看路由表，发现回给 10.1.1.0 网段的数据包应该走 localback 口，于是将 reply 包交给 lo 口（会优先查看路由表的 0 号表，ip route show table 0 查看）。
+6. lo 收到协议栈的 reply 包后，啥都没干，转手又回给协议栈。
+7. 协议栈收到 reply 包之后，发现有 socket 在等待包，于是将包给 socket。
+8. 等待在用户态的 ping 程序发现 socket 返回，于是就收到 ICMP 的 reply 包。
+
+![](pic/VethPairWorkFlow.png)
 
 ### 虚拟“隧道网卡”（tun）
 
@@ -923,6 +942,8 @@ tun 是一个网络层的点对点（Peer To Peer）设备，启用了 IP 层隧
 TUN工作流程
 
 ![](pic/tunWorkFlow.png)
+
+
 
 普通的网卡通过网线收发数据包，但是 TUN 设备通过一个文件收发数据包。所有对这个文件的写操作会通过 TUN 设备转换成一个数据包送给内核，然后后面的操作和物理设备相同，另一端的程序通过socket API获取数据；当内核发送一个包给 TUN 设备时，通过读这个文件可以拿到包的内容。使用tunX的APP可以看成另一台机器。Tun和Tap可以看成网卡，也就是eth0.
 
