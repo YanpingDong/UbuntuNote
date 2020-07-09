@@ -893,14 +893,11 @@ tap 只与其中的以太网（Ethernet）协议对应，所以，tap 有时也�
 
 ### 虚拟“网线”（veth pair）
 
-veth pair 不是一个设备，而是一对设备，用于连接两个虚拟以太端口。veth pair 的本质是反转通讯数据的方向，需要发送的数据会被转换成需要收到的数据重新送入内核网络层进行处理，从而间接的完成数据的注入。操作 veth pair，需要跟 namespace 一起配合，不然就没有意义。
+veth pair veth设备全称为Virtual Enternet device，veth主要的目的是为了跨Network Namespace之间提供一种类似于Linux进程间通信的技术,所以不是一个设备，而是一对设备，用于连接两个虚拟以太端口。veth pair 的本质是反转通讯数据的方向，需要发送的数据会被转换成需要收到的数据重新送入内核网络层进行处理，从而间接的完成数据的注入。操作 veth pair，需要跟 namespace 一起配合，不然就没有意义。
 
 ![](pic/VethPair.png)
 
-**Namespace**
-
-Namespace类似传统网络里的VRF，与VRF不同的是：VRF做的是网络层三层隔离。而namespace隔离的更彻底，它做的是整个协议栈的隔离，隔离的资源包括：UTS(UnixTimesharing System的简称，包含内存名称、版本、 底层体系结构等信息)、IPS(所有与进程间通信（IPC）有关的信息)、mnt(当前装载的文件系统)、PID(有关进程ID的信息)、user(资源配额的信息)、net(网络信息)。
-从网络角度看一个namespace提供了一份独立的网络协议栈（网络设备接口、IPv4/v6、IP路由、防火墙规则、sockets等），而一个设备（Linux Device）只能位于一个namespace中，不同namespace中的设备可以利用vethpair进行桥接。
+基本工作流程如下图简化所示：
 
 ![](pic/VethPairProcess.png)
 
@@ -916,6 +913,13 @@ Namespace类似传统网络里的VRF，与VRF不同的是：VRF做的是网络�
 8. 等待在用户态的 ping 程序发现 socket 返回，于是就收到 ICMP 的 reply 包。
 
 ![](pic/VethPairWorkFlow.png)
+
+### Namespace
+
+Namespace类似传统网络里的VRF，与VRF不同的是：VRF做的是网络层三层隔离。而namespace隔离的更彻底，它做的是整个协议栈的隔离，隔离的资源包括：UTS(UnixTimesharing System的简称，包含内存名称、版本、 底层体系结构等信息)、IPS(所有与进程间通信（IPC）有关的信息)、mnt(当前装载的文件系统)、PID(有关进程ID的信息)、user(资源配额的信息)、net(网络信息)。
+从网络角度看一个namespace提供了一份独立的网络协议栈（网络设备接口、IPv4/v6、IP路由、防火墙规则、sockets等），而一个设备（Linux Device）只能位于一个namespace中，不同namespace中的设备可以利用vethpair进行桥接。
+
+![](pic/namespaceIsolateRange.png)
 
 ### 虚拟“隧道网卡”（tun）
 
