@@ -921,6 +921,58 @@ Namespace类似传统网络里的VRF，与VRF不同的是：VRF做的是网络�
 
 ![](pic/namespaceIsolateRange.png)
 
+使用一段简单的代码，试一试UTS隔离的效果：
+
+```c
+#define _GNU_SOURCE
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <sched.h>
+#include <signal.h>
+#include <unistd.h>
+
+#define STACK_SIZE (1024*1024)
+
+static char child_stack[STACK_SIZE];
+char* const child_args[] = {
+	"/bin/bash",
+	NULL
+};
+
+int child_main(void* args){
+	printf("Now in child process!\n");
+	sethostname("ChildHostname",12);
+	execv(child_args[0],child_args);
+	return 1;
+}
+
+int main(){
+	printf("Program start: \n");
+	int child_pid = clone(child_main,child_stack + STACK_SIZE,CLONE_NEWUTS | SIGCHLD,NULL);
+	waitpid(child_pid,NULL,0);
+	printf("Already exit!\n");
+	return 0;
+}
+```
+
+`gcc testNamespace.c -o testNamespace.o` 编译完成后如果不在root用户下，需要使用sudo来执行
+
+```bash
+learlee@learleePC:~/WorkSpace/C$ sudo ./testNamespace.o
+Program start: 
+Now in child process!
+root@ChildHostnam:~/WorkSpace/C$ hostname
+ChildHostnam
+root@ChildHostnam:~/WorkSpace/C$ exit
+exit
+Already exit!
+learlee@learleePC:~/WorkSpace/C$ 
+```
+上面代码中，重要的地方是在调用clone()方法时，加入了 CLONE_NEWUTS 参数，Linux内核提供的UTS namespace隔离系统调用。如果不加，执行这段代码，将会更改当前的主机名称。不会产生主机名和域名的隔离效果。
+在使用的时候你会发现你进入新的空间，主机名变了，但主机的所有配置是可以使用的，比如java
+
+
 ### 虚拟“隧道网卡”（tun）
 
 tun 是一个网络层的点对点（Peer To Peer）设备，启用了 IP 层隧道（tunnel）功能。Linux 原生支持 5 种三层（IP）隧道：
