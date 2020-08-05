@@ -209,7 +209,7 @@ deb https://dl.winehq.org/wine-builds/debian/ stretch main
 ```
 login shell：取得bash时需要完整的登录流程。就是说通过输入账号和密码登录系统，此时取得的shell称为login shell。
 
-non-login shell：取得bash接口的方法不需要重复登录的举动。如以X Window登录登录linux后，再以X的图形界面启动终端机，此时那个终端机并没有需要输入账号和密码，那个bash环境就是non-login shell。在原本的bash环境下再次执行bash命令，同样也没有输入账号密码就进入新的bash环境（前一个bash的子进程），新的bash也是non-login shell。
+non-login shell：取得bash接口的方法不需要重复登录的举动。如以X Window登录登录linux后，再以X的图形界面启动终端机，此时那个终端机并没有需要输入账号和密码，那个bash环境就是non-login shell。在原本的bash环境下再次执行bash命令，同样也没有输入账号密码就进入新的bash环境（前一个bash的子进程），新的bash也是non-login shell。再比如启动终端。
 ```
 
 login shell一般会读取以下配置文件
@@ -250,7 +250,7 @@ login shell一般会读取以下配置文件
 
 所以，当你修改了/etc/profile的内容后，通过ctrl+alt+t启动一个新窗口并不生效，要么重启系统，要么用source /etc/profile重新加载。但如果是login方式登录你就会发生会立即生效。因为会在登录时重新加载/etc/profile里的内容。
 
-登陆系统时shell读取的顺序应该是/etc/profile-->/etc/enviroment -->$HOME/.profile-->$HOME/.env(如果存在)
+登陆系统时shell读取的顺序应该是/etc/profile-->/etc/enviroment -->$HOME/.profile-->$HOME/.bashrc(如果存在)-->$HOME/.env(如果存在)
 ```
 
 non-login shell一般会读取以下配置文件
