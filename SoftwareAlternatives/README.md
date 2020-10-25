@@ -254,6 +254,9 @@ Deepin OS开发的WeChat还是可以的，使用起来和Win下没有太大区�
 
 Settings-->Region&Language-->Manage Installed Languages-->把汉语（中国）排到第一位。但这种方式会导致有的应用的界面是乱码（因为有的APP不支持中文）
 
+推荐安装Lightning，在附加组件里查询安装就可以，完成后有如下日历和任务功能。作为工作跟踪提示非常方便。
+![](pic/lightning.png)
+
 # VirtualBox安装
 
 [VirtualBox下载地址](https://www.virtualbox.org/wiki/Linux_Downloads)。Windows系统的IOS，这个目前没有发现官方的，可以自行Baidu。
