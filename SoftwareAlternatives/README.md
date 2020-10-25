@@ -236,6 +236,8 @@ Deepin OS开发的WeChat还是可以的，使用起来和Win下没有太大区�
 
 或者选择electronic-wechat，只需要使用`sudo snap install electronic-wechat`安装即可。
 
+目前看WeChat在Ubuntu下都不是很稳定，DeepinOS的安装到20.04上输入中文有乱码！所以还是用网页版本的好。
+
 # Thunderbird
 
 **中文乱码解决**
@@ -336,7 +338,7 @@ flameshot PPA:  https://launchpad.net/~harish2704/+archive/ubuntu/ppa1
 
 安装完成后按如下做快捷键配置：设置>设备>键盘，设置一个自定义快捷键ctrl+alt+a（拉到最下面）命令填写：flameshot gui。
 
-目前使用来看，除了不能添加文字，其他功能和微信的差不多。
+新版本的基本和微信的截图功能很相似了！
 
 # terminator
 
@@ -349,6 +351,7 @@ flameshot PPA:  https://launchpad.net/~harish2704/+archive/ubuntu/ppa1
 Ubuntu18的用户首推的当然是网易云音乐，官方出品支持Linux系统。下载方式如下图：
 
 ![](pic/HowToDownloadMusic163.png)
+
 
 # 录屏工具RecordMyDesktop
 

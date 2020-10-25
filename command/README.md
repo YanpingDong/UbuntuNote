@@ -1447,7 +1447,7 @@ SYSADER ALL= SYDCMD,DSKCMD
 DISKADER ALL=(OP) DSKCMD 
 
 注解： 
-第一行：定义用户别名SYSADER 下有成员 beinan、linuxsir和beinan用户组下的成员，用户组前面必须加%号； 
+第一行：定义用户别名SYSADER 下有成员 beinan、linuxsir和beinan用��组下的成员，用户组前面必须加%号； 
 第二行：定义用户别名 DISKADER ，成员有lanhaitun 
 第三行：定义Runas用户，也就是目标用户的别名为OP，下有成员root 
 第四行：定义SYSCMD命令别名，成员之间用,号分隔，最后的!/usr/bin/passwd root 表示不能通过passwd 来更改root密码； 
