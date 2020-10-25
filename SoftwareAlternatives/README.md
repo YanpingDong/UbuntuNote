@@ -238,6 +238,7 @@ Deepin OS开发的WeChat还是可以的，使用起来和Win下没有太大区�
 
 目前看WeChat在Ubuntu下都不是很稳定，DeepinOS的安装到20.04上输入中文有乱码！所以还是用网页版本的好。
 
+
 # Thunderbird
 
 **中文乱码解决**
@@ -383,7 +384,8 @@ FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其�
 
 # MySQL客户端
 
-在Ubuntu下有两个，一个可以使用官方的MySQL Workbench,另一个可以使用beekeeper-studio，beekeeper-studio安装`sudo snap install beekeeper-studio`。其界面如下，但功能上来说目前只是查询，相对MySQL Workbench要弱。
+在Ubuntu下有两个，一个可以使用官方的MySQL Workbench,另一个可以使用beekeeper-studio，beekeeper-studio安装`sudo snap install beekeeper-studio`。其界面如下，但功能上来说目前只是查询，相对MySQL Workbench要弱。但兼容SQLite、MySQL、MariaDB、Postgres、CockroachDB、SQL Server、Amazon Redshift。当然也是跨平台的，支持Linux、windows、MacOS
+
 
 ![](pic/beekeeper-studio.png)
 
@@ -396,3 +398,9 @@ Step1: [下载页面](https://www.anaconda.com/products/individual) ，拉到最
 Step2: `bash Anaconda3-2020.07-Linux-x86_64.sh`  中间回答一些基本问题就安装好了
 
 Step3: 重新启动teminal,安装完成的提示如下 `==> For changes to take effect, close and re-open your current shell. <==`，安装完成后会配置好.bashrc文件，所以需要重新启动teminal
+
+# drawio
+
+安装：`sudo snap install drawio`,可以用来绘制简单的软件图，比如UML等,如下图所示。
+
+![](pic/drowioPicType.png)
