@@ -417,7 +417,7 @@ Step3: 重新启动teminal,安装完成的提示如下 `==> For changes to take 
 
 # VLC播放器
 
-由于Ubuntu自带的播放器支持格式太少，使用该浏览器代替下，挺好用的。它支持的格式如下所示：
+由于Ubuntu自带的播放器支持格式太少，使用该浏览器代替下，挺好用的,但是如果设置系统标题为中文，会出现菜单乱码问题，应用乱码问题貌似是个普遍问题，中文解决不太好。它支持的格式如下所示：
 
 ```
 It notably plays MKV, MP4, MPEG, MPEG-2, MPEG-4, DivX, MOV, WMV, QuickTime, WebM, FLAC, MP3, Ogg/Vorbis files, BluRays, DVDs, VCDs, podcasts, and multimedia streams from various network sources. 
