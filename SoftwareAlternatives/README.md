@@ -404,3 +404,11 @@ Step3: 重新启动teminal,安装完成的提示如下 `==> For changes to take 
 安装：`sudo snap install drawio`,可以用来绘制简单的软件图，比如UML等,如下图所示。
 
 ![](pic/drowioPicType.png)
+
+
+# VSCode
+
+目前来看（2020/10/25）VSCode使用Snap安装有输入法无法切换问题，所以还是建议去官方网站下载deb文件使用`sudo dpkg -i xxx.deb`来安装
+
+[下载地址](https://code.visualstudio.com/)
+
