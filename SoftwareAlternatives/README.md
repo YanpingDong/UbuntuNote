@@ -415,3 +415,13 @@ Step3: 重新启动teminal,安装完成的提示如下 `==> For changes to take 
 
 [下载地址](https://code.visualstudio.com/)
 
+# VLC播放器
+
+由于Ubuntu自带的播放器支持格式太少，使用该浏览器代替下，挺好用的。它支持的格式如下所示：
+
+```
+It notably plays MKV, MP4, MPEG, MPEG-2, MPEG-4, DivX, MOV, WMV, QuickTime, WebM, FLAC, MP3, Ogg/Vorbis files, BluRays, DVDs, VCDs, podcasts, and multimedia streams from various network sources. 
+```
+
+运行 `sudo snap install vlc`命令就可以简单安装了
+
