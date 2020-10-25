@@ -160,8 +160,8 @@ Rambox is a workspace browser that allows you to manage as many applications as 
 ```
 # the following configuration is for jdk
 export JAVA_HOME=/install_path/jkdx.x.x
-epxort PATH=$PATH:$JAVA_HOME/bin
-epxpor CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+export PATH=$PATH:$JAVA_HOME/bin
+export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
 ```
 
 - Step4：执行 chmod +x profile ，把profile变成可执行文件
@@ -386,3 +386,13 @@ FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其�
 在Ubuntu下有两个，一个可以使用官方的MySQL Workbench,另一个可以使用beekeeper-studio，beekeeper-studio安装`sudo snap install beekeeper-studio`。其界面如下，但功能上来说目前只是查询，相对MySQL Workbench要弱。
 
 ![](pic/beekeeper-studio.png)
+
+# Anaconda安装
+
+Step1: [下载页面](https://www.anaconda.com/products/individual) ，拉到最下面找到Anaconda Installers。实际就是个sh文件，下载完成后运行Step2
+
+![](pic/anacondaInstaller.png)
+
+Step2: `bash Anaconda3-2020.07-Linux-x86_64.sh`  中间回答一些基本问题就安装好了
+
+Step3: 重新启动teminal,安装完成的提示如下 `==> For changes to take effect, close and re-open your current shell. <==`，安装完成后会配置好.bashrc文件，所以需要重新启动teminal
