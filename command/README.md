@@ -261,36 +261,6 @@ tcp 0 0 192.168.1.2:33324 173.194.36.117:443 ESTABLISHED 1691/chrome
 netstat -ant  #列出所有tcp链接，禁用反向域名解析功能
 ```
 
-# screenfetch
-
-这个方便的 Bash 脚本可以用来生成那些漂亮的终端主题信息和用 ASCII 构成的发行版标志，就像如今你在别人的截屏里看到的那样。它会自动检测你的发行版并显示 ASCII 版的发行版标志，并且在右边显示一些有价值的信息。
-
-安装方式：sudo apt-get install screenfetch
-
-**示例**
-
-```bash
-screenfetch
-                          ./+o+-       learlee@learleePC
-                  yyyyy- -yyyyyy+      OS: Ubuntu 16.04 xenial
-               ://+//////-yyyyyyo      Kernel: x86_64 Linux 4.15.0-47-generic
-           .++ .:/++++++/-.+sss/`      Uptime: 7d 9h 0m
-         .:++o:  /++++++++/:--:/-      Packages: 2066
-        o:+o+:++.`..```.-/oo+++++/     Shell: bash 4.3.48
-       .:+o:+o/.          `+sssoo+/    Resolution: 3840x1080
-  .++/+:+oo+o:`             /sssooo.   DE: Unity 7.4.5
- /+++//+:`oo+o               /::--:.   WM: Compiz
- \+/+o+++`o++o               ++////.   WM Theme: MacBuntu-OS-X
-  .++.o+++oo+:`             /dddhhh.   GTK Theme: MacBuntu-OS-X [GTK2/3]
-       .+.o+oo:.          `oddhhhh+    Icon Theme: MacBuntu-OS
-        \+.++o+o``-````.:ohdhhhhh+     Font: Apple Garamond 11
-         `:o+++ `ohhhhhhhhyo++os:      CPU: Intel Core i5-4460 CPU @ 3.4GHz
-           .o:`.syhhhhhhh/.oo++o`      GPU: AMD/ATI Caicos XT [Radeon HD 7470/8470 / R5 235/310 OEM]
-               /osyyyyyyo++ooo+++/     RAM: 7526MiB / 15980MiB
-                   ````` +oo+++o\:    
-                          `oo++.   
-```
-
 # tee 
 
 是在不影响原本 I/O 输出的情况下，将 stdout 复制一份到档案里
